@@ -1,6 +1,17 @@
 # poker
 
-This template should help get you started developing with Vue 3 in Vite.
+This is not an application to play poker
+This is an app poker planning in an agile project
+
+## websocket server
+
+for developing purpose:
+
+```sh
+node index.mjs
+```
+
+a production solution need to be found
 
 ## Recommended IDE Setup
 
@@ -66,4 +77,3 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
-# poker
