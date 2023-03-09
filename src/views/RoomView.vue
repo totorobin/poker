@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { useRoomStore } from '@/stores/room'
-import { watch } from 'vue'
+import { watch , computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import GameCard from '@/components/GameCard.vue'
+import { RefreshLeft , View , Hide} from '@element-plus/icons-vue'
 
 const props = defineProps<{
   roomId: string
@@ -30,6 +31,16 @@ if (props.roomId != room.value.id) {
     }
   )
 }
+const showHide = computed({
+  get() { return room.value.cardVisible },
+  set(newValue:boolean) { 
+    if(newValue) {
+      show()
+    } else {
+      hide()
+    }
+  }
+})
 </script>
 
 <template>
@@ -37,9 +48,30 @@ if (props.roomId != room.value.id) {
     <el-container>
       <el-main>
         <el-row justify="end">
-          <el-button @click="() => show()">show</el-button>
-          <el-button @click="() => hide()">hide</el-button>
-          <el-button @click="() => reset()">reset</el-button>
+          <el-link class="icon-button" :underline="false"  @click="() => showHide = !showHide" >
+            <el-icon  size="20">
+              <el-tooltip
+              v-if="!showHide" 
+                  class="box-item"
+                  effect="dark"
+                  content="Show"
+                  placement="top-start"
+                >
+                <View />
+              </el-tooltip>
+                <el-tooltip  v-else
+                  class="box-item"
+                  effect="dark"
+                  content="Hide"
+                  placement="top-start"
+                >
+              <Hide />
+              </el-tooltip>              
+            </el-icon>
+          </el-link>
+          <el-link class="icon-button" :underline="false"  @click="() => reset()" >
+            <el-icon  size="20"><RefreshLeft /></el-icon>
+          </el-link>
         </el-row>
         <el-row justify="center" :gutter="15" class="user-view">
           <el-col :span="4" v-for="(user, index) in users" :key="index">
@@ -65,6 +97,10 @@ if (props.roomId != room.value.id) {
 </template>
 
 <style scoped>
+.icon-button {
+  padding: 0px 6px;
+
+}
 .el-container {
   max-width: 800px;
   margin-left: auto;

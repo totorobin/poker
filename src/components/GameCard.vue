@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import imgUrl from '@/assets/8cxrbGE6i.jpg'
+import backImg from '@/assets/kisspng-playing-card-visual-arts-tarot-studio-5b07327b32c0c3.8514217315271983312079.png'
+import frontImg from '@/assets/playing-card-front.png'
 const props = defineProps<{
   cardValue: string | undefined
 }>()
+
 </script>
 
 <template>
-  <div :class="{ card : true}" :style="{ background: cardValue === '?'  ? `no-repeat center/100% url(${imgUrl})` : ''}" >{{ cardValue == '?' ? '' : cardValue }}</div>
+  <div :class="{ card : true}" :style="{ background: cardValue === '?'  ? `no-repeat center/100% url(${backImg})` : cardValue ? ` no-repeat center/90% url(${frontImg})` : '', border : cardValue && cardValue !== '?' ? '1px solid black' : '' }" >{{ cardValue == '?' ? '' : cardValue }}</div>
 </template>
 
 <style scoped>
