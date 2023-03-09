@@ -138,4 +138,4 @@ function informRooms(ids, notif) {
 }
 
 
-ViteExpress.listen(app, 3001, () => console.log("Server is listening..."));
+ViteExpress.listen(app, 8080, () => console.log("Server is listening..."));

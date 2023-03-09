@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "node server.mjs",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
@@ -22,7 +22,6 @@
     "express-ws": "^5.0.2",
     "http": "^0.0.1-security",
     "pinia": "^2.0.32",
-    "uuidv4": "^6.2.13",
     "vite-express": "^0.4.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
