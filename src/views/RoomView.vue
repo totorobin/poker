@@ -70,7 +70,15 @@ const showHide = computed({
             </el-icon>
           </el-link>
           <el-link class="icon-button" :underline="false"  @click="() => reset()" >
+          
+                <el-tooltip  
+                  class="box-item"
+                  effect="dark"
+                  content="Reset"
+                  placement="top-start"
+                >
             <el-icon  size="20"><RefreshLeft /></el-icon>
+          </el-tooltip>
           </el-link>
         </el-row>
         <el-row justify="center" :gutter="15" class="user-view">
