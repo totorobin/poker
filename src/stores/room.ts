@@ -78,7 +78,7 @@ export const useRoomStore = defineStore('room', () => {
     sendMessage(JSON.stringify({ action: 'join', roomId: roomId, value: userStore.user.name }))
   }
 
-  async function vote(cardValue: string) {
+  async function vote(cardValue: string | undefined) {
     console.log('Join Room')
     sendMessage(JSON.stringify({ action: 'vote', roomId: room.value.id, value: cardValue }))
   }

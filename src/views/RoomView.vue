@@ -75,7 +75,7 @@ const showHide = computed({
         </el-row>
         <el-row justify="center" :gutter="15" class="user-view">
           <el-col :span="4" v-for="(user, index) in users" :key="index">
-              <GameCard :card-value="user.card" :class="{ set : user.card }" />
+              <GameCard @click="() => vote(undefined)" :card-value="user.card" :class="{ set : user.card }" />
             {{ user.name }}
           </el-col>
         </el-row>
@@ -105,6 +105,7 @@ const showHide = computed({
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  height: 80vh
 }
 .el-main {
   padding-top: 2px;
