@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
+import { ElMessage } from 'element-plus'
 
 interface User {
   id: string
@@ -21,7 +22,7 @@ const port = ':3000'
 const echoSocketUrl = socketProtocol + '//' + window.location.hostname + port + '/ws'
 
 // Define socket and attach it to our data object
-const connection = await new WebSocket(echoSocketUrl)
+const connection = new WebSocket(echoSocketUrl)
 
 connection.onopen = function (event) {
   console.log(event)
@@ -56,8 +57,12 @@ export const useRoomStore = defineStore('room', () => {
     const data = JSON.parse(event.data)
     if (data.userId) {
       userId.value = data.userId
-    } else {
-      room.value = data
+    } 
+    if(data.room) {
+      room.value = data.room
+    }
+    if(data.notification) {
+      ElMessage(data.notification.text)
     }
   }
 
@@ -120,7 +125,7 @@ export const useRoomStore = defineStore('room', () => {
           reject(new Error('Maximum number of attempts exceeded'))
         } else if (socket.readyState === socket.OPEN) {
           clearInterval(interval)
-          resolve()
+          resolve(1)
         }
         currentAttempt++
       }, intervalTime)
@@ -141,3 +146,4 @@ export const useRoomStore = defineStore('room', () => {
     leave
   }
 })
+

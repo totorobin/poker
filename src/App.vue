@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from './stores/user'
-import { FullScreen, Share } from '@element-plus/icons-vue'
+import { FullScreen, Share , User} from '@element-plus/icons-vue'
 import router from './router'
 import { useRoomStore } from './stores/room'
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 const userStore = useUserStore()
 const roomStore = useRoomStore()
-const route = useRoute()
 const { user } = storeToRefs(userStore)
 
 const showNameModal = ref(false)
@@ -18,9 +17,7 @@ const showNameModal = ref(false)
 const nameForm = ref('')
 
 const handleClose = () => {
-  if (!user.value.name) {
-    showNameModal.value = true
-  }
+  showNameModal.value = !user.value.name
 }
 
 const setName = () => {
@@ -35,9 +32,9 @@ if (!user.value.name) {
 
 const openInWindow = () => {
   window.open(
-    route.fullPath,
+    window.location.href,
     '',
-    'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=490,height=400'
+    'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=440,height=400'
   )
   router.push('/')
   roomStore.leave()
@@ -54,7 +51,6 @@ const copyToClipboard = () => {
   <el-dialog
     v-model="showNameModal"
     title="What's your name"
-    width="30%"
     :before-close="handleClose"
   >
     <span>please state your name</span>
@@ -77,10 +73,10 @@ const copyToClipboard = () => {
           <div @click="copyToClipboard" >
             <el-icon size="20"><Share /></el-icon>
           </div>
-          <div @click="openInWindow" >
+          <div class="window-button" @click="openInWindow" >
             <el-icon size="20"><FullScreen /></el-icon>
           </div>
-          <div @click="() => (showNameModal = true)">player : {{ user.name }}</div>
+          <div class="user" @click="() => (showNameModal = true)"><el-icon size="20"><User /></el-icon> {{ user.name }}</div>
         </el-menu>
       </el-header>
       <RouterView />
@@ -90,13 +86,26 @@ const copyToClipboard = () => {
 
 <style scoped>
 header {
-  line-height: 2;
-  max-height: 100vh;
+  line-height: 3;
+}
+.el-dialog {
+  max-width: 200px;
 }
 
 .logo {
   display: block;
   margin: 0 auto 2rem;
+}
+.user {
+     height: 30px;
+  border-radius: 3px;
+  border: 1px solid grey;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .flex-grow {
@@ -104,5 +113,25 @@ header {
 }
 .el-menu div {
   padding: 3px;
+}
+
+@media (max-width: 450px) {
+  header {
+    height: 25px;
+    --el-header-padding: 0 2px;
+  }
+  .el-menu {
+    height: 25px;
+    --el-menu-item-height: 25px;
+  }
+  .window-button {
+    display: none;
+  }
+  .user {
+     height: 16px;
+  }
+  header {
+    line-height: 1;
+  }
 }
 </style>

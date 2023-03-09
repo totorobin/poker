@@ -6,8 +6,9 @@ const __dirname = path.dirname(__filename);
 
 import express from 'express'
 import expressWs from 'express-ws'
+import ViteExpress  from "vite-express";
 import http from 'http'
-import {uuid} from 'uuidv4'
+import { v4 as uuidv4 } from 'uuid';
 
 // Our port
 let port = 3000;
@@ -19,13 +20,6 @@ let server = http.createServer(app).listen(port);
 // Apply expressWs
 const ews = expressWs(app, server);
 
-app.use(express.static(__dirname + '/views'));
-
-// Get the route / 
-app.get('/', (req, res) => {
-    res.status(200).send("Welcome to our app");
-});
-
 var rooms = {};
 
 var aWss = ews.getWss('/');
@@ -36,7 +30,7 @@ app.ws('/ws', async function(ws, req) {
 
     ws.on('message', async function(msg) {
         if(!ws.id) {
-            ws.id = req.headers['sec-websocket-key'];
+            ws.id = uuidv4();
             ws.send(JSON.stringify({userId: ws.id}))
         }
         console.log(msg);
@@ -47,29 +41,27 @@ app.ws('/ws', async function(ws, req) {
     ws.on('close', async function() {
         let userId = ws.id
         console.log('disconnected',userId);
+        var roomIds = []
+        var userName = ''
         for (const [id, room] of Object.entries(rooms)) {
             if(room.users[userId]) {
+                userName = room.users[userId].name;
                 delete room.users[userId]
                 if(Object.keys(rooms[id].users).length == 0) {
                     delete rooms[id]
                 } else {
-                    aWss.clients.forEach(client => {
-                        if(rooms[id].users[client.id]) {
-                            if (client.readyState === 1) {
-                                console.log("sending to ", client.id)
-                                client.send(JSON.stringify(rooms[id]));
-                            }
-                        }
-                    })
+                    roomIds.push(id)
                 }
             }
         }
+        informRooms(roomIds, {text: userName + ' has left the room'})
     })
 });
 
+
 function actionOnRoom(ws, msg) {
     console.log(msg.action)
-
+    var notif = undefined
     switch(msg.action) {
         case "create": 
             do {
@@ -81,12 +73,17 @@ function actionOnRoom(ws, msg) {
                     cardVisible: false
                 }
             }
-            ws.send(JSON.stringify(rooms[msg.roomId]));
             break;
         case "join" :
             if(rooms[msg.roomId] != undefined) {
                 console.log("add user to room")
+                var oldName = rooms[msg.roomId].users[ws.id]?.name
                 rooms[msg.roomId].users[ws.id] = {name: msg.value, id: ws.id}
+                if(oldName) {
+                    notif = { text : oldName + ' is now called ' + msg.value }
+                } else {
+                    notif = { text : msg.value + ' just joined the room' }
+                }
             } else {
                 console.log("create room")
                 rooms = { ...rooms, [msg.roomId] : {
@@ -98,7 +95,14 @@ function actionOnRoom(ws, msg) {
             }
             break;
         case 'vote' :
+            var oldValue = rooms[msg.roomId].users[ws.id].card;
             rooms[msg.roomId].users[ws.id].card = msg.value;
+            if(!oldValue) {
+                notif = { text : rooms[msg.roomId].users[ws.id].name + ' just voted' }
+            }
+            if(!Object.values(rooms[msg.roomId].users).find(u => !u.card)) {
+                notif = { text : 'Everyone has voted' }
+            }
             break;
         case 'show' :
             rooms[msg.roomId].cardVisible = true;
@@ -121,12 +125,23 @@ function actionOnRoom(ws, msg) {
             console.log("no action")
     }
 
-    console.log(rooms)
-    aWss.clients.forEach(function (client) {
-        if (client.readyState === 1 && rooms[msg.roomId].users[client.id]) {
-            console.log("sending to ", client.id)
-            client.send(JSON.stringify(rooms[msg.roomId]));
-        }
-    });
+    informRooms([msg.roomId], notif)
 
 }
+
+function informRooms(ids, notif) {
+
+    ids.forEach(roomId => {
+        console.log(rooms[roomId])
+        aWss.clients.forEach(function (client) {
+            if (client.readyState === 1 && rooms[roomId].users[client.id]) {
+                console.log("sending to ", client.id)
+                client.send(JSON.stringify({ room: rooms[roomId], notification: notif }));
+            }
+        });
+    })
+
+}
+
+
+ViteExpress.listen(app, 3001, () => console.log("Server is listening..."));
