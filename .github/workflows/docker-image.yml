@@ -12,7 +12,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build the hello-docker Docker image
+      - name: Build the poker Docker image
         run: |
           docker build . --file Dockerfile --tag ghcr.io/totorobin/poker:latest
           docker push ghcr.io/totorobin/poker:latest
