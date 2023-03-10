@@ -1,7 +1,14 @@
 # poker
 
 This is not an application to play poker
-This is an app poker planning in an agile project
+This is an app for poker planning in an agile project
+
+
+## Try it 
+```sh
+docker pull ghcr.io/totorobin/poker:latest
+docker run -p 8080:8080 -p 3000:3000 -d ghcr.io/totorobin/poker:latest
+```
 
 ## Recommended IDE Setup
 
