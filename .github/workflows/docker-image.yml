@@ -1,4 +1,4 @@
-name: publish
+name: build-and-publish-docker-image
 
 on: [push]
 jobs:
