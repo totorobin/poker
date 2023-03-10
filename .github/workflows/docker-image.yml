@@ -2,7 +2,7 @@ name: publish
 
 on: [push]
 jobs:
-  publish-hello-docker-image:
+  publish-poker-docker-image:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,6 +14,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the hello-docker Docker image
         run: |
-          docker build . --file Dockerfile --tag totorobin/poker:latest
-          docker push totorobin/poker:latest
+          docker build . --file Dockerfile --tag ghcr.io/totorobin/poker:latest
+          docker push ghcr.io/totorobin/poker:latest
 
