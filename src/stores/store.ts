@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useUserStore } from './user'
 import { ElMessage } from 'element-plus'
 
 interface User {
@@ -18,8 +17,8 @@ interface Room {
 
 // ws://your-url-here.com or wss:// for secure websockets.
 const socketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-const port = ':8080'
-const echoSocketUrl = socketProtocol + '//' + window.location.hostname + port + '/ws'
+const port = '8080'
+const echoSocketUrl = socketProtocol + '//' + window.location.hostname + ':' + port + '/ws'
 
 // Define socket and attach it to our data object
 const connection = new WebSocket(echoSocketUrl)
@@ -29,8 +28,29 @@ connection.onopen = function (event) {
   console.log('Successfully connected to the echo websocket server...')
 }
 
-export const useRoomStore = defineStore('room', () => {
+connection.onclose = function (event: CloseEvent) {
+  console.error('Socket is closed: ', event.reason)
+  ElMessage('Websocket has closed, the page will be refresh to attempt reconnection in 3 second.')
+  setTimeout(function () {
+    window.location.reload()
+  }, 3000)
+}
+
+connection.onerror = function (event: Event) {
+  const message = event instanceof ErrorEvent ? event.message : ''
+  console.error('Socket encountered error: ', message, 'Closing socket')
+  connection.close()
+}
+
+export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
+  const lastRoomId = ref('') //ref(localStorage.getItem('roomId'))
+  const userName = ref(localStorage.getItem('userName'))
+
+  function setUser(name: string) {
+    userName.value = name
+    localStorage.setItem('userName', name)
+  }
 
   const userId = ref('')
   const users = computed(() =>
@@ -57,25 +77,24 @@ export const useRoomStore = defineStore('room', () => {
     const data = JSON.parse(event.data)
     if (data.userId) {
       userId.value = data.userId
-    } 
-    if(data.room) {
+    }
+    if (data.room) {
       room.value = data.room
     }
-    if(data.notification) {
+    if (data.notification) {
       ElMessage(data.notification.text)
     }
   }
 
   async function createRoom() {
     console.log('create Room')
-    const userStore = useUserStore()
-    sendMessage(JSON.stringify({ action: 'create', value: userStore.user.name }))
+    sendMessage(JSON.stringify({ action: 'create', value: userName.value }))
   }
 
   async function joinRoom(roomId: string) {
+    lastRoomId.value = roomId
     console.log('Join Room')
-    const userStore = useUserStore()
-    sendMessage(JSON.stringify({ action: 'join', roomId: roomId, value: userStore.user.name }))
+    sendMessage(JSON.stringify({ action: 'join', roomId: roomId, value: userName.value }))
   }
 
   async function vote(cardValue: string | undefined) {
@@ -143,7 +162,9 @@ export const useRoomStore = defineStore('room', () => {
     reset,
     users,
     selectedCard,
-    leave
+    leave,
+    setUser,
+    userName,
+    lastRoomId
   }
 })
-

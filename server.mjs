@@ -138,4 +138,5 @@ function informRooms(ids, notif) {
 }
 
 
-ViteExpress.listen(app, 80, () => console.log("Server is listening..."));
+// eslint-disable-next-line no-undef
+ViteExpress.listen(app, process.env.NODE_ENV == 'production' ? 80 : 3000, () => console.log("Server is listening..."));
