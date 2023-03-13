@@ -5,7 +5,7 @@ import http from 'http'
 import { v4 as uuidv4 } from 'uuid';
 
 // Our port
-let port = 3000;
+let port = 8080;
 
 // App and server
 let app = express();
@@ -138,4 +138,4 @@ function informRooms(ids, notif) {
 }
 
 
-ViteExpress.listen(app, 8080, () => console.log("Server is listening..."));
+ViteExpress.listen(app, 80, () => console.log("Server is listening..."));

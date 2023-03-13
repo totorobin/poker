@@ -18,7 +18,7 @@ interface Room {
 
 // ws://your-url-here.com or wss:// for secure websockets.
 const socketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-const port = ':3000'
+const port = ':8080'
 const echoSocketUrl = socketProtocol + '//' + window.location.hostname + port + '/ws'
 
 // Define socket and attach it to our data object
