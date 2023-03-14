@@ -1,11 +1,12 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { io } from "socket.io-client";
 
 interface User {
   id: string
   name: string
-  card: string
+  card: string | null
 }
 
 interface Room {
@@ -15,145 +16,123 @@ interface Room {
   cardVisible: boolean
 }
 
-// ws://your-url-here.com or wss:// for secure websockets.
-const socketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-const port = '8080'
-const echoSocketUrl = socketProtocol + '//' + window.location.hostname + ':' + port + '/ws'
+const socket = io();
 
-// Define socket and attach it to our data object
-const connection = new WebSocket(echoSocketUrl)
+socket.on("connect", () => {
+  console.log(`connected to websocket with id ${socket.id}`); // x8WIv7-mJelg7on_ALbx
+  const userName = localStorage.getItem('userName');
+  if(userName) {
+    socket.emit('setUserName', userName)
+  }
+});
 
-connection.onopen = function (event) {
-  console.log(event)
-  console.log('Successfully connected to the echo websocket server...')
-}
-
-connection.onclose = function (event: CloseEvent) {
-  console.error('Socket is closed: ', event.reason)
+socket.on("disconnect", () => {
+  console.error('Socket is closed ')
   ElMessage('Websocket has closed, the page will be refresh to attempt reconnection in 3 second.')
   setTimeout(function () {
     window.location.reload()
   }, 3000)
-}
+})
 
-connection.onerror = function (event: Event) {
-  const message = event instanceof ErrorEvent ? event.message : ''
-  console.error('Socket encountered error: ', message, 'Closing socket')
-  connection.close()
-}
+
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
-  const lastRoomId = ref('') //ref(localStorage.getItem('roomId'))
+  const lastRoomId = computed({
+    get() {
+      return localStorage.getItem('roomId') || ''
+    },
+    set(newValue: string) {
+      if (newValue) {
+        localStorage.setItem('roomId', newValue)
+      } 
+    }
+  })
   const userName = ref(localStorage.getItem('userName'))
 
   function setUser(name: string) {
     userName.value = name
+    socket.emit('setUserName',name)
     localStorage.setItem('userName', name)
   }
 
-  const userId = ref('')
+
   const users = computed(() =>
     !room.value.users
       ? []
       : Object.values(room.value.users).map((user: User) => {
-          if (user.id === userId.value) {
+          if (user.id === socket.id) {
             return { name: user.name, card: user.card }
           } else {
             if (room.value.cardVisible) {
-              return { name: user.name, card: user.card }
+              return { name: user.name, card: user.card  }
             } else {
-              return { name: user.name, card: user.card ? '?' : undefined }
+              return { name: user.name, card: user.card ? '?' : null }
             }
           }
         })
   )
   const selectedCard = computed(() =>
-    !room.value.users ? '' : room.value.users[userId.value].card
+    !room.value.users ? '' : room.value.users[socket.id].card
   )
 
-  connection.onmessage = function (event) {
-    console.log('message received :', event)
-    const data = JSON.parse(event.data)
-    if (data.userId) {
-      userId.value = data.userId
+  socket.on('roomState', (roomState) => {
+    room.value = roomState
+  })
+  socket.on('nameChange', ({oldName, newName}) => {
+    ElMessage(`${oldName} is now called ${newName}`)
+  })
+  socket.on('vote', ({name, done}) => {
+    if(done) {
+      ElMessage(`Everyone has voted`)
+    } else {
+      ElMessage(`${name} has voted`)
     }
-    if (data.room) {
-      room.value = data.room
+  })
+  socket.on('reset', ({name}) => {ElMessage(`${name} has reset the room`)})
+  socket.on('left', ({name}) => {ElMessage(`${name} is gone`)})
+  socket.on('joined', ({name}) => {ElMessage(`${name} just joined`)})
+  socket.on('visibility', ({name, state}) => {
+    if(state) {
+      ElMessage(`${name} just showed everyone cards`)
+    } else {
+      ElMessage(`${name} just hidden everyone cards`)
     }
-    if (data.notification) {
-      ElMessage(data.notification.text)
-    }
-  }
+  })
+  //socket.on('', ({name}) => {ElMessage(`${name}`)})
 
   async function createRoom() {
-    console.log('create Room')
-    sendMessage(JSON.stringify({ action: 'create', value: userName.value }))
+    socket.emit('create', (response: { roomId: string}) => {lastRoomId.value = response.roomId })
   }
 
   async function joinRoom(roomId: string) {
     lastRoomId.value = roomId
-    console.log('Join Room')
-    sendMessage(JSON.stringify({ action: 'join', roomId: roomId, value: userName.value }))
+    socket.emit('join', {roomId})
   }
 
-  async function vote(cardValue: string | undefined) {
-    console.log('Join Room')
-    sendMessage(JSON.stringify({ action: 'vote', roomId: room.value.id, value: cardValue }))
+  async function vote(cardValue: string | null) {
+    socket.emit('vote', {value: cardValue} )
   }
 
   async function show() {
-    console.log('Show Votes')
-    sendMessage(JSON.stringify({ action: 'show', roomId: room.value.id }))
-  }
+    socket.emit('cardVisible', true)
+   }
   async function hide() {
-    console.log('Hide Votes')
-    sendMessage(JSON.stringify({ action: 'hide', roomId: room.value.id }))
+    socket.emit('cardVisible', false)
   }
   async function reset() {
-    console.log('reset Votes')
-    sendMessage(JSON.stringify({ action: 'reset', roomId: room.value.id }))
+    socket.emit('reset')
   }
 
   async function leave() {
-    sendMessage(JSON.stringify({ action: 'leave', roomId: room.value.id }))
-  }
-
-  const sendMessage = async (msg: string) => {
-    if (connection.readyState !== connection.OPEN) {
-      try {
-        await waitForOpenConnection(connection)
-        connection.send(msg)
-      } catch (err) {
-        console.error(err)
-      }
-    } else {
-      connection.send(msg)
-    }
-  }
-
-  const waitForOpenConnection = (socket: WebSocket) => {
-    return new Promise((resolve, reject) => {
-      const maxNumberOfAttempts = 10
-      const intervalTime = 200 //ms
-
-      let currentAttempt = 0
-      const interval = setInterval(() => {
-        if (currentAttempt > maxNumberOfAttempts - 1) {
-          clearInterval(interval)
-          reject(new Error('Maximum number of attempts exceeded'))
-        } else if (socket.readyState === socket.OPEN) {
-          clearInterval(interval)
-          resolve(1)
-        }
-        currentAttempt++
-      }, intervalTime)
+    socket.emit('leave', {roomId: lastRoomId.value}, (newRoom: Room) => {
+      room.value = newRoom
     })
+    
   }
 
   return {
     room,
-    sendMessage,
     joinRoom,
     createRoom,
     vote,

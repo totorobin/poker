@@ -2,7 +2,7 @@
 import backImg from '@/assets/kisspng-playing-card-visual-arts-tarot-studio-5b07327b32c0c3.8514217315271983312079.png'
 import frontImg from '@/assets/playing-card-front.png'
 defineProps<{
-  cardValue: string | undefined
+  cardValue: string | null
 }>()
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { FullScreen, Share, User } from '@element-plus/icons-vue'
 import router from './router'
@@ -8,7 +8,7 @@ import { useRoomStore } from './stores/store'
 import { ElMessage } from 'element-plus'
 
 const roomStore = useRoomStore()
-const { userName } = storeToRefs(roomStore)
+const { userName , room } = storeToRefs(roomStore)
 
 const showNameModal = ref(false)
 
@@ -34,7 +34,6 @@ const openInWindow = () => {
     '',
     'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=440,height=400'
   )
-  router.push('/')
   roomStore.leave()
 }
 
@@ -42,6 +41,18 @@ const copyToClipboard = () => {
   navigator.clipboard.writeText(window.location.href)
   ElMessage('Link has been paste into clipboard')
 }
+
+
+
+watch(() => room.value.id, (newId, oldId) => {
+  if(newId !== oldId) {
+    if (newId) {
+      router.push('/room/' + newId)
+    } else {
+      router.push('/')
+    }
+  }
+})
 </script>
 
 <template>
