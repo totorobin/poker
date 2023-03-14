@@ -2,31 +2,29 @@
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import { useUserStore } from './stores/user'
-import { FullScreen, Share , User} from '@element-plus/icons-vue'
+import { FullScreen, Share, User } from '@element-plus/icons-vue'
 import router from './router'
-import { useRoomStore } from './stores/room'
+import { useRoomStore } from './stores/store'
 import { ElMessage } from 'element-plus'
 
-const userStore = useUserStore()
 const roomStore = useRoomStore()
-const { user } = storeToRefs(userStore)
+const { userName } = storeToRefs(roomStore)
 
 const showNameModal = ref(false)
 
 const nameForm = ref('')
 
 const handleClose = () => {
-  showNameModal.value = !user.value.name
+  showNameModal.value = !userName.value
 }
 
 const setName = () => {
   if (nameForm.value !== '') {
-    userStore.setUser(nameForm.value)
+    roomStore.setUser(nameForm.value)
     showNameModal.value = false
   }
 }
-if (!user.value.name) {
+if (!userName.value) {
   showNameModal.value = true
 }
 
@@ -43,16 +41,11 @@ const openInWindow = () => {
 const copyToClipboard = () => {
   navigator.clipboard.writeText(window.location.href)
   ElMessage('Link has been paste into clipboard')
-  
 }
 </script>
 
 <template>
-  <el-dialog
-    v-model="showNameModal"
-    title="What's your name"
-    :before-close="handleClose"
-  >
+  <el-dialog v-model="showNameModal" title="What's your name" :before-close="handleClose">
     <span>please state your name</span>
     <el-input v-model="nameForm" placeholder="name" v-on:keyup.enter="setName" />
     <template #footer>
@@ -69,14 +62,16 @@ const copyToClipboard = () => {
           <RouterLink to="/"
             ><img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="20" height="20"
           /></RouterLink>
-          <div class="flex-grow" />          
-          <div @click="copyToClipboard" >
+          <div class="flex-grow" />
+          <div @click="copyToClipboard">
             <el-icon size="20"><Share /></el-icon>
           </div>
-          <div class="window-button" @click="openInWindow" >
+          <div class="window-button" @click="openInWindow">
             <el-icon size="20"><FullScreen /></el-icon>
           </div>
-          <div class="user" @click="() => (showNameModal = true)"><el-icon size="20"><User /></el-icon> {{ user.name }}</div>
+          <div class="user" @click="() => (showNameModal = true)">
+            <el-icon size="20"><User /></el-icon> {{ userName }}
+          </div>
         </el-menu>
       </el-header>
       <RouterView />
@@ -97,7 +92,7 @@ header {
   margin: 0 auto 2rem;
 }
 .user {
-     height: 30px;
+  height: 30px;
   border-radius: 3px;
   border: 1px solid grey;
   display: inline-flex;
@@ -128,7 +123,7 @@ header {
     display: none;
   }
   .user {
-     height: 16px;
+    height: 16px;
   }
   header {
     line-height: 1;

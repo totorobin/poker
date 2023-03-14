@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoomStore } from '@/stores/room'
+import { useRoomStore } from '@/stores/store'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 

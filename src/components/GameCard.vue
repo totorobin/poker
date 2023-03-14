@@ -4,11 +4,23 @@ import frontImg from '@/assets/playing-card-front.png'
 defineProps<{
   cardValue: string | undefined
 }>()
-
 </script>
 
 <template>
-  <div :class="{ card : true}" :style="{ background: cardValue === '?'  ? `no-repeat center/100% url(${backImg})` : cardValue ? `no-repeat center/90% url(${frontImg})` : '', border : cardValue && cardValue !== '?' ? '1px solid black' : '' }" >{{ cardValue == '?' ? '' : cardValue }}</div>
+  <div
+    :class="{ card: true }"
+    :style="{
+      background:
+        cardValue === '?'
+          ? `no-repeat center/100% url(${backImg})`
+          : cardValue
+          ? `no-repeat center/90% url(${frontImg})`
+          : '',
+      border: cardValue && cardValue !== '?' ? '1px solid black' : ''
+    }"
+  >
+    {{ cardValue == '?' ? '' : cardValue }}
+  </div>
 </template>
 
 <style scoped>
