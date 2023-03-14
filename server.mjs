@@ -20,7 +20,7 @@ var rooms = {};
 var aWss = ews.getWss('/');
 
 // Get the /ws websocket route
-app.ws('/ws', async function(ws, req) {
+app.ws('/ws', async function(ws) {
 
 
     ws.on('message', async function(msg) {
@@ -139,5 +139,3 @@ function informRooms(ids, notif) {
 }
 
 ViteExpress.bind(app, server, () => console.log("Server is listening..."));
-// eslint-disable-next-line no-undef
-//ViteExpress.listen(app, process.env.NODE_ENV == 'production' ? 80 : 3000, () => console.log("Server is listening..."));
