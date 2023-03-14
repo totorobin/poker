@@ -5,7 +5,9 @@ import http from 'http'
 import { v4 as uuidv4 } from 'uuid';
 
 // Our port
-let port = 8080;
+// eslint-disable-next-line no-undef
+let port = process.env.PORT || 8080;
+
 
 // App and server
 let app = express();
@@ -19,7 +21,7 @@ var rooms = {};
 var aWss = ews.getWss('/');
 
 // Get the /ws websocket route
-app.ws('/ws', async function(ws, req) {
+app.ws('/ws', async function(ws) {
 
 
     ws.on('message', async function(msg) {
@@ -138,5 +140,4 @@ function informRooms(ids, notif) {
 }
 
 
-// eslint-disable-next-line no-undef
-ViteExpress.listen(app, process.env.NODE_ENV == 'production' ? 80 : 3000, () => console.log("Server is listening..."));
+ViteExpress.bind(app, server, () => console.log("Server is listening..."));
