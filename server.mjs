@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 // eslint-disable-next-line no-undef
 let port = process.env.PORT || 8080;
 
+
 // App and server
 let app = express();
 let server = http.createServer(app).listen(port);    
@@ -137,5 +138,6 @@ function informRooms(ids, notif) {
     })
 
 }
+
 
 ViteExpress.bind(app, server, () => console.log("Server is listening..."));
