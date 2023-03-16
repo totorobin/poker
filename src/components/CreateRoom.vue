@@ -4,8 +4,7 @@ import { useRoomStore } from '@/stores/store'
 import { ref } from 'vue'
 
 const roomStore = useRoomStore()
-const { lastRoomId } = storeToRefs(roomStore)
-const roomForm = ref(lastRoomId.value)
+const roomForm = ref(localStorage.getItem('roomId') || '')
 
 
 function joinRoom() {

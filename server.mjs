@@ -3,26 +3,44 @@ import ViteExpress  from "vite-express";
 import http from 'http'
 //import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io'
+import { uniqueNamesGenerator, adjectives, animals, names, starWars, NumberDictionary } from 'unique-names-generator';
 
-
-let port = 8080;
+// eslint-disable-next-line no-undef
+let port = process.env.PORT || 8080;
 // App and server
 let app = express();
 let server = http.createServer(app).listen(port);    
 
 const io = new Server(server)
 
+const roomNameConfig = {
+    dictionaries: [adjectives, animals, names],
+    separator: '-',
+    length: 2,
+  };
+
+
+  const userNameConfig = {
+    dictionaries: [starWars],
+    style: 'capital',
+    length: 1,
+  };
 
 var rooms = {};
 
 io.on('connection', (socket) => {
-    console.log(`user ${socket.id} connected`);
+    socket.data.userName = uniqueNamesGenerator(userNameConfig)
+    console.log(`user ${socket.data.userName} connected`);
+
+    socket.on('whoAmI', (callback) => {
+        callback(socket.data)
+    })
 
     socket.on('setUserName', (userName) => {
         let oldName = socket.data.userName
         socket.data.userName = userName
         socket.rooms.forEach((roomId) => {
-            if(rooms[roomId] != undefined) {
+            if(roomId in rooms) {
                 rooms[roomId].users[socket.id].name = userName  // update room
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
                 socket.to(roomId).emit('nameChange', {oldName, newName: userName})  // inform action
@@ -33,47 +51,29 @@ io.on('connection', (socket) => {
         console.log('new room for ', socket.data.userName || socket.id)
         let roomId;
         do {
-            roomId = Math.floor(Math.random() * 1000000)
-        } while(rooms[roomId] != undefined);
+            roomId = uniqueNamesGenerator(roomNameConfig);
+        } while(roomId in rooms);
         callback({roomId})
-        rooms = { ...rooms, [roomId] : {
-                id:roomId,
-                users: {[socket.id]: {name: socket.data.userName, id: socket.id}},
-                cardVisible: false
-            }
-        }
         socket.join(roomId)
-        io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
     })
     socket.on('join', ({roomId}) => {
-        console.log('%s joined room %s', socket.data.userName || socket.id, roomId)
-        if(rooms[roomId] != undefined) {
-            rooms[roomId].users[socket.id] = {name: socket.data.userName, id: socket.id, card: null}
-        } else {
-            console.log("room creation")
-            rooms = { ...rooms, [roomId] : {
-                    id:roomId,
-                    users: {[socket.id]: {name: socket.data.userName, id: socket.id, card: null}},
-                    cardVisible: false
-                }
-            }
-        }
         socket.join(roomId)
-        io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
-        socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
+        
     })
     socket.on('vote', ({value}) => {
         socket.rooms.forEach((roomId) => {
-            if(rooms[roomId] != undefined) {
+            if(roomId in rooms) {
+                const notSet = !rooms[roomId].users[socket.id].card
                 rooms[roomId].users[socket.id].card = value  // update card value
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
-                socket.to(roomId).emit('vote',  {name: socket.data.userName, done: !Object.values(rooms[roomId].users).find(u => !u.card)})   // inform action
+                if(notSet && !!value)
+                    socket.to(roomId).emit('vote',  {name: socket.data.userName, done: !Object.values(rooms[roomId].users).find(u => !u.card)})   // inform action
             }
         })
     })
     socket.on('cardVisible', (value) => {
         socket.rooms.forEach((roomId) => {
-            if(rooms[roomId] != undefined) {
+            if(roomId in rooms) {
                 rooms[roomId].cardVisible = value  // update card value
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
                 socket.to(roomId).emit('visibility', {name: socket.data.userName, state: value})  // inform action
@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
     })
     socket.on('reset', () => {
         socket.rooms.forEach((roomId) => {
-            if(rooms[roomId] != undefined) {
+            if(roomId in rooms) {
                 rooms[roomId].cardVisible = false; // hide cards
                 Object.keys(rooms[roomId].users).forEach(id => {
                     rooms[roomId].users[id].card = null
@@ -99,12 +99,26 @@ io.on('connection', (socket) => {
     })
   });
 
-  io.of("/").adapter.on("create-room", (room) => {
-    console.log(`room ${room} was created`);
+  io.of("/").adapter.on("create-room", (roomId) => {
+    rooms = { ...rooms,
+        [roomId] : {
+            id:roomId,
+            users: {},
+            cardVisible: false
+        }
+    }
   });
   
-  io.of("/").adapter.on("join-room", (room, id) => {
-    console.log(`socket ${id} has joined room ${room}`);
+  io.of("/").adapter.on("join-room", async (roomId, userId) => {
+    if(roomId !== userId) {  // ignore user room
+        const socket = (await io.in(userId).fetchSockets())[0];
+        rooms[roomId].users[userId] = {name: socket.data.userName, id: userId, card: null}
+        io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+        socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
+        console.log(`user ${socket.data.userName} has joined room ${roomId}`);
+    } else {
+        delete rooms[roomId]
+    }
   });
 
   io.of("/").adapter.on("delete-room", (roomId) => {
@@ -114,8 +128,8 @@ io.on('connection', (socket) => {
   
   io.of("/").adapter.on("leave-room", (roomId, userId) => {
     console.log(`socket ${userId} has left room ${roomId}`);
-    if(rooms[roomId] != undefined) {
-        const userName = rooms[roomId].users[userId].name
+    if(roomId in rooms) {
+        const userName = rooms[roomId].users[userId]?.name
         delete rooms[roomId].users[userId]  // update room
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         io.to(roomId).emit('left', userName || userId)  // inform action

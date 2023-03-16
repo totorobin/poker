@@ -18,11 +18,18 @@ interface Room {
 
 const socket = io();
 
+
+const userName = ref(localStorage.getItem('userName'))
+
 socket.on("connect", () => {
-  console.log(`connected to websocket with id ${socket.id}`); // x8WIv7-mJelg7on_ALbx
-  const userName = localStorage.getItem('userName');
-  if(userName) {
+  console.log(`connected to websocket with id ${socket.id}`);
+
+  if(userName.value) {
     socket.emit('setUserName', userName)
+  } else {
+    socket.emit('whoAmI', (data: {userName: string}) => {
+      userName.value = data.userName
+    })
   }
 });
 
@@ -38,17 +45,6 @@ socket.on("disconnect", () => {
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
-  const lastRoomId = computed({
-    get() {
-      return localStorage.getItem('roomId') || ''
-    },
-    set(newValue: string) {
-      if (newValue) {
-        localStorage.setItem('roomId', newValue)
-      } 
-    }
-  })
-  const userName = ref(localStorage.getItem('userName'))
 
   function setUser(name: string) {
     userName.value = name
@@ -102,11 +98,14 @@ export const useRoomStore = defineStore('store', () => {
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
 
   async function createRoom() {
-    socket.emit('create', (response: { roomId: string}) => {lastRoomId.value = response.roomId })
+    socket.emit('create', (response: { roomId: string}) => {
+      console.log(response)
+      localStorage.setItem('roomId', response.roomId )
+    })
   }
 
   async function joinRoom(roomId: string) {
-    lastRoomId.value = roomId
+    localStorage.setItem('roomId', roomId)
     socket.emit('join', {roomId})
   }
 
@@ -125,7 +124,8 @@ export const useRoomStore = defineStore('store', () => {
   }
 
   async function leave() {
-    socket.emit('leave', {roomId: lastRoomId.value}, (newRoom: Room) => {
+    if(room.value.id)
+    socket.emit('leave', {roomId: room.value.id}, (newRoom: Room) => {
       room.value = newRoom
     })
     
@@ -143,7 +143,6 @@ export const useRoomStore = defineStore('store', () => {
     selectedCard,
     leave,
     setUser,
-    userName,
-    lastRoomId
+    userName
   }
 })

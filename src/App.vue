@@ -12,7 +12,7 @@ const { userName , room } = storeToRefs(roomStore)
 
 const showNameModal = ref(false)
 
-const nameForm = ref('')
+const nameForm = ref(userName.value || '')
 
 const handleClose = () => {
   showNameModal.value = !userName.value
@@ -23,9 +23,6 @@ const setName = () => {
     roomStore.setUser(nameForm.value)
     showNameModal.value = false
   }
-}
-if (!userName.value) {
-  showNameModal.value = true
 }
 
 const openInWindow = () => {

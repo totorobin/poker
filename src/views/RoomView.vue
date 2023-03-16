@@ -9,6 +9,8 @@ const props = defineProps<{
   roomId: string
 }>()
 
+document.title = 'PP - room ' + props.roomId
+
 const roomStore = useRoomStore()
 const { room, users, selectedCard, userName } = storeToRefs(roomStore)
 const { joinRoom, vote, show, hide, reset } = roomStore
@@ -76,7 +78,7 @@ const showHide = computed({
         <el-row justify="center" :gutter="15" class="user-view">
           <el-col :span="4" v-for="(user, index) in users" :key="index">
             <GameCard
-              @click="() => vote(null)"
+              @click="() => userName === user.name ? vote(null) : () => {}"
               :card-value="user.card"
               :class="{ set: user.card }"
             />
