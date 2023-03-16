@@ -9,7 +9,7 @@ const props = defineProps<{
   roomId: string
 }>()
 
-document.title = 'PP - room ' + props.roomId
+document.title = 'PP - ' + props.roomId
 
 const roomStore = useRoomStore()
 const { room, users, selectedCard, userName } = storeToRefs(roomStore)
