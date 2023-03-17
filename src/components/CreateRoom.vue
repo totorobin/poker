@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { useRoomStore } from '@/stores/store'
-import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const roomStore = useRoomStore()
-const router = useRouter()
-const roomId = computed(() => roomStore.room.id)
-const roomForm = ref('')
+const roomForm = ref(localStorage.getItem('roomId') || '')
 
-watch(roomId, async (newId) => {
-  if (newId) {
-    console.log('roomId : ', newId)
-
-    router.push('/room/' + newId)
-  }
-})
 
 function joinRoom() {
   roomStore.joinRoom(roomForm.value)

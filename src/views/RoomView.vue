@@ -9,11 +9,12 @@ const props = defineProps<{
   roomId: string
 }>()
 
+document.title = 'PP - ' + props.roomId
+
 const roomStore = useRoomStore()
 const { room, users, selectedCard, userName } = storeToRefs(roomStore)
 const { joinRoom, vote, show, hide, reset } = roomStore
 
-console.log(props.roomId, room.value.id)
 if (props.roomId != room.value.id) {
   if (userName.value) {
     joinRoom(props.roomId)
@@ -21,7 +22,6 @@ if (props.roomId != room.value.id) {
   watch(
     () => userName.value,
     (newUser) => {
-      console.log(newUser)
       if (newUser !== '') {
         joinRoom(props.roomId)
       }
@@ -78,7 +78,7 @@ const showHide = computed({
         <el-row justify="center" :gutter="15" class="user-view">
           <el-col :span="4" v-for="(user, index) in users" :key="index">
             <GameCard
-              @click="() => vote(undefined)"
+              @click="() => userName === user.name ? vote(null) : () => {}"
               :card-value="user.card"
               :class="{ set: user.card }"
             />
