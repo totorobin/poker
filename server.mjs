@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
         })
     })
     socket.on('create', (callback) => {
-        console.log('new room for ', socket.data.userName || socket.id)
+        console.log('new room for ', socket.data.userName)
         let roomId;
         do {
             roomId = uniqueNamesGenerator(roomNameConfig);
@@ -126,13 +126,13 @@ io.on('connection', (socket) => {
     delete rooms[roomId]
   });
   
-  io.of("/").adapter.on("leave-room", (roomId, userId) => {
+  io.of("/").adapter.on("leave-room", async (roomId, userId) => {
     console.log(`socket ${userId} has left room ${roomId}`);
     if(roomId in rooms) {
-        const userName = rooms[roomId].users[userId]?.name
+        let userName = rooms[roomId].users[userId].name
         delete rooms[roomId].users[userId]  // update room
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
-        io.to(roomId).emit('left', userName || userId)  // inform action
+        io.to(roomId).emit('left', {name: userName})  // inform action
     }
   });
 

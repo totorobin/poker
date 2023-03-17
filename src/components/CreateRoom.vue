@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { useRoomStore } from '@/stores/store'
 import { ref } from 'vue'
 

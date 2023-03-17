@@ -25,7 +25,7 @@ socket.on("connect", () => {
   console.log(`connected to websocket with id ${socket.id}`);
 
   if(userName.value) {
-    socket.emit('setUserName', userName)
+    socket.emit('setUserName', userName.value)
   } else {
     socket.emit('whoAmI', (data: {userName: string}) => {
       userName.value = data.userName

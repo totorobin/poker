@@ -26,6 +26,8 @@ const setName = () => {
 }
 
 const openInWindow = () => {
+  if(userName.value)
+    localStorage.setItem('userName', userName.value)
   window.open(
     window.location.href,
     '',
@@ -35,7 +37,7 @@ const openInWindow = () => {
 }
 
 const copyToClipboard = () => {
-  navigator.clipboard.writeText(window.location.href)
+  navigator.clipboard.writeText(`${window.location.href}`)
   ElMessage('Link has been paste into clipboard')
 }
 
