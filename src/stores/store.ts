@@ -2,6 +2,8 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { io } from "socket.io-client";
+import { i18n } from '@/locales';
+
 
 interface User {
   id: string
@@ -76,23 +78,23 @@ export const useRoomStore = defineStore('store', () => {
     room.value = roomState
   })
   socket.on('nameChange', ({oldName, newName}) => {
-    ElMessage(`${oldName} is now called ${newName}`)
+    ElMessage(i18n.t('notifications.change-name', { oldName,newName }))
   })
   socket.on('vote', ({name, done}) => {
     if(done) {
-      ElMessage(`Everyone has voted`)
+      ElMessage(i18n.t('notifications.vote-done'))
     } else {
-      ElMessage(`${name} has voted`)
+      ElMessage(i18n.t('notifications.vote', {name}))
     }
   })
-  socket.on('reset', ({name}) => {ElMessage(`${name} has reset the room`)})
-  socket.on('left', ({name}) => {ElMessage(`${name} is gone`)})
-  socket.on('joined', ({name}) => {ElMessage(`${name} just joined`)})
+  socket.on('reset', ({name}) => {ElMessage(i18n.t('notifications.reset', {name}))})
+  socket.on('left', ({name}) => {ElMessage(i18n.t('notifications.left', {name}))})
+  socket.on('joined', ({name}) => {ElMessage(i18n.t('notifications.join', {name}))})
   socket.on('visibility', ({name, state}) => {
     if(state) {
-      ElMessage(`${name} just showed everyone cards`)
+      ElMessage(i18n.t('notifications.show', {name}))
     } else {
-      ElMessage(`${name} just hidden everyone cards`)
+      ElMessage(i18n.t('notifications.hide', {name}))
     }
   })
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
@@ -146,3 +148,4 @@ export const useRoomStore = defineStore('store', () => {
     userName
   }
 })
+

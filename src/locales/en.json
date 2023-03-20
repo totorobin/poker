@@ -1,0 +1,28 @@
+{
+    "flag": "🇬🇧",
+    "buttons" : {
+        "new-room" : "new",
+        "join-room" : "join"
+    },
+    "titles" : {
+        "new-room" : "new room",
+        "join-room" : "join room"
+    },
+    "tooltips" : {
+        "show" : "Show",
+        "hide" : "Hide",
+        "reset" : "Reset",
+        "share": "Share",
+        "popup" : "Open in popup window"
+    },
+    "notifications" : {
+        "join" : "{name} just joined",
+        "left" : "{name} is gone",
+        "vote" : "{name} has voted",
+        "vote-done" : "Everyone has voted",
+        "change-name" : "{oldName} is now called {newName}",
+        "reset": "{name} has reset the room",
+        "show": "{name} just showed everyone cards",
+        "hide": "{name} just hidden everyone cards"
+    }
+}

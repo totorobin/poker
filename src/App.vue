@@ -6,6 +6,7 @@ import { FullScreen, Share, User } from '@element-plus/icons-vue'
 import router from './router'
 import { useRoomStore } from './stores/store'
 import { ElMessage } from 'element-plus'
+import ChangeLangButton from './components/ChangeLangButton.vue'
 
 const roomStore = useRoomStore()
 const { userName , room } = storeToRefs(roomStore)
@@ -73,6 +74,7 @@ watch(() => room.value.id, (newId, oldId) => {
             ><img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="20" height="20"
           /></RouterLink>
           <div class="flex-grow" />
+          <ChangeLangButton />
           <div @click="copyToClipboard">
             <el-icon size="20"><Share /></el-icon>
           </div>

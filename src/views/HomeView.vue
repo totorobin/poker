@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import CreateRoom from '../components/CreateRoom.vue'
-document.title = 'Planning Poker'
 </script>
 
 <template>
-  <main>
+  <el-container>
     <CreateRoom />
-  </main>
+  </el-container>
 </template>
+
+<style scoped>
+.el-container {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 80vh;
+}
+</style>
