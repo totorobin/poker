@@ -1,21 +1,28 @@
 {
-    "flag": "🇫🇷",
-    "buttons" : {
-        "new-room" : "Créer",
-        "join-room" : "Rejoindre"
-    },
-    "titles" : {
-        "new-room" : "Nouvelle salle",
-        "join-room" : "Rejoindre une salle"
-    },
-    "notifications" : {
-        "join" : "{name} a rejoins la salle",
-        "left" : "{name} est parti",
-        "vote" : "{name} a voté",
-        "vote-done" : "Tout le monde a voté",
-        "change-name" : "{oldName} se fait maintenant appelé {newName}",
-        "reset": "{name} a réinitialisé la salle",
-        "show": "{name} a rendu les cartes visibles",
-        "hide": "{name} a caché les valeurs des cartes"
-    }
+  "flag": "🇫🇷",
+  "buttons": {
+    "new-room": "Créer",
+    "join-room": "Rejoindre"
+  },
+  "titles": {
+    "new-room": "Nouvelle salle",
+    "join-room": "Rejoindre une salle"
+  },
+  "tooltips": {
+    "show": "Afficher",
+    "hide": "Cacher",
+    "reset": "Réinitialiser",
+    "share": "Partager",
+    "popup": "Ouvrir dans une popup"
+  },
+  "notifications": {
+    "join": "{name} a rejoins la salle",
+    "left": "{name} est parti",
+    "vote": "{name} a voté",
+    "vote-done": "Tout le monde a voté",
+    "change-name": "{oldName} se fait maintenant appelé {newName}",
+    "reset": "{name} a réinitialisé la salle",
+    "show": "{name} a rendu les cartes visibles",
+    "hide": "{name} a caché les valeurs des cartes"
+  }
 }

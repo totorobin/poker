@@ -9,7 +9,7 @@ import { ElMessage } from 'element-plus'
 import ChangeLangButton from './components/ChangeLangButton.vue'
 
 const roomStore = useRoomStore()
-const { userName , room } = storeToRefs(roomStore)
+const { userName, room } = storeToRefs(roomStore)
 
 const showNameModal = ref(false)
 
@@ -27,8 +27,7 @@ const setName = () => {
 }
 
 const openInWindow = () => {
-  if(userName.value)
-    localStorage.setItem('userName', userName.value)
+  if (userName.value) localStorage.setItem('userName', userName.value)
   window.open(
     window.location.href,
     '',
@@ -42,17 +41,18 @@ const copyToClipboard = () => {
   ElMessage('Link has been paste into clipboard')
 }
 
-
-
-watch(() => room.value.id, (newId, oldId) => {
-  if(newId !== oldId) {
-    if (newId) {
-      router.push('/room/' + newId)
-    } else {
-      router.push('/')
+watch(
+  () => room.value.id,
+  (newId, oldId) => {
+    if (newId !== oldId) {
+      if (newId) {
+        router.push('/room/' + newId)
+      } else {
+        router.push('/')
+      }
     }
   }
-})
+)
 </script>
 
 <template>

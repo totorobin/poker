@@ -1,17 +1,19 @@
-><script setup lang="ts">
+>
+<script setup lang="ts">
 import { useI18n, type Locale } from 'vue-i18n'
 
 const { t, locale, availableLocales } = useI18n({ useScope: 'global' })
 
 const changelang = () => {
-  locale.value = availableLocales[(availableLocales.indexOf(locale.value as Locale) + 1) % availableLocales.length]
+  locale.value =
+    availableLocales[
+      (availableLocales.indexOf(locale.value as Locale) + 1) % availableLocales.length
+    ]
 }
-
-
-</script> 
+</script>
 
 <template>
-          <div class="flag" @click="changelang">
-            {{ t('flag') }}
-          </div>
+  <div class="flag" @click="changelang">
+    {{ t('flag') }}
+  </div>
 </template>

@@ -1,9 +1,8 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
-import { io } from "socket.io-client";
-import { i18n } from '@/locales';
-
+import { io } from 'socket.io-client'
+import { i18n } from '@/locales'
 
 interface User {
   id: string
@@ -18,24 +17,23 @@ interface Room {
   cardVisible: boolean
 }
 
-const socket = io();
-
+const socket = io()
 
 const userName = ref(localStorage.getItem('userName'))
 
-socket.on("connect", () => {
-  console.log(`connected to websocket with id ${socket.id}`);
+socket.on('connect', () => {
+  console.log(`connected to websocket with id ${socket.id}`)
 
-  if(userName.value) {
+  if (userName.value) {
     socket.emit('setUserName', userName.value)
   } else {
-    socket.emit('whoAmI', (data: {userName: string}) => {
+    socket.emit('whoAmI', (data: { userName: string }) => {
       userName.value = data.userName
     })
   }
-});
+})
 
-socket.on("disconnect", () => {
+socket.on('disconnect', () => {
   console.error('Socket is closed ')
   ElMessage('Websocket has closed, the page will be refresh to attempt reconnection in 3 second.')
   setTimeout(function () {
@@ -43,17 +41,14 @@ socket.on("disconnect", () => {
   }, 3000)
 })
 
-
-
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
 
   function setUser(name: string) {
     userName.value = name
-    socket.emit('setUserName',name)
+    socket.emit('setUserName', name)
     localStorage.setItem('userName', name)
   }
-
 
   const users = computed(() =>
     !room.value.users
@@ -63,61 +58,65 @@ export const useRoomStore = defineStore('store', () => {
             return { name: user.name, card: user.card }
           } else {
             if (room.value.cardVisible) {
-              return { name: user.name, card: user.card  }
+              return { name: user.name, card: user.card }
             } else {
               return { name: user.name, card: user.card ? '?' : null }
             }
           }
         })
   )
-  const selectedCard = computed(() =>
-    !room.value.users ? '' : room.value.users[socket.id].card
-  )
+  const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
 
   socket.on('roomState', (roomState) => {
     room.value = roomState
   })
-  socket.on('nameChange', ({oldName, newName}) => {
-    ElMessage(i18n.t('notifications.change-name', { oldName,newName }))
+  socket.on('nameChange', ({ oldName, newName }) => {
+    ElMessage(i18n.t('notifications.change-name', { oldName, newName }))
   })
-  socket.on('vote', ({name, done}) => {
-    if(done) {
+  socket.on('vote', ({ name, done }) => {
+    if (done) {
       ElMessage(i18n.t('notifications.vote-done'))
     } else {
-      ElMessage(i18n.t('notifications.vote', {name}))
+      ElMessage(i18n.t('notifications.vote', { name }))
     }
   })
-  socket.on('reset', ({name}) => {ElMessage(i18n.t('notifications.reset', {name}))})
-  socket.on('left', ({name}) => {ElMessage(i18n.t('notifications.left', {name}))})
-  socket.on('joined', ({name}) => {ElMessage(i18n.t('notifications.join', {name}))})
-  socket.on('visibility', ({name, state}) => {
-    if(state) {
-      ElMessage(i18n.t('notifications.show', {name}))
+  socket.on('reset', ({ name }) => {
+    ElMessage(i18n.t('notifications.reset', { name }))
+  })
+  socket.on('left', ({ name }) => {
+    ElMessage(i18n.t('notifications.left', { name }))
+  })
+  socket.on('joined', ({ name }) => {
+    ElMessage(i18n.t('notifications.join', { name }))
+  })
+  socket.on('visibility', ({ name, state }) => {
+    if (state) {
+      ElMessage(i18n.t('notifications.show', { name }))
     } else {
-      ElMessage(i18n.t('notifications.hide', {name}))
+      ElMessage(i18n.t('notifications.hide', { name }))
     }
   })
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
 
   async function createRoom() {
-    socket.emit('create', (response: { roomId: string}) => {
+    socket.emit('create', (response: { roomId: string }) => {
       console.log(response)
-      localStorage.setItem('roomId', response.roomId )
+      localStorage.setItem('roomId', response.roomId)
     })
   }
 
   async function joinRoom(roomId: string) {
     localStorage.setItem('roomId', roomId)
-    socket.emit('join', {roomId})
+    socket.emit('join', { roomId })
   }
 
   async function vote(cardValue: string | null) {
-    socket.emit('vote', {value: cardValue} )
+    socket.emit('vote', { value: cardValue })
   }
 
   async function show() {
     socket.emit('cardVisible', true)
-   }
+  }
   async function hide() {
     socket.emit('cardVisible', false)
   }
@@ -126,11 +125,10 @@ export const useRoomStore = defineStore('store', () => {
   }
 
   async function leave() {
-    if(room.value.id)
-    socket.emit('leave', {roomId: room.value.id}, (newRoom: Room) => {
-      room.value = newRoom
-    })
-    
+    if (room.value.id)
+      socket.emit('leave', { roomId: room.value.id }, (newRoom: Room) => {
+        room.value = newRoom
+      })
   }
 
   return {
@@ -148,4 +146,3 @@ export const useRoomStore = defineStore('store', () => {
     userName
   }
 })
-

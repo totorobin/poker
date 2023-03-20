@@ -11,10 +11,9 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       beforeEnter: (to, from) => {
-        if(from.name == 'room')
-        useRoomStore().leave()
+        if (from.name == 'room') useRoomStore().leave()
         return true
-      },
+      }
     },
     {
       name: 'room',

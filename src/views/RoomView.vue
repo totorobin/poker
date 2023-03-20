@@ -78,7 +78,7 @@ const showHide = computed({
         <el-row justify="center" :gutter="15" class="user-view">
           <el-col :span="4" v-for="(user, index) in users" :key="index">
             <GameCard
-              @click="() => userName === user.name ? vote(null) : () => {}"
+              @click="() => (userName === user.name ? vote(null) : () => {})"
               :card-value="user.card"
               :class="{ set: user.card }"
             />
