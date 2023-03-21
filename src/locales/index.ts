@@ -3,13 +3,18 @@ import { createI18n, type VueI18n } from 'vue-i18n'
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
 
-// Type-define 'en-US' as the master schema for the resource
+const listLocales = ['en', 'fr']
+
 type MessageSchema = typeof en
-const userLang = navigator.language
+let userLang: string | undefined
+for(const lang of navigator.languages) {
+  userLang = listLocales.find(loc => lang == loc) || listLocales.find(loc => lang.split('-')[0] == loc)
+  if(userLang) break;
+}
 console.log('The language is: ' + userLang)
 const instance = createI18n<[MessageSchema], 'en' | 'fr'>({
   legacy: false,
-  locale: userLang,
+  locale: userLang || 'en',
   fallbackLocale: 'en',
   messages: {
     en: en,
