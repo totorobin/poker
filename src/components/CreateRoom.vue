@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoomStore } from '@/stores/store'
+import { useRoomStore } from '@/stores'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n({ useScope: 'global' })
@@ -18,13 +18,13 @@ function create() {
 
 <template>
   <el-row :gutter="6">
-    <el-col :span="6">
+    <el-col :span="8">
       <div>
         <h2>{{ t('titles.new-room') }}</h2>
         <el-button @click="create">{{ t('buttons.new-room') }}</el-button>
       </div>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="16">
       <div>
         <h2>{{ t('titles.join-room') }}</h2>
         <el-input v-model="roomForm" placeholder="room id" v-on:keyup.enter="joinRoom">
@@ -36,3 +36,8 @@ function create() {
     </el-col>
   </el-row>
 </template>
+<style scoped>
+.el-row { 
+  width: 100%;
+}
+</style>

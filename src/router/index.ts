@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-
-import { useRoomStore } from '@/stores/store'
+import HomeView from '@/views/HomeView.vue'
+import { useRoomStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,7 +17,7 @@ const router = createRouter({
     {
       name: 'room',
       path: '/room/:roomId',
-      component: () => import('../views/RoomView.vue'),
+      component: () => import('@/views/RoomView.vue'),
       props: true
     }
   ]

@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import CreateRoom from '../components/CreateRoom.vue'
+import CreateRoom from '@/components/CreateRoom.vue'
 </script>
 
 <template>
-  <el-container>
-    <CreateRoom />
-  </el-container>
+  <div class="common-layout">
+    <el-container>
+      <CreateRoom />
+    </el-container>
+  </div>
 </template>
+
 
 <style scoped>
 .el-container {
-  max-width: 900px;
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
-  height: 80vh;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoomStore } from '@/stores/store'
+import { useRoomStore } from '@/stores'
 import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import GameCard from '@/components/GameCard.vue'

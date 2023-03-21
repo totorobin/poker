@@ -1,4 +1,3 @@
->
 <script setup lang="ts">
 import { useI18n, type Locale } from 'vue-i18n'
 
@@ -17,3 +16,18 @@ const changelang = () => {
     {{ t('flag') }}
   </div>
 </template>
+
+<style scoped>
+.flag {
+  justify-content: center;
+  align-items: center;
+  line-height: 2.5em;
+}
+@media (max-width: 450px) {
+  .flag {
+    line-height: 1em;
+  }
+}
+
+
+</style>
