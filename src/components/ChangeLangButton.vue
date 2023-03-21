@@ -12,9 +12,11 @@ const changelang = () => {
 </script>
 
 <template>
-  <div class="flag" @click="changelang">
+ <el-tooltip class="box-item" effect="dark" :content="t('tooltips.lang')" placement="top-start">
+   <div class="flag" @click="changelang">
     {{ t('flag') }}
   </div>
+  </el-tooltip>
 </template>
 
 <style scoped>

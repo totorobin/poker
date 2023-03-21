@@ -19,11 +19,16 @@ interface Room {
 
 const socket = io()
 
+const firstConnection = ref(true)
+
 const userName = ref(localStorage.getItem('userName'))
+const userSaved = ref(localStorage.getItem('userName') !== null)
 
 socket.on('connect', () => {
   console.log(`connected to websocket with id ${socket.id}`)
-
+  if(!firstConnection.value) {
+    ElMessage(i18n.t('notifications.websocket-reconnected'))
+  }
   if (userName.value) {
     socket.emit('setUserName', userName.value)
   } else {
@@ -33,12 +38,15 @@ socket.on('connect', () => {
   }
 })
 
-socket.on('disconnect', () => {
-  console.error('Socket is closed ')
-  ElMessage('Websocket has closed, the page will be refresh to attempt reconnection in 3 second.')
-  setTimeout(function () {
-    window.location.reload()
-  }, 3000)
+socket.on('disconnect', (reason) => {
+  firstConnection.value = false
+  ElMessage(i18n.t('notifications.websocket-disconnected'))
+  if (reason === "io server disconnect") {
+    // the disconnection was initiated by the server, you need to reconnect manually
+    setTimeout(function () {
+      socket.connect();
+    }, 3000)
+  }
 })
 
 export const useRoomStore = defineStore('store', () => {
@@ -46,6 +54,7 @@ export const useRoomStore = defineStore('store', () => {
 
   function setUser(name: string) {
     userName.value = name
+    userSaved.value = true
     socket.emit('setUserName', name)
     localStorage.setItem('userName', name)
   }
@@ -143,6 +152,7 @@ export const useRoomStore = defineStore('store', () => {
     selectedCard,
     leave,
     setUser,
-    userName
+    userName,
+    userSaved
   }
 })

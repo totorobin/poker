@@ -2,6 +2,9 @@
 import { storeToRefs } from 'pinia'
 import { FullScreen } from '@element-plus/icons-vue'
 import { useRoomStore } from '@/stores'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'global' })
 
 const roomStore = useRoomStore()
 const { userName } = storeToRefs(roomStore)
@@ -18,9 +21,11 @@ const openInWindow = () => {
 </script>
 
 <template>
-    <div class="window-button" @click="openInWindow">
+    <el-tooltip class="box-item" effect="dark" :content="t('tooltips.popup')" placement="top-start">
+  <div class="window-button" @click="openInWindow">
         <el-icon size="20"><FullScreen /></el-icon>
     </div>
+    </el-tooltip>
 </template>
 
 <style scoped>

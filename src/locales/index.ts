@@ -1,4 +1,4 @@
-import { createI18n, type Composer } from 'vue-i18n'
+import { createI18n, type VueI18n } from 'vue-i18n'
 
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
@@ -19,4 +19,4 @@ const instance = createI18n<[MessageSchema], 'en' | 'fr'>({
 
 export default instance
 
-export const i18n = instance.global
+export const i18n: VueI18n = instance.global

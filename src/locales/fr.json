@@ -13,7 +13,8 @@
     "hide": "Cacher",
     "reset": "Réinitialiser",
     "share": "Partager",
-    "popup": "Ouvrir dans une popup"
+    "popup": "Ouvrir dans une popup",
+    "lang": "Langue : français"
   },
   "notifications": {
     "join": "{name} a rejoins la salle",
@@ -23,6 +24,17 @@
     "change-name": "{oldName} se fait maintenant appelé {newName}",
     "reset": "{name} a réinitialisé la salle",
     "show": "{name} a rendu les cartes visibles",
-    "hide": "{name} a caché les valeurs des cartes"
+    "hide": "{name} a caché les valeurs des cartes",
+    "clipboard" : "Lien copié",
+    "websocket-disconnected": "Websocket déconnecté, tentative de reconnection.",
+    "websocket-reconnected": "Websocket re-connecté"
+  },
+  "prompt-name": {
+    "title" : "Surnom",
+    "message": "veuillez saisir votre Surnom",
+    "error-input": "Surnom invalide",
+    "confirm": "Ok",
+    "cancel": "Annuler",
+    "cancel-notif": "saisie annulée"
   }
 }

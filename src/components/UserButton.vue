@@ -2,19 +2,20 @@
 import { storeToRefs } from 'pinia'
 import { User } from '@element-plus/icons-vue'
 import { useRoomStore } from '@/stores'
-import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'global' })
 
 const roomStore = useRoomStore()
-const { userName } = storeToRefs(roomStore)
+const { userName, userSaved } = storeToRefs(roomStore)
 
 const open = () => {
-  ElMessageBox.prompt('Please input your name', 'Name', {
-    confirmButtonText: 'OK',
-    cancelButtonText: 'Cancel',
-    inputPattern:
-      /[\w!#$%&'*+/=?^_`{|}~-]+?/,
-    inputErrorMessage: 'Invalid Surname',
+  ElMessageBox.prompt(t('prompt-name.message'), t('prompt-name.title'), {
+    confirmButtonText: t('prompt-name.confirm'),
+    cancelButtonText: t('prompt-name.cancel'),
+    inputPattern: /^[^_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,32}$/,
+    inputErrorMessage: t('prompt-name.error-input'),
   })
     .then(({ value }) => {
         if (value !== '') {
@@ -24,7 +25,7 @@ const open = () => {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Input canceled',
+        message: t('prompt-name.cancel-notif'),
       })
     })
 }
@@ -32,9 +33,9 @@ const open = () => {
 </script>
 
 <template>
-    <div class="user" @click="open">
+    <el-badge :is-dot="!userSaved" class="user" @click="open">
         <el-icon size="20"><User /></el-icon> {{ userName }}
-    </div>
+    </el-badge>
 </template>
 
 
