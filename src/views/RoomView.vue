@@ -4,6 +4,9 @@ import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import GameCard from '@/components/GameCard.vue'
 import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n({ useScope: 'global' })
 
 const props = defineProps<{
   roomId: string
@@ -53,7 +56,7 @@ const showHide = computed({
                 v-if="!showHide"
                 class="box-item"
                 effect="dark"
-                content="Show"
+                :content="t('tooltips.show')"
                 placement="top-start"
               >
                 <View />
@@ -62,7 +65,7 @@ const showHide = computed({
                 v-else
                 class="box-item"
                 effect="dark"
-                content="Hide"
+                :content="t('tooltips.hide')"
                 placement="top-start"
               >
                 <Hide />
@@ -70,7 +73,7 @@ const showHide = computed({
             </el-icon>
           </el-link>
           <el-link class="icon-button" :underline="false" @click="() => reset()">
-            <el-tooltip class="box-item" effect="dark" content="Reset" placement="top-start">
+            <el-tooltip class="box-item" effect="dark" :content="t('tooltips.reset')" placement="top-start">
               <el-icon size="20"><RefreshLeft /></el-icon>
             </el-tooltip>
           </el-link>
