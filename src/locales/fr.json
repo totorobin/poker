@@ -17,7 +17,7 @@
     "lang": "Langue : français"
   },
   "notifications": {
-    "join": "{name} a rejoins la salle",
+    "join": "{name} a rejoint la salle",
     "left": "{name} est parti",
     "vote": "{name} a voté",
     "vote-done": "Tout le monde a voté",
