@@ -31,10 +31,10 @@
   },
   "prompt-name": {
     "title" : "Surnom",
-    "message": "veuillez saisir votre Surnom",
+    "message": "Veuillez saisir votre Surnom",
     "error-input": "Surnom invalide",
     "confirm": "Ok",
     "cancel": "Annuler",
-    "cancel-notif": "saisie annulée"
+    "cancel-notif": "Saisie annulée"
   }
 }
