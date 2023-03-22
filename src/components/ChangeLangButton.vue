@@ -14,22 +14,14 @@ const changelang = () => {
 <template>
  <el-tooltip class="box-item" effect="dark" :content="t('tooltips.lang')" placement="top-start">
    <div class="flag" @click="changelang">
-    {{ t('flag') }}
+    <el-icon>{{ t('flag') }}</el-icon>
   </div>
   </el-tooltip>
 </template>
 
 <style scoped>
 .flag {
-  justify-content: center;
-  align-items: center;
-  line-height: 2.5em;
+  padding: 0 5px;
 }
-@media (max-width: 450px) {
-  .flag {
-    line-height: 1em;
-  }
-}
-
 
 </style>

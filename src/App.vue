@@ -26,28 +26,36 @@ watch(
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>
-        <MyHeader />
-      </el-header>
-      <RouterView />
+      <el-header><MyHeader /></el-header>
+      <el-main><RouterView /></el-main>
+      <el-footer></el-footer>
     </el-container>
   </div>
 </template>
 
+<style>
+body {
+  margin:0;
+}
+</style>
 <style scoped>
-header {
-  line-height: 3;
-}
 
-.flex-grow {
-  flex-grow: 1;
+.el-header {
+  height: 50px;
+  line-height: 50px;
+  background-color: black;
 }
-
+.el-container {
+  height: 100vh;
+}
 @media (max-width: 450px) {
-  header {
-    height: 25px;
-    --el-header-padding: 0 2px;
-    line-height: 1;
+  .el-header  {
+    height: 30px;
+    line-height: 30px;
+  }
+  .el-main {
+    padding: 10px;
   }
 }
 </style>
+

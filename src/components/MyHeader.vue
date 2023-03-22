@@ -9,35 +9,36 @@ import UserButton from '@/components/UserButton.vue'
 </script>
 
 <template>
-    <el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false">
-        <RouterLink to="/">
-            <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="20" height="20"/>
-        </RouterLink>
-        <div class="flex-grow" />
-        <ChangeLangButton />
-        <ShareButton />
-        <PopupWindowButton />
-        <UserButton />
-    </el-menu>
+  <el-row>
+    <RouterLink to="/">
+        <img alt="Vue logo" class="logo" src="@/assets/logo.png" />
+    </RouterLink>
+    <div class="flex-grow" />
+    <ChangeLangButton />
+    <ShareButton />
+    <PopupWindowButton />
+    <UserButton />
+  </el-row>
 </template>
 
 <style scoped>
+.el-row {
+  color: white;
+  font-size: 20px;
+}
 .logo {
+  height: 40px;
   display: block;
-  margin: 0 auto 2rem;
+  margin: 5px auto;
 }
 
 .flex-grow {
   flex-grow: 1;
 }
-.el-menu div {
-  padding: 3px;
-}
-
 @media (max-width: 450px) {
-  .el-menu {
-    height: 25px;
-    --el-menu-item-height: 25px;
+  .logo {
+    height: 29px;
+    margin: 0 auto;
   }
 }
 </style>

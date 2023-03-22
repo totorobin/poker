@@ -14,7 +14,7 @@ const open = () => {
   ElMessageBox.prompt(t('prompt-name.message'), t('prompt-name.title'), {
     confirmButtonText: t('prompt-name.confirm'),
     cancelButtonText: t('prompt-name.cancel'),
-    inputPattern: /^[^_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,32}$/,
+    inputPattern: /^[^_!¡?÷¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,32}$/,
     inputErrorMessage: t('prompt-name.error-input'),
   })
     .then(({ value }) => {
@@ -42,12 +42,13 @@ const open = () => {
 <style scoped>
 .user {
   height: 30px;
+  margin: auto 5px ;
+  padding-right: 2px;
   border-radius: 3px;
   border: 1px solid grey;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  line-height: 1;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -56,7 +57,7 @@ const open = () => {
 @media (max-width: 450px) {
 
   .user {
-    height: 16px;
+    height: 19px;
   }
 }
 </style>
