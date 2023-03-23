@@ -47,8 +47,8 @@ const showHide = computed({
 
 <template>
     <el-row justify="end">
-      <el-link class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
-        <el-icon size="20">
+      <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
+        <el-icon size="25">
           <el-tooltip
             v-if="!showHide"
             class="box-item"
@@ -68,12 +68,12 @@ const showHide = computed({
             <Hide />
           </el-tooltip>
         </el-icon>
-      </el-link>
-      <el-link class="icon-button" :underline="false" @click="() => reset()">
+      </div>
+      <div class="icon-button" :underline="false" @click="() => reset()">
         <el-tooltip class="box-item" effect="dark" :content="t('tooltips.reset')" placement="top-start">
-          <el-icon size="20"><RefreshLeft /></el-icon>
+          <el-icon size="25"><RefreshLeft /></el-icon>
         </el-tooltip>
-      </el-link>
+      </div>
     </el-row>
     <div class="user-view" >
       <el-row justify="center" :gutter="15" >

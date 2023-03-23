@@ -17,7 +17,7 @@ function create() {
 </script>
 
 <template>
-  <el-row :gutter="6">
+  <el-row>
     <el-col :span="8">
       <div>
         <h2>{{ t('titles.new-room') }}</h2>
@@ -36,8 +36,10 @@ function create() {
     </el-col>
   </el-row>
 </template>
+
 <style scoped>
 .el-row { 
-  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 </style>
