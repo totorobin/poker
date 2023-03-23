@@ -38,6 +38,11 @@ watch(
 </template>
 
 <style>
+/** important : permet d'afficher la fenetre de saisie du user AU DESSUS des notifications  **/
+.el-overlay {
+  z-index: 99999999999999 !important;
+}
+
 body {
   margin:0;
 }
