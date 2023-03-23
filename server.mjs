@@ -48,11 +48,11 @@ io.on('connection', (socket) => {
         })
     })
     socket.on('create', (callback) => {
-        console.log('new room for ', socket.data.userName)
         let roomId;
         do {
             roomId = uniqueNamesGenerator(roomNameConfig);
         } while(roomId in rooms);
+        console.log(`new room for ${socket.data.userName} : ${roomId}`)
         callback({roomId})
         socket.join(roomId)
     })
@@ -122,8 +122,11 @@ io.on('connection', (socket) => {
   });
 
   io.of("/").adapter.on("delete-room", (roomId) => {
-    console.log(`room ${roomId} was deleted`);
-    delete rooms[roomId]
+    if(roomId in rooms) {
+        delete rooms[roomId]
+        console.log(`room ${roomId} was deleted`);
+        console.log(`current rooms : ${Object.keys(rooms).length}`)
+    }
   });
   
   io.of("/").adapter.on("leave-room", async (roomId, userId) => {
