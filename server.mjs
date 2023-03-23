@@ -1,141 +1,141 @@
 import express from 'express'
-import expressWs from 'express-ws'
 import ViteExpress  from "vite-express";
 import http from 'http'
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
+import { Server } from 'socket.io'
+import { uniqueNamesGenerator, adjectives, animals, names, starWars, NumberDictionary } from 'unique-names-generator';
 
-// Our port
-let port = 3000;
-
+// eslint-disable-next-line no-undef
+let port = process.env.PORT || 8080;
 // App and server
 let app = express();
 let server = http.createServer(app).listen(port);    
 
-// Apply expressWs
-const ews = expressWs(app, server);
+const io = new Server(server)
+
+const roomNameConfig = {
+    dictionaries: [adjectives, animals, names],
+    separator: '-',
+    length: 2,
+  };
+
+
+  const userNameConfig = {
+    dictionaries: [starWars],
+    style: 'capital',
+    length: 1,
+  };
 
 var rooms = {};
 
-var aWss = ews.getWss('/');
+io.on('connection', (socket) => {
+    socket.data.userName = uniqueNamesGenerator(userNameConfig)
+    console.log(`user ${socket.data.userName} connected`);
 
-// Get the /ws websocket route
-app.ws('/ws', async function(ws, req) {
-
-
-    ws.on('message', async function(msg) {
-        if(!ws.id) {
-            ws.id = uuidv4();
-            ws.send(JSON.stringify({userId: ws.id}))
-        }
-        console.log(msg);
-        actionOnRoom(ws,JSON.parse(msg));
-        // Start listening for messages
-    });
-
-    ws.on('close', async function() {
-        let userId = ws.id
-        console.log('disconnected',userId);
-        var roomIds = []
-        var userName = ''
-        for (const [id, room] of Object.entries(rooms)) {
-            if(room.users[userId]) {
-                userName = room.users[userId].name;
-                delete room.users[userId]
-                if(Object.keys(rooms[id].users).length == 0) {
-                    delete rooms[id]
-                } else {
-                    roomIds.push(id)
-                }
-            }
-        }
-        informRooms(roomIds, {text: userName + ' has left the room'})
+    socket.on('whoAmI', (callback) => {
+        callback(socket.data)
     })
-});
 
+    socket.on('setUserName', (userName) => {
+        let oldName = socket.data.userName
+        socket.data.userName = userName
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].users[socket.id].name = userName  // update room
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+                socket.to(roomId).emit('nameChange', {oldName, newName: userName})  // inform action
+            }
+        })
+    })
+    socket.on('create', (callback) => {
+        console.log('new room for ', socket.data.userName)
+        let roomId;
+        do {
+            roomId = uniqueNamesGenerator(roomNameConfig);
+        } while(roomId in rooms);
+        callback({roomId})
+        socket.join(roomId)
+    })
+    socket.on('join', ({roomId}) => {
+        socket.join(roomId)
+        
+    })
+    socket.on('vote', ({value}) => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                const notSet = !rooms[roomId].users[socket.id].card
+                rooms[roomId].users[socket.id].card = value  // update card value
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+                if(notSet && !!value)
+                    socket.to(roomId).emit('vote',  {name: socket.data.userName, done: !Object.values(rooms[roomId].users).find(u => !u.card)})   // inform action
+            }
+        })
+    })
+    socket.on('cardVisible', (value) => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].cardVisible = value  // update card value
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+                socket.to(roomId).emit('visibility', {name: socket.data.userName, state: value})  // inform action
+            }
+        })
+    })
+    socket.on('reset', () => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].cardVisible = false; // hide cards
+                Object.keys(rooms[roomId].users).forEach(id => {
+                    rooms[roomId].users[id].card = null
+                })  // reset card values
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+                socket.to(roomId).emit('reset', {name: socket.data.userName})  // inform action
+            }
+        })
+    })
+    socket.on('leave', ({roomId}, callback) => {
+        console.log(`${socket.id} is leaving room ${roomId}`);
+        socket.leave(roomId)
+        callback({})
+    })
+  });
 
-function actionOnRoom(ws, msg) {
-    console.log(msg.action)
-    var notif = undefined
-    switch(msg.action) {
-        case "create": 
-            do {
-                msg.roomId = Math.floor(Math.random() * 1000000)
-            } while(rooms[msg.roomId] != undefined);
-            rooms = { ...rooms, [msg.roomId] : {
-                    id:msg.roomId,
-                    users: {[ws.id]: {name: msg.value, id: ws.id}},
-                    cardVisible: false
-                }
-            }
-            break;
-        case "join" :
-            if(rooms[msg.roomId] != undefined) {
-                console.log("add user to room")
-                var oldName = rooms[msg.roomId].users[ws.id]?.name
-                rooms[msg.roomId].users[ws.id] = {name: msg.value, id: ws.id}
-                if(oldName) {
-                    notif = { text : oldName + ' is now called ' + msg.value }
-                } else {
-                    notif = { text : msg.value + ' just joined the room' }
-                }
-            } else {
-                console.log("create room")
-                rooms = { ...rooms, [msg.roomId] : {
-                        id:msg.roomId,
-                        users: {[ws.id]: {name: msg.value, id: ws.id}},
-                        cardVisible: false
-                    }
-                }
-            }
-            break;
-        case 'vote' :
-            var oldValue = rooms[msg.roomId].users[ws.id].card;
-            rooms[msg.roomId].users[ws.id].card = msg.value;
-            if(!oldValue) {
-                notif = { text : rooms[msg.roomId].users[ws.id].name + ' just voted' }
-            }
-            if(!Object.values(rooms[msg.roomId].users).find(u => !u.card)) {
-                notif = { text : 'Everyone has voted' }
-            }
-            break;
-        case 'show' :
-            rooms[msg.roomId].cardVisible = true;
-            break;
-        case 'hide' :
-            rooms[msg.roomId].cardVisible = false;
-            break;
-        case 'reset' :
-            rooms[msg.roomId].cardVisible = false;
-            Object.keys(rooms[msg.roomId].users).forEach(id => {
-                rooms[msg.roomId].users[id].card = undefined
-            })
-            break;
-        case 'leave' :
-            if(msg.roomId && rooms[msg.roomId]) {
-                delete rooms[msg.roomId].users[ws.id]
-            }
-            break;
-        default: 
-            console.log("no action")
+  io.of("/").adapter.on("create-room", (roomId) => {
+    rooms = { ...rooms,
+        [roomId] : {
+            id:roomId,
+            users: {},
+            cardVisible: false
+        }
     }
+  });
+  
+  io.of("/").adapter.on("join-room", async (roomId, userId) => {
+    if(roomId !== userId) {  // ignore user room
+        const socket = (await io.in(userId).fetchSockets())[0];
+        rooms[roomId].users[userId] = {name: socket.data.userName, id: userId, card: null}
+        io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+        socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
+        console.log(`user ${socket.data.userName} has joined room ${roomId}`);
+    } else {
+        delete rooms[roomId]
+    }
+  });
 
-    informRooms([msg.roomId], notif)
-
-}
-
-function informRooms(ids, notif) {
-
-    ids.forEach(roomId => {
-        console.log(rooms[roomId])
-        aWss.clients.forEach(function (client) {
-            if (client.readyState === 1 && rooms[roomId].users[client.id]) {
-                console.log("sending to ", client.id)
-                client.send(JSON.stringify({ room: rooms[roomId], notification: notif }));
-            }
-        });
-    })
-
-}
+  io.of("/").adapter.on("delete-room", (roomId) => {
+    console.log(`room ${roomId} was deleted`);
+    delete rooms[roomId]
+  });
+  
+  io.of("/").adapter.on("leave-room", async (roomId, userId) => {
+    console.log(`socket ${userId} has left room ${roomId}`);
+    if(roomId in rooms) {
+        let userName = rooms[roomId].users[userId].name
+        delete rooms[roomId].users[userId]  // update room
+        io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+        io.to(roomId).emit('left', {name: userName})  // inform action
+    }
+  });
 
 
-ViteExpress.listen(app, 8080, () => console.log("Server is listening..."));
+// eslint-disable-next-line no-undef
+ViteExpress.bind(app, server, () => console.log("Server is listening..."));

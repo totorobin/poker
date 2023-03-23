@@ -1,0 +1,40 @@
+{
+  "flag": "🇫🇷",
+  "buttons": {
+    "new-room": "Créer",
+    "join-room": "Rejoindre"
+  },
+  "titles": {
+    "new-room": "Nouvelle salle",
+    "join-room": "Rejoindre une salle"
+  },
+  "tooltips": {
+    "show": "Afficher",
+    "hide": "Cacher",
+    "reset": "Réinitialiser",
+    "share": "Partager",
+    "popup": "Ouvrir dans une popup",
+    "lang": "Langue : français"
+  },
+  "notifications": {
+    "join": "{name} a rejoint la salle",
+    "left": "{name} est parti",
+    "vote": "{name} a voté",
+    "vote-done": "Tout le monde a voté",
+    "change-name": "{oldName} se fait maintenant appeler {newName}",
+    "reset": "{name} a réinitialisé la salle",
+    "show": "{name} a rendu les cartes visibles",
+    "hide": "{name} a caché les valeurs des cartes",
+    "clipboard" : "Lien copié",
+    "websocket-disconnected": "Websocket déconnecté, tentative de reconnection.",
+    "websocket-reconnected": "Websocket re-connecté"
+  },
+  "prompt-name": {
+    "title" : "Surnom",
+    "message": "Veuillez saisir votre Surnom",
+    "error-input": "Surnom invalide",
+    "confirm": "Ok",
+    "cancel": "Annuler",
+    "cancel-notif": "Saisie annulée"
+  }
+}
