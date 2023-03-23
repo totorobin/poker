@@ -1,4 +1,6 @@
-FROM node:16
+# --------------> The build image
+FROM node:18-slim as build
+
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,9 +19,21 @@ COPY . .
 
 RUN npm run build
 
-ENV PORT=8080
+
+# --------------> The production image__
+FROM node:18-slim
+ENV NODE_ENV production
+
+# Create app directory
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app/package*.json ./
+RUN npm ci --only=production
+COPY --from=build /usr/src/app/dist dist
+COPY --from=build /usr/src/app/server.mjs server.mjs
+
+ENV PORT 8080
 EXPOSE 8080
 
-ENV NODE_ENV=production
-
+USER node
 CMD [ "node", "server.mjs" ]
