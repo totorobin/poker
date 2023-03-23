@@ -5,12 +5,3 @@ import CreateRoom from '@/components/CreateRoom.vue'
 <template>
   <CreateRoom />
 </template>
-
-
-<style scoped>
-.el-container {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>

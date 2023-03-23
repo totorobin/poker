@@ -43,9 +43,7 @@ socket.on('disconnect', (reason) => {
   ElMessage(i18n.t('notifications.websocket-disconnected'))
   if (reason === "io server disconnect") {
     // the disconnection was initiated by the server, you need to reconnect manually
-    setTimeout(function () {
-      socket.connect();
-    }, 3000)
+    setTimeout(() => socket.connect(), 3000)
   }
 })
 
@@ -65,13 +63,10 @@ export const useRoomStore = defineStore('store', () => {
       : Object.values(room.value.users).map((user: User) => {
           if (user.id === socket.id) {
             return { name: user.name, card: user.card }
-          } else {
-            if (room.value.cardVisible) {
-              return { name: user.name, card: user.card }
-            } else {
-              return { name: user.name, card: user.card ? '?' : null }
-            }
-          }
+          } else if (room.value.cardVisible) {
+            return { name: user.name, card: user.card }
+          } 
+          return { name: user.name, card: user.card ? '?' : null }
         })
   )
   const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))

@@ -89,17 +89,17 @@ const showHide = computed({
     </div>
   <Teleport to="footer">
     <div class="card-footer" >
-    <el-row justify="center">
-      <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
-        <GameCard
-          :card-value="val"
-          @click="() => (selectedCard === val ? () => {} : vote(val))"
-          :class="{ selected: selectedCard === val }"
-        />
-      </el-col>
-    </el-row>
-  </div>
-     </Teleport>
+      <el-row justify="center">
+        <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
+          <GameCard
+            :card-value="val"
+            @click="() => (selectedCard === val ? () => {} : vote(val))"
+            :class="{ selected: selectedCard === val }"
+          />
+        </el-col>
+      </el-row>
+    </div>
+   </Teleport>
 </template>
 
 <style scoped>

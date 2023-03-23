@@ -5,8 +5,8 @@
     "join-room": "join"
   },
   "titles": {
-    "new-room": "new room",
-    "join-room": "join room"
+    "new-room": "New room",
+    "join-room": "Join room"
   },
   "tooltips": {
     "show": "Show",
@@ -14,7 +14,7 @@
     "reset": "Reset",
     "share": "Share",
     "popup": "Open in popup window",
-    "lang": "Language : english"
+    "lang": "Language : English"
   },
   "notifications": {
     "join": "{name} just joined",
@@ -26,13 +26,13 @@
     "show": "{name} just showed everyone cards",
     "hide": "{name} just hidden everyone cards",
     "clipboard" : "Link has been paste into clipboard",
-    "websocket-disconnected": "Websocket has closed, reconnection attempt in 3 seconds.",
+    "websocket-disconnected": "Websocket has closed, reconnection attempt",
     "websocket-reconnected": "Websocket re-connected"
   },
   "prompt-name": {
     "title" : "Surname",
-    "message": "Please input your name'",
-    "error-input": "invalid Surname",
+    "message": "Please input your name",
+    "error-input": "Invalid Surname",
     "confirm": "OK",
     "cancel": "Cancel",
     "cancel-notif": "Input canceled"

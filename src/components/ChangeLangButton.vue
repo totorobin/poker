@@ -14,7 +14,7 @@ const changelang = () => {
 <template>
  <el-tooltip class="box-item" effect="dark" :content="t('tooltips.lang')" placement="top-start">
    <div class="flag" @click="changelang">
-    <el-icon>{{ t('flag') }}</el-icon>
+    {{ t('flag') }}
   </div>
   </el-tooltip>
 </template>

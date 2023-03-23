@@ -10,6 +10,7 @@ const roomStore = useRoomStore()
 const { room } = storeToRefs(roomStore)
 const backgroundColor = ref('white')
 
+
 watch(
   () => room.value.id,
   (newId, oldId) => {

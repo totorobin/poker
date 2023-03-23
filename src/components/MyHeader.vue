@@ -30,11 +30,13 @@ import UserButton from '@/components/UserButton.vue'
   height: 40px;
   display: block;
   margin: 5px auto;
+
 }
 
 .flex-grow {
   flex-grow: 1;
 }
+
 @media (max-width: 450px) {
   .logo {
     height: 29px;

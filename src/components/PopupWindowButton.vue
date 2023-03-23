@@ -33,6 +33,7 @@ const openInWindow = () => {
   padding: 0 5px;
   margin-top: 2px;
 }
+
 @media (max-width: 450px) {
   .window-button {
     display: none;

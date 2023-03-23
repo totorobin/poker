@@ -17,11 +17,11 @@
     "lang": "Langue : français"
   },
   "notifications": {
-    "join": "{name} a rejoins la salle",
+    "join": "{name} a rejoint la salle",
     "left": "{name} est parti",
     "vote": "{name} a voté",
     "vote-done": "Tout le monde a voté",
-    "change-name": "{oldName} se fait maintenant appelé {newName}",
+    "change-name": "{oldName} se fait maintenant appeler {newName}",
     "reset": "{name} a réinitialisé la salle",
     "show": "{name} a rendu les cartes visibles",
     "hide": "{name} a caché les valeurs des cartes",
@@ -31,10 +31,10 @@
   },
   "prompt-name": {
     "title" : "Surnom",
-    "message": "veuillez saisir votre Surnom",
+    "message": "Veuillez saisir votre Surnom",
     "error-input": "Surnom invalide",
     "confirm": "Ok",
     "cancel": "Annuler",
-    "cancel-notif": "saisie annulée"
+    "cancel-notif": "Saisie annulée"
   }
 }
