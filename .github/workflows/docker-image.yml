@@ -15,5 +15,10 @@ jobs:
       - name: Build the poker Docker image
         run: |
           docker build . --file Dockerfile --tag ghcr.io/totorobin/poker:latest
-          docker push ghcr.io/totorobin/poker:latest
+      - name: publish the docker image
+       # Develop branch only
+        if: github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/totorobin/poker:latest
+
+      
 
