@@ -27,6 +27,7 @@
     "unique-names-generator": "^4.7.1",
     "vite-express": "^0.4.1",
     "vue": "^3.2.47",
+    "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
