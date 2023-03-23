@@ -46,76 +46,66 @@ const showHide = computed({
 </script>
 
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-main>
-        <el-row justify="end">
-          <el-link class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
-            <el-icon size="20">
-              <el-tooltip
-                v-if="!showHide"
-                class="box-item"
-                effect="dark"
-                :content="t('tooltips.show')"
-                placement="top-start"
-              >
-                <View />
-              </el-tooltip>
-              <el-tooltip
-                v-else
-                class="box-item"
-                effect="dark"
-                :content="t('tooltips.hide')"
-                placement="top-start"
-              >
-                <Hide />
-              </el-tooltip>
-            </el-icon>
-          </el-link>
-          <el-link class="icon-button" :underline="false" @click="() => reset()">
-            <el-tooltip class="box-item" effect="dark" :content="t('tooltips.reset')" placement="top-start">
-              <el-icon size="20"><RefreshLeft /></el-icon>
-            </el-tooltip>
-          </el-link>
-        </el-row>
-        <el-row justify="center" :gutter="15" class="user-view">
-          <el-col :span="4" v-for="(user, index) in users" :key="index">
-            <GameCard
-              @click="() => (userName === user.name ? vote(null) : () => {})"
-              :card-value="user.card"
-              :class="{ set: user.card }"
-            />
-            {{ user.name }}
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
-  </div>
-  <el-footer>
-    <el-row justify="center">
-      <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
-        <GameCard
-          :card-value="val"
-          @click="() => (selectedCard === val ? () => {} : vote(val))"
-          :class="{ selected: selectedCard === val }"
-        />
-      </el-col>
+    <el-row justify="end">
+      <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
+        <el-icon size="25">
+          <el-tooltip
+            v-if="!showHide"
+            class="box-item"
+            effect="dark"
+            :content="t('tooltips.show')"
+            placement="top-start"
+          >
+            <View />
+          </el-tooltip>
+          <el-tooltip
+            v-else
+            class="box-item"
+            effect="dark"
+            :content="t('tooltips.hide')"
+            placement="top-start"
+          >
+            <Hide />
+          </el-tooltip>
+        </el-icon>
+      </div>
+      <div class="icon-button" :underline="false" @click="() => reset()">
+        <el-tooltip class="box-item" effect="dark" :content="t('tooltips.reset')" placement="top-start">
+          <el-icon size="25"><RefreshLeft /></el-icon>
+        </el-tooltip>
+      </div>
     </el-row>
-  </el-footer>
+    <div class="user-view" >
+      <el-row justify="center" :gutter="15" >
+        <el-col :span="4" v-for="(user, index) in users" :key="index">
+          <GameCard
+            @click="() => (userName === user.name ? vote(null) : () => {})"
+            :card-value="user.card"
+            :class="{ set: user.card }"
+          />
+          {{ user.name }}
+        </el-col>
+      </el-row>
+    </div>
+  <Teleport to="footer">
+    <div class="card-footer" >
+      <el-row justify="center">
+        <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
+          <GameCard
+            :card-value="val"
+            @click="() => (selectedCard === val ? () => {} : vote(val))"
+            :class="{ selected: selectedCard === val }"
+          />
+        </el-col>
+      </el-row>
+    </div>
+   </Teleport>
 </template>
 
 <style scoped>
+
 .icon-button {
   padding: 0px 6px;
-}
-.el-container {
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  height: 80vh;
-}
-.el-main {
-  padding-top: 2px;
 }
 .selected {
   opacity: 0;
@@ -154,16 +144,16 @@ const showHide = computed({
   padding-top: 20px;
   padding-bottom: 20px;
   text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+
 }
-.el-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: auto;
+.card-footer {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  left: 5px;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  z-index: 1;
+  margin: 0 auto;
 }
 </style>

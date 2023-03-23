@@ -21,15 +21,7 @@ const changelang = () => {
 
 <style scoped>
 .flag {
-  justify-content: center;
-  align-items: center;
-  line-height: 2.5em;
+  padding: 0 5px;
 }
-@media (max-width: 450px) {
-  .flag {
-    line-height: 1em;
-  }
-}
-
 
 </style>
