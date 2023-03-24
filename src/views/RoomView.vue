@@ -81,6 +81,7 @@ const showHide = computed({
           <GameCard
             @click="() => (userName === user.name ? vote(null) : () => {})"
             :card-value="user.card"
+            :card-set="user.vote"
             :class="{ set: user.card }"
           />
           {{ user.name }}

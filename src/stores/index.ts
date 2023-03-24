@@ -8,12 +8,13 @@ interface User {
   id: string
   name: string
   card: string | null
+  vote: boolean
 }
 
 interface Room {
   id: string
   name: string
-  users: { [key: string]: User }
+  users: User[]
   cardVisible: boolean
 }
 
@@ -49,6 +50,7 @@ socket.on('disconnect', (reason) => {
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
+  const selectedCard = ref('')
 
   function setUser(name: string) {
     userName.value = name
@@ -58,20 +60,16 @@ export const useRoomStore = defineStore('store', () => {
   }
 
   const users = computed(() =>
-    !room.value.users
-      ? []
-      : Object.values(room.value.users).map((user: User) => {
+      room.value.users?.map((user: User) => {
           if (user.id === socket.id) {
-            return { name: user.name, card: user.card }
-          } else if (room.value.cardVisible) {
-            return { name: user.name, card: user.card }
+            return { ...user, card: selectedCard.value}
           } 
-          return { name: user.name, card: user.card ? '?' : null }
+          return user
         })
   )
-  const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
 
   socket.on('roomState', (roomState) => {
+    console.log(roomState)
     room.value = roomState
   })
   socket.on('nameChange', ({ oldName, newName }) => {
@@ -86,6 +84,7 @@ export const useRoomStore = defineStore('store', () => {
   })
   socket.on('reset', ({ name }) => {
     ElMessage(i18n.t('notifications.reset', { name }))
+    selectedCard.value = ''
   })
   socket.on('left', ({ name }) => {
     ElMessage(i18n.t('notifications.left', { name }))
@@ -116,6 +115,7 @@ export const useRoomStore = defineStore('store', () => {
 
   async function vote(cardValue: string | null) {
     socket.emit('vote', { value: cardValue })
+    selectedCard.value = cardValue || ''
   }
 
   async function show() {
@@ -126,6 +126,7 @@ export const useRoomStore = defineStore('store', () => {
   }
   async function reset() {
     socket.emit('reset')
+    selectedCard.value = ''
   }
 
   async function leave() {
