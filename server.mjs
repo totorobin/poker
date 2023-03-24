@@ -3,7 +3,7 @@ import ViteExpress  from "vite-express";
 import http from 'http'
 //import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io'
-import { uniqueNamesGenerator, adjectives, animals, names, starWars, NumberDictionary } from 'unique-names-generator';
+import { uniqueNamesGenerator, adjectives, animals, names, starWars } from 'unique-names-generator';
 
 // eslint-disable-next-line no-undef
 let port = process.env.PORT || 8080;
@@ -27,6 +27,19 @@ const roomNameConfig = {
   };
 
 var rooms = {};
+
+
+class Room {
+    constructor(id) {
+        this.id = id;
+        this.users = {},
+        this.cardVisible = false
+    }
+
+    toJSON() {
+        return { cardVisible: this.cardVisible, id: this.id, users: [ ...Object.entries(this.users).map(([key, value]) => ({ id: key, name: value.name, card: this.cardVisible ? value.card : null, vote: !!value.card }))]}
+    }
+}
 
 io.on('connection', (socket) => {
     socket.data.userName = uniqueNamesGenerator(userNameConfig)
@@ -101,18 +114,14 @@ io.on('connection', (socket) => {
 
   io.of("/").adapter.on("create-room", (roomId) => {
     rooms = { ...rooms,
-        [roomId] : {
-            id:roomId,
-            users: {},
-            cardVisible: false
-        }
+        [roomId] : new Room(roomId)
     }
   });
   
   io.of("/").adapter.on("join-room", async (roomId, userId) => {
     if(roomId !== userId) {  // ignore user room
         const socket = (await io.in(userId).fetchSockets())[0];
-        rooms[roomId].users[userId] = {name: socket.data.userName, id: userId, card: null}
+        rooms[roomId].users[userId] = {name: socket.data.userName, card: null}
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
         console.log(`user ${socket.data.userName} has joined room ${roomId}`);
