@@ -76,10 +76,11 @@ io.on('connection', (socket) => {
     socket.on('vote', ({value}) => {
         socket.rooms.forEach((roomId) => {
             if(roomId in rooms) {
-                const notSet = !rooms[roomId].users[socket.id].card
+                const oldValue = rooms[roomId].users[socket.id].card
                 rooms[roomId].users[socket.id].card = value  // update card value
-                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
-                if(notSet && !!value)
+                if((!oldValue && !!value) || (!!oldValue && !value) || rooms[roomId].cardVisible )
+                    io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+                if(!oldValue && !!value)
                     socket.to(roomId).emit('vote',  {name: socket.data.userName, done: !Object.values(rooms[roomId].users).find(u => !u.card)})   // inform action
             }
         })

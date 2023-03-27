@@ -3,7 +3,7 @@ import backImg from '@/assets/kisspng-playing-card-visual-arts-tarot-studio-5b07
 import frontImg from '@/assets/playing-card-front.png'
 defineProps<{
   cardValue: string | null
-  cardSet: boolean
+  cardSet?: boolean
 }>()
 </script>
 
