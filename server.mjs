@@ -122,7 +122,8 @@ io.on('connection', (socket) => {
         [roomId] : {
             id:roomId,
             users: {},
-            cardVisible: false
+            cardVisible: false,
+            endTimer: 0
         }
     }
   });
@@ -134,8 +135,12 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
         console.log(`user ${socket.data.userName} has joined room ${roomId}`);
-        if(rooms[roomId].endTimer >= 0) {
-            socket.emit('timer', { endTime : rooms[roomId].endTimer })
+        if(rooms[roomId].endTimer > 0) {
+            if(rooms[roomId].endTimer < Date.now()) {
+                rooms[roomId].endTimer = 0
+            } else {
+                socket.emit('timer', { endTime : rooms[roomId].endTimer })
+            }
         }
     } else {
         delete rooms[roomId]

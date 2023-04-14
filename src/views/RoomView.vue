@@ -48,7 +48,7 @@ const showHide = computed({
 
 <template>
     <el-row justify="end">
-      <RoomTimer />
+      <RoomTimer class="timer"/>
       <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
         <el-icon size="25">
           <el-tooltip
@@ -106,7 +106,7 @@ const showHide = computed({
 
 <style scoped>
 
-.icon-button {
+.icon-button, .timer {
   padding: 0px 6px;
 }
 .selected {

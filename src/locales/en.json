@@ -27,7 +27,8 @@
     "hide": "{name} just hidden everyone cards",
     "clipboard" : "Link has been paste into clipboard",
     "websocket-disconnected": "Websocket has closed, reconnection attempt",
-    "websocket-reconnected": "Websocket re-connected"
+    "websocket-reconnected": "Websocket re-connected",
+    "end-timer": "Time's up!"
   },
   "prompt-name": {
     "title" : "Surname",
