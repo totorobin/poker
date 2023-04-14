@@ -49,7 +49,7 @@ socket.on('disconnect', (reason) => {
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
-  const time = ref(new Date(-2700000))
+  const time = ref(new Date(0))
   const nIntervId = ref(0)
   const zero = new Date(-3600000)
   const timerRunning = computed(() => nIntervId.value !== 0)
@@ -111,10 +111,10 @@ export const useRoomStore = defineStore('store', () => {
     nIntervId.value = setInterval(() => {
       time.value = new Date(endTime - Date.now())
       if (time.value <= zero) {
-        time.value = zero
         clearInterval(nIntervId.value);
         nIntervId.value = 0
         endTimer.value = true
+        time.value = new Date(0)
       }
     }, 1000)
   })
