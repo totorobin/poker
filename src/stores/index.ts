@@ -26,7 +26,7 @@ const userSaved = ref(localStorage.getItem('userName') !== null)
 
 socket.on('connect', () => {
   console.log(`connected to websocket with id ${socket.id}`)
-  if(!firstConnection.value) {
+  if (!firstConnection.value) {
     ElMessage(i18n.t('notifications.websocket-reconnected'))
   }
   if (userName.value) {
@@ -65,13 +65,13 @@ export const useRoomStore = defineStore('store', () => {
     !room.value.users
       ? []
       : Object.values(room.value.users).map((user: User) => {
-          if (user.id === socket.id) {
-            return { name: user.name, card: user.card }
-          } else if (room.value.cardVisible) {
-            return { name: user.name, card: user.card }
-          } 
-          return { name: user.name, card: user.card ? '?' : null }
-        })
+        if (user.id === socket.id) {
+          return { name: user.name, card: user.card }
+        } else if (room.value.cardVisible) {
+          return { name: user.name, card: user.card }
+        }
+        return { name: user.name, card: user.card ? '?' : null }
+      })
   )
   const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
 
@@ -106,31 +106,32 @@ export const useRoomStore = defineStore('store', () => {
   })
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
   socket.on('timer', ({ endTime }) => {
-        console.log('start timer from websocket : ', endTime)
-        nIntervId.value = setInterval(() => { 
-            time.value = new Date(endTime - Date.now())
-            console.log('time : ', time.value, zero)
-            if(time.value <= zero) {
-              clearInterval(nIntervId.value);
-                stopTimer()
-            }
-        } , 1000)
-      })
-
-    socket.on('stopTimer', () => {
-      console.log('stop timer')
+    console.log('start timer from websocket : ', endTime)
+    nIntervId.value = setInterval(() => {
+      time.value = new Date(endTime - Date.now())
+      console.log('time : ', time.value, zero)
+      if (time.value <= zero) {
+        time.value = zero
         clearInterval(nIntervId.value);
-        nIntervId.value = 0
-      })
+        stopTimer()
+      }
+    }, 1000)
+  })
+
+  socket.on('stopTimer', () => {
+    console.log('stop timer')
+    clearInterval(nIntervId.value);
+    nIntervId.value = 0
+  })
 
   const stopTimer = () => {
     socket.emit('stopTimer')
-  }   
+  }
 
-  const startTimer = (time : Date) => {
+  const startTimer = (time: Date) => {
     console.log('start timer from screen ', time.getTime())
-    socket.emit('timer',  { endTime : Date.now() + time.getTime() })
-  }   
+    socket.emit('timer', { endTime: Date.now() + time.getTime() })
+  }
 
   async function createRoom() {
     socket.emit('create', (response: { roomId: string }) => {

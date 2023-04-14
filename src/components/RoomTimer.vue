@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoomStore } from '@/stores';
 import { VideoPlay , VideoPause } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const roomStore = useRoomStore()

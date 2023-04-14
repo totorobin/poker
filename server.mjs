@@ -3,7 +3,7 @@ import ViteExpress  from "vite-express";
 import http from 'http'
 //import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io'
-import { uniqueNamesGenerator, adjectives, animals, names, starWars, NumberDictionary } from 'unique-names-generator';
+import { uniqueNamesGenerator, adjectives, animals, names, starWars } from 'unique-names-generator';
 
 // eslint-disable-next-line no-undef
 let port = process.env.PORT || 8080;
