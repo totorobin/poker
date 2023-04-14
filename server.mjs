@@ -97,6 +97,24 @@ io.on('connection', (socket) => {
         socket.leave(roomId)
         callback({})
     })
+    socket.on('timer', ({ endTime }) => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].endTimer = endTime
+                io.to(roomId).emit('timer', { endTime }) 
+                console.log('room ', roomId, ' timer ', rooms[roomId].endTimer)
+            }
+        })
+    })
+    socket.on('stopTimer', () => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].endTimer = 0
+                io.to(roomId).emit('stopTimer') 
+                console.log('room ', roomId, ' timer ', rooms[roomId].endTimer)
+            }
+        })
+    })
   });
 
   io.of("/").adapter.on("create-room", (roomId) => {
@@ -116,6 +134,9 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
         console.log(`user ${socket.data.userName} has joined room ${roomId}`);
+        if(rooms[roomId].endTimer >= 0) {
+            socket.emit('timer', { endTime : rooms[roomId].endTimer })
+        }
     } else {
         delete rooms[roomId]
     }
