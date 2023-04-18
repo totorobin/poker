@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
         socket.join(roomId)
     })
     socket.on('join', ({roomId}) => {
-        socket.join(roomId)
+        socket.join(roomId.toLowerCase())
         
     })
     socket.on('vote', ({value}) => {
