@@ -61,11 +61,9 @@ export const useRoomStore = defineStore('store', () => {
     !room.value.users
       ? []
       : Object.values(room.value.users).map((user: User) => {
-          if (user.id === socket.id) {
+          if (user.id === socket.id || room.value.cardVisible) {
             return { name: user.name, card: user.card }
-          } else if (room.value.cardVisible) {
-            return { name: user.name, card: user.card }
-          } 
+          }
           return { name: user.name, card: user.card ? '?' : null }
         })
   )
