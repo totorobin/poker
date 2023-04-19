@@ -49,9 +49,8 @@ socket.on('disconnect', (reason) => {
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
-  const time = ref(new Date(0))
+  const time = ref(3600000)  // 1h en ms
   const nIntervId = ref(0)
-  const zero = new Date(-3600000)
   const timerRunning = computed(() => nIntervId.value !== 0)
   const endTimer = ref(false)
 
@@ -109,12 +108,12 @@ export const useRoomStore = defineStore('store', () => {
 
   socket.on('timer', ({ endTime }) => {
     nIntervId.value = setInterval(() => {
-      time.value = new Date(endTime - Date.now())
-      if (time.value <= zero) {
+      time.value = endTime - Date.now()
+      if (time.value < 1000) { // si moins d'1s
         clearInterval(nIntervId.value);
         nIntervId.value = 0
         endTimer.value = true
-        time.value = new Date(0)
+        time.value = 3600000
       }
     }, 1000)
   })
@@ -128,8 +127,8 @@ export const useRoomStore = defineStore('store', () => {
     socket.emit('stopTimer')
   }
 
-  const startTimer = (time: Date) => { 
-    socket.emit('timer', { endTime: Date.now() + time.getTime() })
+  const startTimer = (time: number) => { 
+    socket.emit('timer', { endTime: Date.now() + time })
   }
 
   async function createRoom() {
