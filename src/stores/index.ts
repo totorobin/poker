@@ -113,7 +113,7 @@ export const useRoomStore = defineStore('store', () => {
         clearInterval(nIntervId.value);
         nIntervId.value = 0
         endTimer.value = true
-        time.value = 3600000
+        //time.value = 3600000
       }
     }, 1000)
   })
