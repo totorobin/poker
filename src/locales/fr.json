@@ -27,7 +27,8 @@
     "hide": "{name} a caché les valeurs des cartes",
     "clipboard" : "Lien copié",
     "websocket-disconnected": "Websocket déconnecté, tentative de reconnection.",
-    "websocket-reconnected": "Websocket re-connecté"
+    "websocket-reconnected": "Websocket re-connecté",
+    "end-timer": "Temps écoulé !"
   },
   "prompt-name": {
     "title" : "Surnom",

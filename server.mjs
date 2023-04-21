@@ -3,7 +3,7 @@ import ViteExpress  from "vite-express";
 import http from 'http'
 //import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io'
-import { uniqueNamesGenerator, adjectives, animals, names, starWars, NumberDictionary } from 'unique-names-generator';
+import { uniqueNamesGenerator, adjectives, animals, names, starWars } from 'unique-names-generator';
 
 // eslint-disable-next-line no-undef
 let port = process.env.PORT || 8080;
@@ -97,6 +97,24 @@ io.on('connection', (socket) => {
         socket.leave(roomId)
         callback({})
     })
+    socket.on('timer', ({ endTime }) => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].endTimer = endTime
+                io.to(roomId).emit('timer', { endTime }) 
+                console.log('room ', roomId, ' timer ', rooms[roomId].endTimer)
+            }
+        })
+    })
+    socket.on('stopTimer', () => {
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId].endTimer = 0
+                io.to(roomId).emit('stopTimer') 
+                console.log('room ', roomId, ' timer ', rooms[roomId].endTimer)
+            }
+        })
+    })
   });
 
   io.of("/").adapter.on("create-room", (roomId) => {
@@ -104,7 +122,8 @@ io.on('connection', (socket) => {
         [roomId] : {
             id:roomId,
             users: {},
-            cardVisible: false
+            cardVisible: false,
+            endTimer: 0
         }
     }
   });
@@ -116,6 +135,13 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
         console.log(`user ${socket.data.userName} has joined room ${roomId}`);
+        if(rooms[roomId].endTimer > 0) {
+            if(rooms[roomId].endTimer < Date.now()) {
+                rooms[roomId].endTimer = 0
+            } else {
+                socket.emit('timer', { endTime : rooms[roomId].endTimer })
+            }
+        }
     } else {
         delete rooms[roomId]
     }
