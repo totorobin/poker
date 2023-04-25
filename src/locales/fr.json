@@ -6,7 +6,8 @@
   },
   "titles": {
     "new-room": "Nouvelle salle",
-    "join-room": "Rejoindre une salle"
+    "join-room": "Rejoindre une salle",
+    "room-name": "Nom de la salle"
   },
   "tooltips": {
     "show": "Afficher",

@@ -23,6 +23,7 @@ declare module '@vue/runtime-core' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     GameCard: typeof import('./src/components/GameCard.vue')['default']
     MyHeader: typeof import('./src/components/MyHeader.vue')['default']

@@ -83,7 +83,7 @@ const showHide = computed({
             :card-value="user.card"
             :class="{ set: user.card }"
           />
-          {{ user.name }}
+          <div class="user-name">{{ user.name }}</div>
         </el-col>
       </el-row>
     </div>
@@ -155,5 +155,17 @@ const showHide = computed({
   left: 5px;
   max-width: 800px;
   margin: 0 auto;
+}
+.user-name{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: rgb(192, 252, 158);
+  border-radius: 7px;
+  border: 1px solid var(--el-card-border-color);
+  box-shadow: var(--el-box-shadow-light);
+  margin-top:5px;
+  margin-bottom:18px;
+  padding: 5px;
 }
 </style>

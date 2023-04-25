@@ -35,6 +35,7 @@ defineProps<{
   border: 1px solid var(--el-card-border-color);
   box-shadow: var(--el-box-shadow-light);
   font-size: xx-large;
+  background-color: #224222;
 }
 @media (max-width: 450px) {
   .card {

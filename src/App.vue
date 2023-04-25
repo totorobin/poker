@@ -10,14 +10,14 @@ const roomStore = useRoomStore()
 const { room } = storeToRefs(roomStore)
 const backgroundColor = ref('white')
 
-
 watch(
   () => room.value.id,
   (newId, oldId) => {
     if (newId !== oldId) {
       if (newId) {
         router.push('/room/' + newId)
-        backgroundColor.value = '#56ab2f'
+        backgroundColor.value = '#337333'
+    
       } else {
         router.push('/')
         backgroundColor.value = 'white'
@@ -25,10 +25,13 @@ watch(
     }
   }
 )
+
 </script>
 
 <template>
-  <div class="common-layout" :style="{'background-color': backgroundColor }">
+  <div  
+  v-bind:class="{ 'common-layout-white': backgroundColor=='white' , 'common-layout': backgroundColor!='white' }" 
+  :style="{'background-color': backgroundColor}">
     <el-container>
       <el-header><MyHeader /></el-header>
       <el-main><RouterView /></el-main>
@@ -45,6 +48,13 @@ watch(
 
 body {
   margin:0;
+}
+
+.common-layout-white{
+    background: url("../src/assets/bg_poker_white.jpg") no-repeat right bottom fixed;
+}
+.common-layout{
+    background: url("../src/assets/bg_poker.jpg") no-repeat right bottom fixed;
 }
 </style>
 <style scoped>
