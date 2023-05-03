@@ -14,6 +14,7 @@ const props = defineProps<{
 
 document.title = 'PP - ' + props.roomId
 
+const cards = ['0', '1', '2', '3', '5', '8', '13', '21', '∞', '☕']
 const roomStore = useRoomStore()
 const { room, users, selectedCard, userName } = storeToRefs(roomStore)
 const { joinRoom, vote, show, hide, reset } = roomStore
@@ -107,7 +108,7 @@ function pickCard(val: any) {
   <Teleport to="footer">
     <div class="card-footer" >
       <el-row justify="center">
-        <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val" :class="{cardcontainer: true}">
+        <el-col :span="3" v-for="val in cards" :key="val" :class="{cardcontainer: true}">
           <GameCard
             :card-value="val"
             @click="() => pickCard(val)"
@@ -179,5 +180,8 @@ function pickCard(val: any) {
   left: 5px;
   max-width: 800px;
   margin: 0 auto;
+}
+.card-footer .cardcontainer {
+  max-width: calc(100%/v-bind('cards.length') - 5px);
 }
 </style>
