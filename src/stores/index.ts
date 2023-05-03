@@ -27,7 +27,10 @@ const userSaved = ref(localStorage.getItem('userName') !== null)
 socket.on('connect', () => {
   console.log(`connected to websocket with id ${socket.id}`)
   if (!firstConnection.value) {
-    ElMessage(i18n.t('notifications.websocket-reconnected'))
+    ElMessage({
+      message: i18n.t('notifications.websocket-reconnected'),
+      grouping: true,
+    })
   }
   if (userName.value) {
     socket.emit('setUserName', userName.value)
@@ -40,7 +43,10 @@ socket.on('connect', () => {
 
 socket.on('disconnect', (reason) => {
   firstConnection.value = false
-  ElMessage(i18n.t('notifications.websocket-disconnected'))
+  ElMessage({
+    message: i18n.t('notifications.websocket-disconnected'),
+    grouping: true,
+  })
   if (reason === "io server disconnect") {
     // the disconnection was initiated by the server, you need to reconnect manually
     setTimeout(() => socket.connect(), 3000)
@@ -79,29 +85,53 @@ export const useRoomStore = defineStore('store', () => {
     room.value = roomState
   })
   socket.on('nameChange', ({ oldName, newName }) => {
-    ElMessage(i18n.t('notifications.change-name', { oldName, newName }))
+    ElMessage({
+      message: i18n.t('notifications.change-name', { oldName, newName }),
+      grouping: true,
+    })
   })
   socket.on('vote', ({ name, done }) => {
     if (done) {
-      ElMessage(i18n.t('notifications.vote-done'))
+      ElMessage({
+        message: i18n.t('notifications.vote-done'),
+        grouping: true,
+      })
     } else {
-      ElMessage(i18n.t('notifications.vote', { name }))
+      ElMessage({
+        message: i18n.t('notifications.vote', { name }),
+        grouping: true,
+      })
     }
   })
   socket.on('reset', ({ name }) => {
-    ElMessage(i18n.t('notifications.reset', { name }))
+    ElMessage({
+      message: i18n.t('notifications.reset', { name }),
+      grouping: true,
+    })
   })
   socket.on('left', ({ name }) => {
-    ElMessage(i18n.t('notifications.left', { name }))
+    ElMessage({
+      message: i18n.t('notifications.left', { name }),
+      grouping: true,
+    })
   })
   socket.on('joined', ({ name }) => {
-    ElMessage(i18n.t('notifications.join', { name }))
+    ElMessage({
+      message: i18n.t('notifications.join', { name }),
+      grouping: true,
+    })
   })
   socket.on('visibility', ({ name, state }) => {
     if (state) {
-      ElMessage(i18n.t('notifications.show', { name }))
+      ElMessage({
+        message: i18n.t('notifications.show', { name }),
+        grouping: true,
+      })
     } else {
-      ElMessage(i18n.t('notifications.hide', { name }))
+      ElMessage({
+        message: i18n.t('notifications.hide', { name }),
+        grouping: true,
+      })
     }
   })
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
@@ -126,7 +156,7 @@ export const useRoomStore = defineStore('store', () => {
     socket.emit('stopTimer')
   }
 
-  const startTimer = (time: number) => { 
+  const startTimer = (time: number) => {
     socket.emit('timer', { endTime: Date.now() + time })
   }
 
