@@ -47,9 +47,6 @@ socket.on('disconnect', (reason) => {
         message: i18n.t('notifications.websocket-disconnected'),
         grouping: true,
       })
-        message: i18n.t('notifications.websocket-disconnected'),
-        grouping: true,
-      })
   if (reason === "io server disconnect") {
     // the disconnection was initiated by the server, you need to reconnect manually
     setTimeout(() => socket.connect(), 3000)
