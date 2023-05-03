@@ -114,9 +114,7 @@ io.on('connection', (socket) => {
   });
 
   io.of("/").adapter.on("create-room", (roomId) => {
-    rooms = { ...rooms,
-        [roomId] : new Room(roomId)
-    }
+    rooms[roomId] = new Room(roomId)
   });
   
   io.of("/").adapter.on("join-room", async (roomId, userId) => {
