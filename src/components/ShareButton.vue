@@ -7,7 +7,10 @@ const { t } = useI18n({ useScope: 'global' })
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(`${window.location.href}`)
-  ElMessage(t('notifications.clipboard'))
+      ElMessage({
+        message: t('notifications.clipboard'),
+        grouping: true,
+      })
 }
 </script>
 
