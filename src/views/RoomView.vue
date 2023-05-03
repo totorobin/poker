@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import GameCard from '@/components/GameCard.vue'
 import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import RoomTimer from '@/components/RoomTimer.vue'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -61,6 +62,7 @@ function pickCard(val: any) {
 
 <template>
     <el-row justify="end">
+      <RoomTimer class="timer"/>
       <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
         <el-icon size="25">
           <el-tooltip
@@ -125,7 +127,7 @@ function pickCard(val: any) {
 
 <style scoped>
 
-.icon-button {
+.icon-button, .timer {
   padding: 0px 6px;
 }
 .actionable {

@@ -26,7 +26,7 @@ const userSaved = ref(localStorage.getItem('userName') !== null)
 
 socket.on('connect', () => {
   console.log(`connected to websocket with id ${socket.id}`)
-  if(!firstConnection.value) {
+  if (!firstConnection.value) {
     ElMessage(i18n.t('notifications.websocket-reconnected'))
   }
   if (userName.value) {
@@ -49,6 +49,10 @@ socket.on('disconnect', (reason) => {
 
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
+  const time = ref(3600000)  // 1h en ms
+  const nIntervId = ref(0)
+  const timerRunning = computed(() => nIntervId.value !== 0)
+  const endTimer = ref(false)
 
   function setUser(name: string) {
     userName.value = name
@@ -100,6 +104,30 @@ export const useRoomStore = defineStore('store', () => {
   })
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
 
+  socket.on('timer', ({ endTime }) => {
+    nIntervId.value = setInterval(() => {
+      time.value = endTime - Date.now()
+      if (time.value < 1000) { // si moins d'1s
+        clearInterval(nIntervId.value);
+        nIntervId.value = 0
+        endTimer.value = true
+      }
+    }, 1000)
+  })
+
+  socket.on('stopTimer', () => {
+    clearInterval(nIntervId.value);
+    nIntervId.value = 0
+  })
+
+  const stopTimer = () => {
+    socket.emit('stopTimer')
+  }
+
+  const startTimer = (time: number) => { 
+    socket.emit('timer', { endTime: Date.now() + time })
+  }
+
   async function createRoom() {
     socket.emit('create', (response: { roomId: string }) => {
       console.log(response)
@@ -146,6 +174,7 @@ export const useRoomStore = defineStore('store', () => {
     leave,
     setUser,
     userName,
-    userSaved
+    userSaved,
+    time, startTimer, stopTimer, timerRunning, endTimer
   }
 })
