@@ -7,17 +7,19 @@ const { t } = useI18n({ useScope: 'global' })
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(`${window.location.href}`)
-      ElMessage({
-        message: t('notifications.clipboard'),
-        grouping: true,
-      })
+  ElMessage({
+    message: t('notifications.clipboard'),
+    grouping: true,
+  })
 }
 </script>
 
 <template>
   <el-tooltip class="box-item" effect="dark" :content="t('tooltips.share')" placement="top-start">
     <div @click="copyToClipboard" class="share">
-        <el-icon><Share /></el-icon>
+      <el-icon>
+        <Share />
+      </el-icon>
     </div>
   </el-tooltip>
 </template>
@@ -27,6 +29,4 @@ const copyToClipboard = () => {
   padding: 0 5px;
   margin-top: 2px;
 }
-
-
 </style>
