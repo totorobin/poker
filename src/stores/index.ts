@@ -15,7 +15,16 @@ interface Room {
   name: string
   users: { [key: string]: User }
   cardVisible: boolean
+  cards: string[]
 }
+
+interface SavedRoom {
+  roomId : string,
+  cards : string[]
+}
+
+
+const savedRooms = ref(JSON.parse(localStorage.getItem('rooms') || '[]') as SavedRoom[])
 
 const socket = io()
 
@@ -118,6 +127,17 @@ export const useRoomStore = defineStore('store', () => {
   socket.on('stopTimer', () => {
     clearInterval(nIntervId.value);
     nIntervId.value = 0
+  })
+
+
+  socket.on('set-cards', (callback) => {
+    const savedRoom = savedRooms.value.filter(r => r.roomId === room.value.id)[0] || { roomId: room.value.id, cards: ['1', '2', '3', '5', '8', '13', '21', '☕']} as SavedRoom
+    console.log('send cards ', savedRoom.cards)
+    callback({
+      cards : savedRoom.cards
+    })
+    savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== room.value.id), savedRoom]
+    localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
   })
 
   const stopTimer = () => {

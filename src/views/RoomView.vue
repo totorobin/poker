@@ -110,7 +110,7 @@ function pickCard(val: any) {
   <Teleport to="footer">
     <div class="card-footer" >
       <el-row justify="center">
-        <el-col :span="3" v-for="val in cards" :key="val" :class="{cardcontainer: true}">
+        <el-col :span="3" v-for="val in room.cards" :key="val" :class="{cardcontainer: true}">
           <GameCard
             :card-value="val"
             @click="() => pickCard(val)"
