@@ -92,7 +92,7 @@ const showHide = computed({
   <Teleport to="footer">
     <div class="card-footer" >
       <el-row justify="center">
-        <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
+        <el-col :span="3" v-for="val in room.cards" :key="val">
           <GameCard
             :card-value="val"
             @click="() => (selectedCard === val ? () => {} : vote(val))"

@@ -118,12 +118,14 @@ io.on('connection', (socket) => {
   });
 
   io.of("/").adapter.on("create-room", (roomId) => {
+    console.log(`creating room ${roomId}`);
     rooms = { ...rooms,
         [roomId] : {
             id:roomId,
             users: {},
             cardVisible: false,
-            endTimer: 0
+            endTimer: 0,
+            cards : []
         }
     }
   });
@@ -141,6 +143,14 @@ io.on('connection', (socket) => {
             } else {
                 socket.emit('timer', { endTime : rooms[roomId].endTimer })
             }
+        }
+        if(rooms[roomId].cards.length == 0) {
+            console.log(`no game for room ${roomId}`)
+            socket.emit('set-cards', ({cards}) => {
+                console.log(`user ${socket.data.userName} has set the game for room ${roomId}`)
+                rooms[roomId].cards = cards
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+            })
         }
     } else {
         delete rooms[roomId]
