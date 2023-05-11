@@ -15,6 +15,7 @@ const props = defineProps<{
 
 document.title = 'PP - ' + props.roomId
 
+const cards = ['0', '1', '2', '3', '5', '8', '13', '21', '∞', '☕']
 const roomStore = useRoomStore()
 const { room, users, selectedCard, userName } = storeToRefs(roomStore)
 const { joinRoom, vote, show, hide, reset } = roomStore
@@ -44,6 +45,19 @@ const showHide = computed({
     }
   }
 })
+function pickCard(val: any) {
+  if(selectedCard.value === val) {
+    return false
+  }
+  
+  if(!selectedCard.value || !val) {
+    vote(val)
+    return
+  }
+
+  vote(null)
+  setTimeout(()=>vote(val), 200)
+}
 </script>
 
 <template>
@@ -79,11 +93,15 @@ const showHide = computed({
     </el-row>
     <div class="user-view" >
       <el-row justify="center" :gutter="15" >
-        <el-col :span="4" v-for="(user, index) in users" :key="index">
+        <el-col :span="4" v-for="(user, index) in users" :key="index" :class="{cardcontainer: true}">
           <GameCard
             @click="() => (userName === user.name ? vote(null) : () => {})"
             :card-value="user.card"
-            :class="{ set: user.card }"
+            :class="{ 
+              unset: !user.card,
+              mine: userName === user.name,
+              actionable: userName === user.name && user.card,
+            }"
           />
           {{ user.name }}
         </el-col>
@@ -92,11 +110,14 @@ const showHide = computed({
   <Teleport to="footer">
     <div class="card-footer" >
       <el-row justify="center">
-        <el-col :span="3" v-for="val in ['1', '2', '3', '5', '8', '13', '21', '☕']" :key="val">
+        <el-col :span="3" v-for="val in cards" :key="val" :class="{cardcontainer: true}">
           <GameCard
             :card-value="val"
-            @click="() => (selectedCard === val ? () => {} : vote(val))"
-            :class="{ selected: selectedCard === val }"
+            @click="() => pickCard(val)"
+            :class="{
+              selected: selectedCard === val,
+              actionable: selectedCard !== val,
+            }"
           />
         </el-col>
       </el-row>
@@ -109,38 +130,33 @@ const showHide = computed({
 .icon-button, .timer {
   padding: 0px 6px;
 }
+.actionable {
+  cursor: pointer;
+  transform: scale(1);
+  z-index: 5;
+}
+.actionable:hover {
+  /* effect like taking the card */
+  transform: scale(1.1) rotateX(-5deg) translateY(-20px);
+  box-shadow: 0 -5px 5px 5px #0008;
+  z-index: 10;
+}
+.mine.actionable:hover {
+  /* effect like pulling the card */
+  transform: rotateX(5deg) translateY(20px);
+}
 .selected {
   opacity: 0;
-  transform: translate(0, 0);
-  animation-name: moveCard;
-  animation-duration: 1s;
+  transform: translateY(-200px) rotateX(-10deg) scale(1.3);
+  box-shadow: 0 -15px 15px 15px #0000;
 }
-@keyframes moveCard {
-  0% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(0, -100px);
-  }
+.unset {
+  opacity: 0;
+  transform: translateY(200px) rotateX(-20deg) scale(1.5);
+  box-shadow: 0 -15px 15px 15px #0000;
 }
-
-@keyframes cardSet {
-  0% {
-    opacity: 0;
-    transform: translate(0, 100px);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-}
-.set {
-  opacity: 1;
-  transform: translate(0, 0);
-  animation-name: cardSet;
-  animation-duration: 1s;
+.unset:not(.mine) {
+  transform: translateY(-200px) rotateX(20deg);
 }
 .user-view {
   padding-top: 20px;
@@ -148,7 +164,16 @@ const showHide = computed({
   text-align: center;
   max-width: 1000px;
   margin: 0 auto;
-
+}
+.cardcontainer {
+  perspective: 200px;
+  z-index: 5;
+  background-color: #0002;
+  border-radius: 0.5em;
+  margin: 2px;
+}
+.cardcontainer:hover {
+  z-index: 9;
 }
 .card-footer {
   position: fixed;
@@ -157,5 +182,8 @@ const showHide = computed({
   left: 5px;
   max-width: 800px;
   margin: 0 auto;
+}
+.card-footer .cardcontainer {
+  max-width: calc(100%/v-bind('cards.length') - 5px);
 }
 </style>

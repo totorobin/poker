@@ -17,20 +17,20 @@ const roomNameConfig = {
     dictionaries: [adjectives, animals, names],
     separator: '-',
     length: 2,
-  };
+};
 
 
-  const userNameConfig = {
+const userNameConfig = {
     dictionaries: [starWars],
     style: 'capital',
     length: 1,
-  };
+};
 
 var rooms = {};
 
 io.on('connection', (socket) => {
     socket.data.userName = uniqueNamesGenerator(userNameConfig)
-    console.log(`user ${socket.data.userName} connected`);
+    console.log(`user ${socket.id} connected as '${socket.data.userName}'`);
 
     socket.on('whoAmI', (callback) => {
         callback(socket.data)
@@ -58,7 +58,6 @@ io.on('connection', (socket) => {
     })
     socket.on('join', ({roomId}) => {
         socket.join(roomId.toLowerCase())
-        
     })
     socket.on('vote', ({value}) => {
         socket.rooms.forEach((roomId) => {
@@ -97,6 +96,7 @@ io.on('connection', (socket) => {
         socket.leave(roomId)
         callback({})
     })
+
     socket.on('timer', ({ endTime }) => {
         socket.rooms.forEach((roomId) => {
             if(roomId in rooms) {
@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
     })
   });
 
-  io.of("/").adapter.on("create-room", (roomId) => {
+io.of("/").adapter.on("create-room", (roomId) => {
     rooms = { ...rooms,
         [roomId] : {
             id:roomId,
@@ -126,15 +126,15 @@ io.on('connection', (socket) => {
             endTimer: 0
         }
     }
-  });
+});
   
-  io.of("/").adapter.on("join-room", async (roomId, userId) => {
+io.of("/").adapter.on("join-room", async (roomId, userId) => {
     if(roomId !== userId) {  // ignore user room
         const socket = (await io.in(userId).fetchSockets())[0];
         rooms[roomId].users[userId] = {name: socket.data.userName, id: userId, card: null}
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         socket.to(roomId).emit('joined', {name: socket.data.userName})  // inform action
-        console.log(`user ${socket.data.userName} has joined room ${roomId}`);
+        console.log(`user ${userId} has joined room '${roomId}' as '${socket.data.userName}'`);
         if(rooms[roomId].endTimer > 0) {
             if(rooms[roomId].endTimer < Date.now()) {
                 rooms[roomId].endTimer = 0
@@ -145,26 +145,26 @@ io.on('connection', (socket) => {
     } else {
         delete rooms[roomId]
     }
-  });
+});
 
-  io.of("/").adapter.on("delete-room", (roomId) => {
+io.of("/").adapter.on("delete-room", (roomId) => {
     if(roomId in rooms) {
         delete rooms[roomId]
         console.log(`room ${roomId} was deleted`);
-        console.log(`current rooms : ${Object.keys(rooms).length}`)
+        console.log(`current rooms: ${Object.keys(rooms).length}`)
     }
-  });
-  
-  io.of("/").adapter.on("leave-room", async (roomId, userId) => {
-    console.log(`socket ${userId} has left room ${roomId}`);
+});
+
+io.of("/").adapter.on("leave-room", async (roomId, userId) => {
+    console.log(`user ${userId} has left room ${roomId}`);
     if(roomId in rooms) {
         let userName = rooms[roomId].users[userId].name
         delete rooms[roomId].users[userId]  // update room
         io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
         io.to(roomId).emit('left', {name: userName})  // inform action
     }
-  });
+});
 
 
 // eslint-disable-next-line no-undef
-ViteExpress.bind(app, server, () => console.log("Server is listening..."));
+ViteExpress.bind(app, server, () => console.log(`Server is listening on port ${port}...`));

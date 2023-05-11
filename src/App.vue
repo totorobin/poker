@@ -46,6 +46,14 @@ watch(
 body {
   margin:0;
 }
+
+.el-main {
+  overflow: hidden;
+}
+.el-footer {
+  z-index: 5;
+}
+
 </style>
 <style scoped>
 

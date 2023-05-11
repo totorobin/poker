@@ -14,7 +14,7 @@ const open = () => {
   ElMessageBox.prompt(t('prompt-name.message'), t('prompt-name.title'), {
     confirmButtonText: t('prompt-name.confirm'),
     cancelButtonText: t('prompt-name.cancel'),
-    inputPattern: /^[^_!¡?÷¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{1,32}$/,
+    inputPattern: /^[^_!¡?÷¿/\\+=@#$%^&*(){}|~<>;:[\]]{1,32}$/,
     inputErrorMessage: t('prompt-name.error-input'),
   })
     .then(({ value }) => {
