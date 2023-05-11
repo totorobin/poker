@@ -8,13 +8,13 @@ defineProps<{
   <div
     :class="{
       card: true,
-      cardBack: cardValue === '?',
-      cardFront: cardValue && cardValue !== '?',
+      cardBack: cardValue === ';',
+      cardFront: cardValue && cardValue !== ';',
     }"
   >
     <svg :viewBox="`0 0 ${15+15*(cardValue?.length||0)} 30`">
       <text x="50%" y="100%" text-anchor="middle">
-        {{ cardValue == '?' ? '' : cardValue }}
+        {{ cardValue == ';' ? '' : cardValue }}
       </text>
     </svg>
   </div>

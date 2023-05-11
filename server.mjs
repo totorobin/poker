@@ -35,7 +35,9 @@ io.on('connection', (socket) => {
     socket.on('whoAmI', (callback) => {
         callback(socket.data)
     })
-
+    socket.on('setUserUUID', (uuid) => { 
+        socket.data.uuid = uuid
+    })
     socket.on('setUserName', (userName) => {
         let oldName = socket.data.userName
         socket.data.userName = userName
@@ -115,7 +117,16 @@ io.on('connection', (socket) => {
             }
         })
     })
-  });
+    socket.on('updateSettings', ({cards}) => {
+        console.log('update room ', cards)
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms && rooms[roomId].owner === socket.data.uuid) {
+                rooms[roomId].cards = cards
+                io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+            }
+        })
+    })
+});
 
 io.of("/").adapter.on("create-room", (roomId) => {
     console.log(`creating room ${roomId}`);
@@ -146,9 +157,10 @@ io.of("/").adapter.on("join-room", async (roomId, userId) => {
         }
         if(rooms[roomId].cards.length == 0) {
             console.log(`no game for room ${roomId}`)
-            socket.emit('set-cards', ({cards}) => {
+            socket.emit('set-room', ({cards, owner}) => {
                 console.log(`user ${socket.data.userName} has set the game for room ${roomId}`)
                 rooms[roomId].cards = cards
+                rooms[roomId].owner = owner  // the first to connect is the owner
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
             })
         }
