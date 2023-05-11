@@ -4,7 +4,6 @@ import { ElMessage } from 'element-plus'
 import { io } from 'socket.io-client'
 import { i18n } from '@/locales'
 import  { v4 as uuidv4 }  from 'uuid'
-import  { v4 as uuidv4 }  from 'uuid'
 
 interface User {
   id: string
@@ -27,20 +26,7 @@ interface SavedRoom {
   cards : string[]
   owner: string
   actionsOwnerOnly: boolean
-  cards: string[]
-  owner: string
-  actionsOwnerOnly: boolean
 }
-
-interface SavedRoom {
-  roomId : string,
-  cards : string[]
-  owner: string
-  actionsOwnerOnly: boolean
-}
-
-
-const savedRooms = ref(JSON.parse(localStorage.getItem('rooms') || '[]') as SavedRoom[])
 
 
 const savedRooms = ref(JSON.parse(localStorage.getItem('rooms') || '[]') as SavedRoom[])
@@ -51,12 +37,6 @@ const firstConnection = ref(true)
 
 const userName = ref(localStorage.getItem('userName'))
 const userSaved = ref(localStorage.getItem('userName') !== null)
-const userUuid = computed(() => {
-  if(localStorage.getItem('uuid') == null) {
-    localStorage.setItem('uuid', uuidv4())
-  }
-  return localStorage.getItem('uuid')
-})
 const userUuid = computed(() => {
   if(localStorage.getItem('uuid') == null) {
     localStorage.setItem('uuid', uuidv4())
@@ -116,13 +96,10 @@ export const useRoomStore = defineStore('store', () => {
   const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
 
   socket.on('roomState', (roomState: Room) => {
-    if(roomState.cards.length > 0 && room.value.cards !== roomState.cards) {
-      savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== roomState.id), { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly} as SavedRoom]
-      localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
-    }
-  socket.on('roomState', (roomState: Room) => {
-    if(roomState.cards.length > 0 && room.value.cards !== roomState.cards) {
-      savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== roomState.id), { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly} as SavedRoom]
+    if(roomState.cards.length > 0 && (room.value.cards !== roomState.cards || room.value.actionsOwnerOnly !== roomState.actionsOwnerOnly )) {
+      const roomToSave = { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly} as SavedRoom
+      console.log('save room',roomToSave)
+      savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== roomState.id), roomToSave]
       localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
     }
     room.value = roomState
@@ -183,14 +160,6 @@ export const useRoomStore = defineStore('store', () => {
   })
 
 
-  socket.on('set-room', (callback) => {
-    const savedRoom = savedRooms.value.filter(r => r.roomId === room.value.id)[0] || { roomId: room.value.id, cards: ['1', '2', '3', '5', '8', '13', '21', '☕'], owner: userUuid.value, actionsOwnerOnly: false} as SavedRoom
-    console.log('send cards ', savedRoom.cards)
-    callback(savedRoom)
-    savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== room.value.id), savedRoom]
-    localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
-  })
-
   const stopTimer = () => {
     socket.emit('stopTimer')
   }
@@ -236,9 +205,7 @@ async function updateSettings(settings:SavedRoom) {
   socket.emit('updateSettings', settings)
 }
 
-async function updateSettings(settings:SavedRoom) {
-  socket.emit('updateSettings', settings)
-}
+const actionsAllowed = computed(() => !room.value.actionsOwnerOnly || room.value.owner == userUuid.value)
 
   return {
     room,
@@ -246,16 +213,13 @@ async function updateSettings(settings:SavedRoom) {
     createRoom,
     vote,
     show, hide, reset,
-    show, hide, reset,
     users,
     selectedCard,
     leave,
     setUser,
     userName, userSaved, userUuid,
     time, startTimer, stopTimer, timerRunning, endTimer,
-    updateSettings
-    userName, userSaved, userUuid,
-    time, startTimer, stopTimer, timerRunning, endTimer,
-    updateSettings
+    updateSettings,
+    actionsAllowed
   }
 })
