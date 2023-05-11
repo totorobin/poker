@@ -7,6 +7,7 @@ import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import RoomTimer from '@/components/RoomTimer.vue'
 import RoomSettings from '@/components/RoomSettings.vue'
+import RoomSettings from '@/components/RoomSettings.vue'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -63,6 +64,7 @@ function pickCard(val: any) {
 
 <template>
     <el-row justify="end">
+      <RoomSettings />
       <RoomSettings />
       <RoomTimer class="timer"/>
       <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
