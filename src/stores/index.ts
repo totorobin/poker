@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { io } from 'socket.io-client'
 import { i18n } from '@/locales'
+import  { v4 as uuidv4 }  from 'uuid'
 
 interface User {
   id: string
@@ -16,11 +17,15 @@ interface Room {
   users: { [key: string]: User }
   cardVisible: boolean
   cards: string[]
+  owner: string
+  actionsOwnerOnly: boolean
 }
 
 interface SavedRoom {
   roomId : string,
   cards : string[]
+  owner: string
+  actionsOwnerOnly: boolean
 }
 
 
@@ -32,6 +37,12 @@ const firstConnection = ref(true)
 
 const userName = ref(localStorage.getItem('userName'))
 const userSaved = ref(localStorage.getItem('userName') !== null)
+const userUuid = computed(() => {
+  if(localStorage.getItem('uuid') == null) {
+    localStorage.setItem('uuid', uuidv4())
+  }
+  return localStorage.getItem('uuid')
+})
 
 socket.on('connect', () => {
   console.log(`connected to websocket with id ${socket.id}`)
@@ -45,6 +56,7 @@ socket.on('connect', () => {
       userName.value = data.userName
     })
   }
+  socket.emit('setUserUUID', userUuid.value)
 })
 
 socket.on('disconnect', (reason) => {
@@ -77,14 +89,19 @@ export const useRoomStore = defineStore('store', () => {
           if (user.id === socket.id || room.value.cardVisible) {
             return { name: user.name, card: user.card }
           }
-          return { name: user.name, card: user.card ? '?' : null }
+          return { name: user.name, card: user.card ? ';' : null }
         })
   )
   const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
 
-  socket.on('roomState', (roomState) => {
+  socket.on('roomState', (roomState: Room) => {
+    if(roomState.cards.length > 0 && room.value.cards !== roomState.cards) {
+      savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== roomState.id), { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly} as SavedRoom]
+      localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
+    }
     room.value = roomState
   })
+
   socket.on('nameChange', ({ oldName, newName }) => {
     ElMessage(i18n.t('notifications.change-name', { oldName, newName }))
   })
@@ -130,12 +147,10 @@ export const useRoomStore = defineStore('store', () => {
   })
 
 
-  socket.on('set-cards', (callback) => {
-    const savedRoom = savedRooms.value.filter(r => r.roomId === room.value.id)[0] || { roomId: room.value.id, cards: ['1', '2', '3', '5', '8', '13', '21', '☕']} as SavedRoom
+  socket.on('set-room', (callback) => {
+    const savedRoom = savedRooms.value.filter(r => r.roomId === room.value.id)[0] || { roomId: room.value.id, cards: ['1', '2', '3', '5', '8', '13', '21', '☕'], owner: userUuid.value, actionsOwnerOnly: false} as SavedRoom
     console.log('send cards ', savedRoom.cards)
-    callback({
-      cards : savedRoom.cards
-    })
+    callback(savedRoom)
     savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== room.value.id), savedRoom]
     localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
   })
@@ -181,20 +196,22 @@ export const useRoomStore = defineStore('store', () => {
       })
   }
 
+async function updateSettings(settings:SavedRoom) {
+  socket.emit('updateSettings', settings)
+}
+
   return {
     room,
     joinRoom,
     createRoom,
     vote,
-    show,
-    hide,
-    reset,
+    show, hide, reset,
     users,
     selectedCard,
     leave,
     setUser,
-    userName,
-    userSaved,
-    time, startTimer, stopTimer, timerRunning, endTimer
+    userName, userSaved, userUuid,
+    time, startTimer, stopTimer, timerRunning, endTimer,
+    updateSettings
   }
 })
