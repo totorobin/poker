@@ -11,15 +11,15 @@ defineProps<{
     :class="{ card: true }"
     :style="{
       background:
-        cardValue === '?'
+        cardValue === ';'
           ? `no-repeat center/100% url(${backImg}) whitesmoke`
           : cardValue
           ? `no-repeat center/90% url(${frontImg}) whitesmoke`
           : '',
-      border: cardValue && cardValue !== '?' ? '1px solid black' : ''
+      border: cardValue && cardValue !== ';' ? '1px solid black' : ''
     }"
   >
-    {{ cardValue == '?' ? '' : cardValue }}
+    {{ cardValue == ';' ? '' : cardValue }}
   </div>
 </template>
 
