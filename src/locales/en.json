@@ -2,7 +2,9 @@
   "flag": "🇬🇧",
   "buttons": {
     "new-room": "new",
-    "join-room": "join"
+    "join-room": "join",
+    "cancel": "Cancel",
+    "confirm": "OK"
   },
   "titles": {
     "new-room": "New room",
@@ -37,5 +39,19 @@
     "confirm": "OK",
     "cancel": "Cancel",
     "cancel-notif": "Input canceled"
+  },
+  "settings": {
+    "sets": {
+      "fibo1" :"Fibonacci",
+      "fibo2" :"Fibonacci 2",
+      "line" : "Linéaire",
+      "tee-shirt" : "tee-shirt sizes",
+      "weather" : "weather"
+    },
+    "form": {
+        "deck" : "deck of cards",
+        "title": "Settings",
+        "actions-owner-only": "Actions for admin only"
+    }
   }
 }
