@@ -9,7 +9,7 @@ import type { Room, SavedRoom, User } from '@/data-model'
 
 /** Chargement des valeurs stockés en localstorage */
 const userName = ref(localStorage.getItem('userName'))
-const userSaved = ref(localStorage.getItem('userName') !== null)
+const userSaved = ref(userName.value !== null)
 const userUuid = computed(() => {
   if(localStorage.getItem('uuid') == null) {
     localStorage.setItem('uuid', uuidv4())
