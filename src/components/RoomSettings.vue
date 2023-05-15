@@ -43,7 +43,7 @@ const selectList = () => {
 }
 const selectCard = (val: string) => {
   if (selectedCards.value.includes(val)) {
-    cards.value = [...selectedCards.value.filter(v => v !== val)].join(';')
+    cards.value = selectedCards.value.filter(v => v !== val).join(';')
   } else {
     const desorderedList = [...selectedCards.value, val]
     cards.value = currentList.value.filter((v: string) => desorderedList.includes(v)).join(';')
