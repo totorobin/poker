@@ -50,9 +50,6 @@ io.on('connection', (socket) => {
     socket.on('setUserUUID', (uuid) => { 
         socket.data.uuid = uuid
     })
-    socket.on('setUserUUID', (uuid) => { 
-        socket.data.uuid = uuid
-    })
     socket.on('setUserName', (userName) => {
         let oldName = socket.data.userName
         socket.data.userName = userName
