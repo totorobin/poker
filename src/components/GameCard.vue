@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BACK_CARD_VALUE } from '@/data-model'
 defineProps<{
   cardValue: string | null
 }>()
@@ -8,10 +9,10 @@ defineProps<{
   <div
     :class="{
       card: true,
-      cardBack: cardValue === ';',
-      cardFront: cardValue && cardValue !== ';',
+      cardBack: cardValue === BACK_CARD_VALUE,
+      cardFront: cardValue && cardValue !== BACK_CARD_VALUE,
     }"
-  >{{ cardValue == ';' ? '' : cardValue }}
+  >{{ cardValue == BACK_CARD_VALUE ? '' : cardValue }}
   </div>
 </template>
 

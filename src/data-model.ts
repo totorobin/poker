@@ -21,3 +21,5 @@ export interface User {
     owner: string
     actionsOwnerOnly: boolean
   }
+
+  export const BACK_CARD_VALUE = ';'

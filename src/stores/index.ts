@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus'
 import { io } from 'socket.io-client'
 import { i18n } from '@/locales'
 import  { v4 as uuidv4 }  from 'uuid'
-import type { Room, SavedRoom, User } from '@/data-model'
+import { BACK_CARD_VALUE, type Room, type SavedRoom, type User } from '@/data-model'
 
 
 /** Chargement des valeurs stockés en localstorage */
@@ -105,7 +105,7 @@ export const useRoomStore = defineStore('store', () => {
           if (user.id === socket.id || room.value.cardVisible) {
             return { name: user.name, card: user.card }
           }
-          return { name: user.name, card: user.card ? ';' : null }
+          return { name: user.name, card: user.card ? BACK_CARD_VALUE : null }
         })
   )
   const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[socket.id].card))
