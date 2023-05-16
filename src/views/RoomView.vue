@@ -6,6 +6,7 @@ import GameCard from '@/components/GameCard.vue'
 import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import RoomTimer from '@/components/RoomTimer.vue'
+import RoomSettings from '@/components/RoomSettings.vue'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -15,9 +16,8 @@ const props = defineProps<{
 
 document.title = 'PP - ' + props.roomId
 
-const cards = ['0', '1', '2', '3', '5', '8', '13', '21', '∞', '☕']
 const roomStore = useRoomStore()
-const { room, users, selectedCard, userName } = storeToRefs(roomStore)
+const { room, users, selectedCard, userName, actionsAllowed } = storeToRefs(roomStore)
 const { joinRoom, vote, show, hide, reset } = roomStore
 
 if (props.roomId != room.value.id) {
@@ -61,9 +61,10 @@ function pickCard(val: any) {
 </script>
 
 <template>
-    <el-row justify="end">
+    <el-row class="actions" justify="end">
+      <RoomSettings />
       <RoomTimer class="timer"/>
-      <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
+      <el-button link class="icon-button" :underline="false" :disabled="!actionsAllowed" @click="() => (showHide = !showHide)">
         <el-icon size="25">
           <el-tooltip
             v-if="!showHide"
@@ -84,17 +85,17 @@ function pickCard(val: any) {
             <Hide />
           </el-tooltip>
         </el-icon>
-      </div>
-      <div class="icon-button" :underline="false" @click="() => reset()">
+      </el-button>
+      <el-button link class="icon-button" :underline="false" @click="() => reset()" :disabled="!actionsAllowed" >
         <el-tooltip class="box-item" effect="dark" :content="t('tooltips.reset')" placement="top-start">
           <el-icon size="25"><RefreshLeft /></el-icon>
         </el-tooltip>
-      </div>
+      </el-button>
     </el-row>
     <div class="user-view" >
       <el-row justify="center" :gutter="15" >
         <el-col :span="4" v-for="(user, index) in users" :key="index" :class="{cardcontainer: true}">
-          <GameCard
+          <GameCard style="font-size: xxx-large;"
             @click="() => (userName === user.name ? vote(null) : () => {})"
             :card-value="user.card"
             :class="{ 
@@ -109,8 +110,8 @@ function pickCard(val: any) {
     </div>
   <Teleport to="footer">
     <div class="card-footer" >
-      <el-row justify="center">
-        <el-col :span="3" v-for="val in cards" :key="val" :class="{cardcontainer: true}">
+      <el-row justify="center" style="font-size: xx-large;">
+        <el-col :span="3" v-for="(val,index) in room.cards" :key="index" :class="{cardcontainer: true}">
           <GameCard
             :card-value="val"
             @click="() => pickCard(val)"
@@ -126,8 +127,10 @@ function pickCard(val: any) {
 </template>
 
 <style scoped>
-
-.icon-button, .timer {
+.actions{
+  align-items: center;
+}
+.timer {
   padding: 0px 6px;
 }
 .actionable {
@@ -184,6 +187,6 @@ function pickCard(val: any) {
   margin: 0 auto;
 }
 .card-footer .cardcontainer {
-  max-width: calc(100%/v-bind('cards.length') - 5px);
+  max-width: calc(100%/v-bind('room.cards?.length') - 5px);
 }
 </style>

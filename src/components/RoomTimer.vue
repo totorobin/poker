@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n({ useScope: 'global' })
 
 const roomStore = useRoomStore()
-const { time, timerRunning, endTimer } = storeToRefs(roomStore)
+const { time, timerRunning, endTimer, actionsAllowed } = storeToRefs(roomStore)
 const { startTimer, stopTimer } = roomStore
 
 const setTimer = () => {
@@ -33,8 +33,8 @@ const dateTime = computed({
 <template>
     <div>
         <el-time-picker :clearable="false"  size="small" v-model="dateTime" :readonly="timerRunning"/>
-        <el-button size="small" v-if="!timerRunning" :icon="VideoPlay" @click="setTimer" ></el-button>
-        <el-button size="small" v-else :icon="VideoPause" @click="stopTimer" ></el-button>
+        <el-button :disabled="!actionsAllowed" size="small" v-if="!timerRunning" :icon="VideoPlay" @click="setTimer" ></el-button>
+        <el-button :disabled="!actionsAllowed" size="small" v-else :icon="VideoPause" @click="stopTimer" ></el-button>
         <el-dialog v-model="endTimer" :show="true" @close=" time = 3600000">
            <p class="msg-end-timer">{{ t('notifications.end-timer') }}</p>
         </el-dialog>

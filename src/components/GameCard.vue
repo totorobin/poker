@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BACK_CARD_VALUE } from '@/data-model'
 defineProps<{
   cardValue: string | null
 }>()
@@ -8,15 +9,10 @@ defineProps<{
   <div
     :class="{
       card: true,
-      cardBack: cardValue === '?',
-      cardFront: cardValue && cardValue !== '?',
+      cardBack: cardValue === BACK_CARD_VALUE,
+      cardFront: cardValue && cardValue !== BACK_CARD_VALUE,
     }"
-  >
-    <svg :viewBox="`0 0 ${15+15*(cardValue?.length||0)} 30`">
-      <text x="50%" y="100%" text-anchor="middle">
-        {{ cardValue == '?' ? '' : cardValue }}
-      </text>
-    </svg>
+  >{{ cardValue == BACK_CARD_VALUE ? '' : cardValue }}
   </div>
 </template>
 
@@ -31,20 +27,11 @@ defineProps<{
   border-radius: 7px;
   border: 1px solid var(--el-card-border-color);
   box-shadow: var(--el-box-shadow-light);
-  font-size: xx-large;
   transition: box-shadow .2s ease-in-out, transform .2s ease-in-out;
   box-shadow: 0 0 5px -5px #000;
   background: no-repeat center/100% transparent;
   user-select: none;
-}
-.card svg {
-  position: absolute;
-  left: 20%;
-  top: 20%;
-  line-height: 0;
-  max-width: 60%;
-  max-height: 60%;
-  aspect-ratio: 1;
+
 }
 .cardBack {
   background-image: url('@/assets/playing-card-back.png');

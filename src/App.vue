@@ -65,13 +65,13 @@ body {
 .el-container {
   height: 100vh;
 }
+.el-main {
+    --el-main-padding: 10px;
+  }
 @media (max-width: 450px) {
   .el-header  {
     height: 30px;
     line-height: 30px;
-  }
-  .el-main {
-    padding: 10px;
   }
 }
 </style>
