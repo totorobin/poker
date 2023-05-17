@@ -32,10 +32,9 @@ defineProps<{
   vertical-align: middle;
   aspect-ratio: 2.5 / 3.5;
   border-radius: 7px;
-  border: 1px solid var(--el-card-border-color);
-  box-shadow: var(--el-box-shadow-light);
+  border: 1px solid #ecf5c7a2;
+  box-shadow: var(--el-box-shadow-dark);
   font-size: xx-large;
-  background-color: #224222;
 }
 @media (max-width: 450px) {
   .card {
