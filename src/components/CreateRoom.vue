@@ -17,28 +17,7 @@ function create() {
 </script>
 
 <template>
-  <!--
- 
-    <el-col :span="8">
-      <div>
-        <h2>{{ t('titles.new-room') }}</h2>
-        <el-button @click="create">{{ t('buttons.new-room') }}</el-button>
-      </div>
-    </el-col>
-    <el-col :span="16">
-      <div>
-        <h2>{{ t('titles.join-room') }}</h2>
-        <el-input v-model="roomForm" placeholder="room id" v-on:keyup.enter="joinRoom">
-          <template #append>
-            <el-button @click="joinRoom">{{ t('buttons.join-room') }}</el-button>
-          </template>
-        </el-input>
-      </div>
-    </el-col>
-  
--->
-
-   <el-row class="room_box">
+    <el-row class="room_box">
     <div class="room">
       <el-button @click="create" class="create">{{ t('buttons.new-room') }}</el-button>
       <div class="line"></div>
