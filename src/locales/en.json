@@ -1,12 +1,13 @@
 {
   "flag": "🇬🇧",
   "buttons": {
-    "new-room": "new",
-    "join-room": "join"
+    "new-room": "New",
+    "join-room": "Join"
   },
   "titles": {
     "new-room": "New room",
-    "join-room": "Join room"
+    "join-room": "Join room",
+    "room-name": "Room name"
   },
   "tooltips": {
     "show": "Show",

@@ -18,7 +18,7 @@ function create() {
 
 <template>
   <!--
-  <el-row>
+ 
     <el-col :span="8">
       <div>
         <h2>{{ t('titles.new-room') }}</h2>
@@ -35,10 +35,10 @@ function create() {
         </el-input>
       </div>
     </el-col>
-  </el-row>
+  
 -->
 
-  <div class="room_box">
+   <el-row class="room_box">
     <div class="room">
       <el-button @click="create" class="create">{{ t('buttons.new-room') }}</el-button>
       <div class="line"></div>
@@ -48,7 +48,7 @@ function create() {
       <div class="line"></div>
       <el-button @click="joinRoom" class="join">{{ t('buttons.join-room') }}</el-button>
     </div>
-  </div>
+ </el-row>
 </template>
 
 <style scoped>
@@ -110,7 +110,7 @@ function create() {
 .line {
   margin-left: 1px;
   border-left: 1px solid #d8d8d8;
-  height: 100%;
+  height: 40px;
 }
 
 .room_text {
