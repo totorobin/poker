@@ -46,7 +46,7 @@ const showHide = computed({
 </script>
 
 <template>
-    <el-row justify="end">
+    <el-row justify="end" class="poker-actions">
       <div class="icon-button" :underline="false" @click="() => (showHide = !showHide)">
         <el-icon size="25">
           <el-tooltip
@@ -166,6 +166,16 @@ const showHide = computed({
   box-shadow: var(--el-box-shadow-light);
   margin-top:5px;
   margin-bottom:18px;
+  padding: 5px;
+}
+.poker-actions{
+  display: block;
+  float: right;
+  max-width: 800px;
+  background-color: rgb(244, 250, 241);
+  border-radius: 7px;
+  border: 1px solid var(--el-card-border-color);
+  box-shadow: var(--el-box-shadow-light);
   padding: 5px;
 }
 </style>

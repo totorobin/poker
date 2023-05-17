@@ -66,8 +66,8 @@ function create() {
   display: flex;
   align-items: center;
   margin: auto;
-  width: 680px;
-  height: 54px;
+  max-width: 680px;
+  max-height: 54px;
   background-color: white;
   border: 1px solid #e4e4e4;
   border-radius: 25px;
@@ -91,9 +91,8 @@ function create() {
 }
 
 .join {
-  display: flex;
-  align-items: right;
-  font-family: 'Roboto', sans-serif;
+   display: flex;
+  align-items: center;
   line-height: 24px;
   font-weight: medium;
   border-top-right-radius: 30px;
@@ -111,7 +110,7 @@ function create() {
 .line {
   margin-left: 1px;
   border-left: 1px solid #d8d8d8;
-  height: 40px;
+  height: 100%;
 }
 
 .room_text {
@@ -119,7 +118,7 @@ function create() {
   border: none;
   margin-left: 15px;
   font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  color: var(--el-text-color-regular);
   line-height: 24px;
   font-weight: Regular;
 }
@@ -130,7 +129,7 @@ function create() {
 }
 
 .text_input_room_name {
-  width: 410px;
+  width:  450px;
   display: flex;
   align-items: center;
 }

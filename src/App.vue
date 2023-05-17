@@ -51,10 +51,10 @@ body {
 }
 
 .common-layout-white{
-    background: url("../src/assets/bg_poker_white.jpg") no-repeat right bottom fixed;
+    background: url("@/assets/bg_poker_white.jpg") no-repeat right bottom fixed;
 }
 .common-layout{
-    background: url("../src/assets/bg_poker.jpg") no-repeat right bottom fixed;
+    background: url("@/assets/bg_poker.jpg") no-repeat right bottom fixed;
 }
 </style>
 <style scoped>
