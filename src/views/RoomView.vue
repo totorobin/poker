@@ -119,6 +119,7 @@ function pickCard(val: any) {
               selected: selectedCard === val,
               actionable: selectedCard !== val,
             }"
+            :data-testid="'selectCard' + val"
           />
         </el-col>
       </el-row>

@@ -10,7 +10,7 @@ import { uniqueNamesGenerator, adjectives, animals, names, starWars } from 'uniq
 let port = process.env.PORT || 8080;
 // App and server
 let app = express();
-let server = http.createServer(app).listen(port);    
+let server = http.createServer(app).listen(port,"0.0.0.0", () => console.log(`Server is listening on port ${port}...`));    
 
 const io = new Server(server)
 
@@ -203,4 +203,4 @@ io.of("/").adapter.on("leave-room", async (roomId, userId) => {
 
 
 // eslint-disable-next-line no-undef
-ViteExpress.bind(app, server, () => console.log(`Server is listening on port ${port}...`));
+ViteExpress.bind(app, server);

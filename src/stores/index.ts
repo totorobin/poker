@@ -16,7 +16,7 @@ const userUuid = computed(() => {
   }
   return localStorage.getItem('uuid')
 })
-const savedRooms = ref(JSON.parse(localStorage.getItem('rooms') || '[]') as SavedRoom[])
+const savedRooms = ref<SavedRoom[]>(JSON.parse(localStorage.getItem('rooms') || '[]'))
 
 
 const socket = io()
@@ -58,6 +58,11 @@ export const useRoomStore = defineStore('store', () => {
     }
     room.value = roomState
   })
+
+  function removeSavedRoom(room : SavedRoom) {
+    savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== room.roomId)]
+    localStorage.setItem('rooms', JSON.stringify(savedRooms.value)) 
+  }
 
   /** Gestion des l'utilisateurs */
 
@@ -210,6 +215,7 @@ export const useRoomStore = defineStore('store', () => {
     userName, userSaved, userUuid,
     time, startTimer, stopTimer, timerRunning, endTimer,
     updateSettings,
-    actionsAllowed
+    actionsAllowed,
+    savedRooms, removeSavedRoom
   }
 })
