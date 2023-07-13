@@ -1,3 +1,4 @@
+import 'dotenv/config' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import express from 'express'
 import ViteExpress  from "vite-express";
 import http from 'http'
@@ -5,9 +6,9 @@ import http from 'http'
 import { Server } from 'socket.io'
 import { uniqueNamesGenerator, adjectives, animals, names, starWars } from 'unique-names-generator';
 
-
+console.log(process.env) // remove this after you've confirmed it is working
 // eslint-disable-next-line no-undef
-let port = process.env.PORT || 8080;
+let port = process.env.VITE_BACKEND_PORT || 5173;
 // App and server
 let app = express();
 let server = http.createServer(app).listen(port,"0.0.0.0", () => console.log(`Server is listening on port ${port}...`));    

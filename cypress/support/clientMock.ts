@@ -9,7 +9,7 @@ import  { v4 as uuidv4 }  from 'uuid'
 export function createClientMock(name?: string) {
     
   const uuid = uuidv4()
-  const socket = io('http://localhost:8080')
+  const socket = io({port : 8080})
   
   socket.emit('setUserUUID', uuid)
 

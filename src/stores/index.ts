@@ -1,3 +1,4 @@
+
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
@@ -17,9 +18,9 @@ const userUuid = computed(() => {
   return localStorage.getItem('uuid')
 })
 const savedRooms = ref<SavedRoom[]>(JSON.parse(localStorage.getItem('rooms') || '[]'))
+const port = import.meta.env.VITE_BACKEND_PORT || location.port
 
-
-const socket = io()
+const socket = io({port})
 const firstConnection = ref(true)
 
 socket.on('connect', () => {
