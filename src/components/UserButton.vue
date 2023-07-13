@@ -34,7 +34,7 @@ const open = () => {
 
 <template>
     <el-badge :is-dot="!userSaved" class="user" @click="open">
-        <el-icon size="20"><User /></el-icon> {{ userName }}
+        <el-icon size="20"><User /></el-icon> <div data-testid="userName">{{ userName }}</div>
     </el-badge>
 </template>
 
