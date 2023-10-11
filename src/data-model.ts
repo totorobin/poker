@@ -13,6 +13,7 @@ export interface User {
     cards: string[]
     owner: string
     actionsOwnerOnly: boolean
+    noVoteWhenVisible: boolean
   }
   
  export interface SavedRoom {
@@ -20,6 +21,7 @@ export interface User {
     cards : string[]
     owner: string
     actionsOwnerOnly: boolean
+    noVoteWhenVisible: boolean
   }
 
   export const BACK_CARD_VALUE = ';'

@@ -7,6 +7,7 @@ import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import RoomTimer from '@/components/RoomTimer.vue'
 import RoomSettings from '@/components/RoomSettings.vue'
+import Konami from '@/components/Konami.vue'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -58,6 +59,7 @@ function pickCard(val: any) {
   vote(null)
   setTimeout(()=>vote(val), 200)
 }
+
 </script>
 
 <template>
@@ -108,6 +110,7 @@ function pickCard(val: any) {
         </el-col>
       </el-row>
     </div>
+  <Konami></Konami>
   <Teleport to="footer">
     <div class="card-footer" >
       <el-row justify="center" style="font-size: xx-large;">
@@ -189,4 +192,5 @@ function pickCard(val: any) {
 .card-footer .cardcontainer {
   max-width: calc(100%/v-bind('room.cards?.length') - 5px);
 }
+
 </style>

@@ -12,6 +12,7 @@ const roomStore = useRoomStore()
 const cards = ref('')
 const selectedCards = computed(() => cards.value.split(';'))
 const actionsOwnerOnly = ref(false)
+const noVoteWhenVisible = ref(false)
 
 const openDialog = () => {
 
@@ -19,13 +20,15 @@ const openDialog = () => {
   currentList.value = selectedCards.value
   dialogFormVisible.value = true
   actionsOwnerOnly.value = roomStore.room?.actionsOwnerOnly
+  noVoteWhenVisible.value = roomStore.room?.noVoteWhenVisible
 }
 const updateSettings = () => {
   roomStore.updateSettings({
     roomId: roomStore.room.id,
     cards: selectedCards.value.map(a => a.trim()).filter(a => a.length > 0),
     owner: roomStore.room.owner,
-    actionsOwnerOnly: actionsOwnerOnly.value
+    actionsOwnerOnly: actionsOwnerOnly.value,
+    noVoteWhenVisible: noVoteWhenVisible.value
   })
   dialogFormVisible.value = false
 }
@@ -79,6 +82,7 @@ const selectCard = (val: string) => {
     </div>
     <el-input v-model="cards" placeholder="list of cards" />
     <p>{{ t('settings.form.actions-owner-only') }} <el-switch v-model="actionsOwnerOnly" /></p>
+    <p>{{ t('settings.form.no-vote-after-show') }} <el-switch v-model="noVoteWhenVisible" /></p>
 
     <template #footer>
       <span class="dialog-footer">

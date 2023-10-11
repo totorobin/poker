@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
             return true
         }
         console.log(`action ${action} not allowed for user ${socket.id} connected as '${socket.data.userName}'`)
-        socket.broadcast
+        socket.broadcast.emit('alert', `action ${action} not allowed for user ${socket.id} connected as '${socket.data.userName}'`)
         return false
     }
     socket.data.userName = uniqueNamesGenerator(userNameConfig)
@@ -76,6 +76,10 @@ io.on('connection', (socket) => {
     socket.on('vote', ({value}) => {
         socket.rooms.forEach((roomId) => {
             if(roomId in rooms) {
+                if(rooms[roomId].noVoteWhenVisible && rooms[roomId].cardVisible) {
+                    io.to(socket.id).emit('alert', `Vote not allowed when cards are visible`)
+                    return
+                }
                 const notSet = !rooms[roomId].users[socket.id].card
                 rooms[roomId].users[socket.id].card = value  // update card value
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
@@ -129,13 +133,23 @@ io.on('connection', (socket) => {
             }
         })
     })
-    socket.on('updateSettings', ({cards, actionsOwnerOnly}) => {
-        console.log('update room ', cards, actionsOwnerOnly)
+    socket.on('updateSettings', ({cards, actionsOwnerOnly, noVoteWhenVisible}) => {
+        console.log('update room ', cards, actionsOwnerOnly, noVoteWhenVisible)
         socket.rooms.forEach((roomId) => {
             if(roomId in rooms && rooms[roomId].owner === socket.data.uuid) {
                 rooms[roomId].cards = cards
                 rooms[roomId].actionsOwnerOnly = actionsOwnerOnly
+                rooms[roomId].noVoteWhenVisible = noVoteWhenVisible
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
+            }
+        })
+    })
+    socket.on('49-3', (room) => {
+        console.log('49-3', room)
+        socket.rooms.forEach((roomId) => {
+            if(roomId in rooms) {
+                rooms[roomId] = room
+                io.to(roomId).emit('roomState', room)  // emit new state
             }
         })
     })
@@ -170,11 +184,12 @@ io.of("/").adapter.on("join-room", async (roomId, userId) => {
         }
         if(rooms[roomId].cards.length == 0) {
             console.log(`no game for room ${roomId}`)
-            socket.emit('set-room', ({cards, owner, actionsOwnerOnly}) => {
+            socket.emit('set-room', ({cards, owner, actionsOwnerOnly, noVoteWhenVisible}) => {
                 console.log(`user ${socket.data.userName} has set the game for room ${roomId}`)
                 rooms[roomId].cards = cards
                 rooms[roomId].actionsOwnerOnly = actionsOwnerOnly
                 rooms[roomId].owner = owner  // the first to connect is the owner
+                rooms[roomId].noVoteWhenVisible = noVoteWhenVisible
                 io.to(roomId).emit('roomState', rooms[roomId])  // emit new state
             })
         }

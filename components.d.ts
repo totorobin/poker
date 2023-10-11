@@ -34,6 +34,7 @@ declare module '@vue/runtime-core' {
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     GameCard: typeof import('./src/components/GameCard.vue')['default']
+    Konami: typeof import('./src/components/Konami.vue')['default']
     MyHeader: typeof import('./src/components/MyHeader.vue')['default']
     PopupWindowButton: typeof import('./src/components/PopupWindowButton.vue')['default']
     RoomSettings: typeof import('./src/components/RoomSettings.vue')['default']

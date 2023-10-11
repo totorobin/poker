@@ -51,8 +51,8 @@ export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
 
   socket.on('roomState', (roomState: Room) => {
-    if(roomState.cards.length > 0 && (room.value.cards !== roomState.cards || room.value.actionsOwnerOnly !== roomState.actionsOwnerOnly )) {
-      const roomToSave = { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly} as SavedRoom
+    if(roomState.cards.length > 0 && (room.value.cards !== roomState.cards || room.value.actionsOwnerOnly !== roomState.actionsOwnerOnly || room.value.noVoteWhenVisible !== roomState.noVoteWhenVisible )) {
+      const roomToSave = { roomId: roomState.id, cards: roomState.cards, owner: roomState.owner, actionsOwnerOnly: roomState.actionsOwnerOnly, noVoteWhenVisible: roomState.noVoteWhenVisible} as SavedRoom
       savedRooms.value = [ ...savedRooms.value.filter(r => r.roomId !== roomState.id), roomToSave]
       localStorage.setItem('rooms', JSON.stringify(savedRooms.value) )
     }
@@ -145,6 +145,10 @@ export const useRoomStore = defineStore('store', () => {
       ElMessage(i18n.t('notifications.hide', { name }))
     }
   })
+  socket.on('alert', (message) => {
+    ElMessage(`${message}`)
+  })
+
   //socket.on('', ({name}) => {ElMessage(`${name}`)})
 
 
@@ -210,6 +214,7 @@ export const useRoomStore = defineStore('store', () => {
     userName, userSaved, userUuid,
     time, startTimer, stopTimer, timerRunning, endTimer,
     updateSettings,
-    actionsAllowed
+    actionsAllowed,
+    emit : (id: string, val: any) => socket.emit(id, val)
   }
 })
