@@ -146,7 +146,7 @@ export const useRoomStore = defineStore('store', () => {
     }
   })
   socket.on('alert', (message) => {
-    ElMessage(`${message}`)
+    ElMessage(i18n.t(message))
   })
 
   //socket.on('', ({name}) => {ElMessage(`${name}`)})

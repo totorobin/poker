@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
         socket.rooms.forEach((roomId) => {
             if(roomId in rooms) {
                 if(rooms[roomId].noVoteWhenVisible && rooms[roomId].cardVisible) {
-                    io.to(socket.id).emit('alert', `Vote not allowed when cards are visible`)
+                    io.to(socket.id).emit('alert', 'alert.vote-not-alowed')
                     return
                 }
                 const notSet = !rooms[roomId].users[socket.id].card

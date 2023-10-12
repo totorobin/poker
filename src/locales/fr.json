@@ -54,5 +54,8 @@
         "actions-owner-only": "Actions réservés a l'admin",
         "no-vote-after-show" : "Bloquer les votes une fois les cartes révélés"
     }
+  },
+  "alert": {
+    "vote-not-alowed" : "Vous ne pouvez pas voter lorsque les cartes sont visibles"
   }
 }

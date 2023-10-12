@@ -54,5 +54,8 @@
         "actions-owner-only": "Actions for admin only",
         "no-vote-after-show" : "Lock votes once showed"
     }
+  },
+  "alert": {
+    "vote-not-alowed" : "You cannot vote when cards are visibles"
   }
 }
