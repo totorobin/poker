@@ -65,6 +65,7 @@ export const useConnectionStore = defineStore("connection", () => {
         bindEvents,
         userName: computed(() => state.userName),
         userUuid: state.userUuid,
+        userSaved: computed(() => state.userSaved),
         connect,
         disconnect,
         setUser

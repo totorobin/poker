@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { BACK_CARD_VALUE, type Room, type SavedRoom, type User } from '../data-model.ts'
 import {socket} from "../socket.ts";
+import router from "../router";
 
 
 /** Chargement des valeurs stockés en localstorage */
@@ -55,7 +56,7 @@ export const useRoomStore = defineStore('store', () => {
   /** rejoindre/quitter une salle */
   async function createRoom() {
     socket.emit('create', (response: { roomId: string }) => {
-      console.log(response)
+      router.push(`/room/${response.roomId}`)
       localStorage.setItem('roomId', response.roomId)
     })
   }

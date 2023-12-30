@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import { RouterView } from 'vue-router'
-import router from './router'
 import { useRoomStore } from './store/room.ts'
 import MyHeader from './components/MyHeader.vue'
 import {socket} from "./socket.ts";
@@ -13,22 +12,6 @@ const connectionStore = useConnectionStore()
 
 const { room } = storeToRefs(roomStore)
 const backgroundColor = computed(() => room.value.id ? '#56ab2f' : 'white')
-
-
-watch(
-    () => room.value.id,
-    (newId, oldId) => {
-      if (newId !== oldId) {
-        if (newId) {
-          router.push('/room/' + newId)
-          backgroundColor.value = '#56ab2f'
-        } else {
-          router.push('/')
-          backgroundColor.value = 'white'
-        }
-      }
-    }
-)
 
 // remove any existing listeners (in case of hot reload)
 socket.off()

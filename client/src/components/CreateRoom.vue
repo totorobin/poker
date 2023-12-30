@@ -3,6 +3,7 @@ import { useRoomStore } from '../store/room.ts'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {type SavedRoom} from '../data-model.ts'
+import router from "../router";
 const { t } = useI18n({ useScope: 'global' })
 
 const roomStore = useRoomStore()
@@ -10,7 +11,7 @@ const roomForm = ref(localStorage.getItem('roomId') || '')
 const rooms : SavedRoom[] = JSON.parse(localStorage.getItem('rooms') || '[]')
 console.log(rooms)
 function joinRoom() {
-  roomStore.joinRoom(roomForm.value)
+  router.push(`/room/${roomForm.value}`)
 }
 
 function create() {

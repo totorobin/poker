@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoomStore } from '../store/room.ts'
-import { watch, computed } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import GameCard from '../components/GameCard.vue'
 import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
