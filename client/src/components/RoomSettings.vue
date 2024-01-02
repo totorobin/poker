@@ -24,7 +24,7 @@ const openDialog = () => {
 }
 const updateSettings = () => {
   roomStore.updateSettings({
-    roomId: roomStore.room.id,
+    id: roomStore.room.id,
     cards: selectedCards.value.map(a => a.trim()).filter(a => a.length > 0),
     owner: roomStore.room.owner,
     actionsOwnerOnly: actionsOwnerOnly.value,

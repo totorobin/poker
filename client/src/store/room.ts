@@ -21,8 +21,8 @@ export const useRoomStore = defineStore('store', () => {
   const bindEvents = () => {
     socket.on('roomState', (roomState: Room) => {
       if (!roomState.owner) { // no owner means room not initialized
-        const savedRoom = savedRooms.value.filter(r => r.roomId === room.value.id)[0] || {
-          roomId: room.value.id,
+        const savedRoom = savedRooms.value.filter(r => r.id === roomState.id)[0] || {
+          id: room.value.id,
           cards: ['1', '2', '3', '5', '8', '13', '21', '☕'],
           owner: userUuid,
           actionsOwnerOnly: false
@@ -31,12 +31,12 @@ export const useRoomStore = defineStore('store', () => {
         updateSettings(savedRoom)
       } else {
         const roomToSave = {
-          roomId: roomState.id,
+          id: roomState.id,
           cards: roomState.cards,
           owner: roomState.owner,
           actionsOwnerOnly: roomState.actionsOwnerOnly
         } as SavedRoom
-        savedRooms.value = [...savedRooms.value.filter(r => r.roomId !== roomState.id), roomToSave]
+        savedRooms.value = [...savedRooms.value.filter(r => r.id !== roomState.id), roomToSave]
         localStorage.setItem('rooms', JSON.stringify(savedRooms.value))
       }
       if (roomState.endTimer != room.value.endTimer) {

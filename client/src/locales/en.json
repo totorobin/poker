@@ -52,7 +52,8 @@
     "form": {
         "deck" : "deck of cards",
         "title": "Settings",
-        "actions-owner-only": "Actions for admin only"
+        "actions-owner-only": "Actions for admin only",
+        "no-vote-after-show" : "Lock votes once showed"
     }
   }
 }

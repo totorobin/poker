@@ -7,18 +7,17 @@ export interface User {
   
  export interface Room {
     id: string
-    name: string
     users: { [key: string]: User }
     cardVisible: boolean
     cards: string[]
     owner: string
     actionsOwnerOnly: boolean
     endTimer: number
-     noVoteWhenVisible: boolean
+    noVoteWhenVisible: boolean
   }
   
  export interface SavedRoom {
-    roomId : string,
+    id : string,
     cards : string[]
     owner: string
     actionsOwnerOnly: boolean

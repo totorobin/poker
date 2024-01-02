@@ -8,7 +8,7 @@ const { t } = useI18n({ useScope: 'global' })
 
 const roomStore = useRoomStore()
 const roomForm = ref(localStorage.getItem('roomId') || '')
-const rooms : SavedRoom[] = JSON.parse(localStorage.getItem('rooms') || '[]')
+let rooms : SavedRoom[] = JSON.parse(localStorage.getItem('rooms') || '[]')
 console.log(rooms)
 function joinRoom() {
   router.push(`/room/${roomForm.value}`)
@@ -23,15 +23,20 @@ const querySearch = (queryString: string, cb: any) => {
       ? rooms.filter(createFilter(queryString))
       : rooms
   // call callback function to return suggestions
-  cb(results.map(r => ({value: r.roomId, room: r})))
+  cb(results.map(r => ({value: r.id, room: r})))
 
 }
 const createFilter =  (queryString: string) => {
   return (room: SavedRoom) => {
     return (
-        room.roomId.toLowerCase().indexOf(queryString.toLowerCase()) > 0
+        room.id.toLowerCase().indexOf(queryString.toLowerCase()) > 0
     )
   }
+}
+
+const removeSetting = (id: string) => {
+  rooms = rooms.filter(r => r.id == id)
+  localStorage.setItem('rooms', JSON.stringify(rooms))
 }
 
 const handleSelect = (item: SavedRoom) => {
@@ -58,7 +63,7 @@ const handleSelect = (item: SavedRoom) => {
             <el-button @click="joinRoom">{{ t('buttons.join-room') }}</el-button>
           </template>
           <template #default="{ item }">
-            <div  class="items" >
+            <div v-on:keydown.delete="() => removeSetting(item.id)"  class="items"  >
               <span>{{ item.value }}</span>
               <span class="cards">
                 <span class="card" v-for="card in item.room.cards" >{{ card }}</span>
