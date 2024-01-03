@@ -1,29 +1,27 @@
-import {type Config, starWars, uniqueNamesGenerator} from "unique-names-generator";
+import { type Config, starWars, uniqueNamesGenerator } from 'unique-names-generator';
 
-const userNameConfig = {
-    dictionaries: [starWars],
-    style: 'capital',
-    length: 1,
-} as Config;
+const userNameConfig: Config = {
+  dictionaries: [starWars],
+  style: 'capital',
+  length: 1,
+};
 
 export class User {
-    uuid: string
-    name: string
+  uuid: string;
+  name: string;
 
-    constructor(uuid: string) {
-        this.uuid = uuid
-        this.name = uniqueNamesGenerator(userNameConfig)
-    }
+  constructor(uuid: string) {
+    this.uuid = uuid;
+    this.name = uniqueNamesGenerator(userNameConfig);
+  }
 }
 
 export class Player extends User {
+  card: string | null;
 
-    card: string | null
-
-    constructor(user : User) {
-        super(user.uuid)
-        this.name = user.name
-        this.card = null
-    }
-
+  constructor(user: User) {
+    super(user.uuid);
+    this.name = user.name;
+    this.card = null;
+  }
 }
