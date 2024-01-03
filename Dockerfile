@@ -1,6 +1,8 @@
 # --------------> The frontend build image
 FROM node:18-slim as build-f
 
+WORKDIR /usr/src/shared
+COPY shared .
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -22,6 +24,8 @@ RUN npm run build
 # --------------> The backend build image
 FROM node:18-slim as build-b
 
+WORKDIR /usr/src/shared
+COPY shared .
 
 # Create app directory
 WORKDIR /usr/src/app
