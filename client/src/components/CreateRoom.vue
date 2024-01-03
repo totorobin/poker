@@ -18,7 +18,10 @@
     roomStore.createRoom()
   }
 
-  const querySearch = (queryString: string, cb: function) => {
+  const querySearch = (
+    queryString: string,
+    cb: (rooms: Array<{ value: string; room: Room }>) => void
+  ) => {
     const results = queryString ? rooms.filter(createFilter(queryString)) : rooms
     // call callback function to return suggestions
     cb(results.map((r) => ({ value: r.id, room: r })))
