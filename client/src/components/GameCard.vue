@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { BACK_CARD_VALUE } from '../data-model'
+  import { BACK_CARD_VALUE } from '@shared/data-model'
   defineProps<{
     cardValue: string | null
   }>()

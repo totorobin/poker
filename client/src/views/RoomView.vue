@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import { useRoomStore } from '../store/room.ts'
+  import { useRoomStore } from '@/store/room.ts'
   import { computed } from 'vue'
   import { storeToRefs } from 'pinia'
-  import GameCard from '../components/GameCard.vue'
+  import GameCard from '@/components/GameCard.vue'
   import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
   import { useI18n } from 'vue-i18n'
-  import RoomTimer from '../components/RoomTimer.vue'
-  import RoomSettings from '../components/RoomSettings.vue'
+  import RoomTimer from '@/components/RoomTimer.vue'
+  import RoomSettings from '@/components/RoomSettings.vue'
 
   const { t } = useI18n({ useScope: 'global' })
 

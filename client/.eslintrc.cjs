@@ -17,5 +17,15 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 'latest'
-  }
+  },
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@', './src'],
+          ['@shared', '../shared'],
+        ],
+      },
+    },
+  },
 }

@@ -1,4 +1,4 @@
-import { Room } from './room';
+import { SRoom } from './room';
 import { type Socket } from 'socket.io';
 import { adjectives, animals, type Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
@@ -9,7 +9,7 @@ const roomNameConfig: Config = {
 };
 
 export class RoomStore {
-  private rooms: Record<string, Room>;
+  private rooms: Record<string, SRoom>;
 
   constructor() {
     this.rooms = {};
@@ -24,7 +24,7 @@ export class RoomStore {
     throw new Error('no_current_room');
   }
 
-  get(roomId: string): Room {
+  get(roomId: string): SRoom {
     if (roomId in this.rooms) {
       return this.rooms[roomId];
     } else {
@@ -33,7 +33,7 @@ export class RoomStore {
   }
 
   addRoom(roomId: string): void {
-    this.rooms[roomId] = new Room(roomId);
+    this.rooms[roomId] = new SRoom(roomId);
   }
 
   removeRoom(roomId: string): void {

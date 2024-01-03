@@ -1,23 +1,10 @@
-import { Player, type User } from './user';
+import { Player, type User, Room } from '@shared/data-model';
 
-export class Room {
-  id: string;
-  users: Record<string, Player>;
-  cardVisible: boolean;
-  cards: string[];
-  owner?: string;
-  actionsOwnerOnly: boolean;
-  endTimer: number;
-  noVoteWhenVisible: boolean;
+
+export class SRoom extends Room {
 
   constructor(id: string) {
-    this.id = id;
-    this.users = {};
-    this.cardVisible = false;
-    this.endTimer = 0;
-    this.actionsOwnerOnly = false;
-    this.noVoteWhenVisible = false;
-    this.cards = [];
+    super(id)
   }
 
   showCards(visible: boolean): void {

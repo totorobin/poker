@@ -2,7 +2,7 @@
   import { useRoomStore } from '../store/room.ts'
   import { ref } from 'vue'
   import { useI18n } from 'vue-i18n'
-  import { type SavedRoom } from '../data-model.ts'
+  import { type SavedRoom } from '@shared/data-model'
   import router from '../router'
   const { t } = useI18n({ useScope: 'global' })
 
@@ -20,7 +20,7 @@
 
   const querySearch = (
     queryString: string,
-    cb: (rooms: Array<{ value: string; room: Room }>) => void
+    cb: (rooms: Array<{ value: string; room: SavedRoom }>) => void
   ) => {
     const results = queryString ? rooms.filter(createFilter(queryString)) : rooms
     // call callback function to return suggestions

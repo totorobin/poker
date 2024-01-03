@@ -1,58 +1,28 @@
-import { Server, type ServerOptions } from 'socket.io';
-import type { Server as HTTPSServer } from 'https';
-import type { Http2SecureServer } from 'http2';
-import type * as http from 'http';
-import { type Room } from './room';
-import { RoomStore } from './roomStore';
-import { User } from './user';
+import { Server, type ServerOptions } from 'socket.io'
+import type { Server as HTTPSServer } from 'https'
+import type { Http2SecureServer } from 'http2'
+import type * as http from 'http'
+import { SRoom } from './room'
+import { SUser } from './user'
+import { RoomStore } from './roomStore'
+import  { type ClientToServerEvents, type ServerToClientEvents , Notification , type Room, User } from '@shared/data-model'
 
 const rooms = new RoomStore();
-
-enum Notification {
-  nameChange = 'name-changed',
-  vote = 'vote',
-  voteDone = 'vote-done',
-  voteBlocked = 'vote-blocked',
-  show = 'show',
-  hide = 'hide',
-  reset = 'reset',
-  leftRoom = 'left',
-  joinedRoom = 'join',
-  cheated = 'cheated',
-}
-interface StCEvents {
-  notify: (args: { type: Notification; values: object }) => void;
-  roomState: (room: Room) => void;
-}
-
-interface CtSEvents {
-  whoAmI: (callback: (me: User) => void) => void;
-  setUserUUID: (uuid: string) => void;
-  setUserName: (name: string) => void;
-  create: (callback: (res: { roomId: string }) => void) => Promise<void>;
-  join: (args: { roomId: string }) => Promise<void>;
-  vote: (args: { value: string }) => void;
-  cardVisible: (value: boolean) => void;
-  reset: () => void;
-  leave: (args: { roomId: string }, callback: (e: User) => void) => void;
-  timer: (args: { endTime: number }) => void;
-  updateSettings: (props: Room) => void;
-}
 
 const restrictedEvents = ['timer', 'cardVisible', 'reset', 'updateSettings'];
 
 export class IoServer {
-  io: Server<CtSEvents, StCEvents, any, User>;
+  io: Server<ClientToServerEvents, ServerToClientEvents, any, User>;
 
   constructor(
     srv: undefined | Partial<ServerOptions> | http.Server | HTTPSServer | Http2SecureServer | number,
     opts?: Partial<ServerOptions>,
   ) {
-    this.io = new Server<CtSEvents, StCEvents, any, User>(srv, opts);
+    this.io = new Server<ClientToServerEvents, ServerToClientEvents, any, User>(srv, opts);
 
     this.io.use((socket, next) => {
       const uuid: string = socket.handshake.auth.uuid;
-      socket.data = new User(uuid);
+      socket.data = new SUser(uuid);
       console.log("connection d'un utilisateur :", socket.data);
       next();
     });
@@ -165,7 +135,7 @@ export class IoServer {
           console.log(err);
         }
       });
-      socket.on('updateSettings', (props: Room) => {
+      socket.on('updateSettings', (props) => {
         console.log('update room ', props);
         try {
           const roomId = rooms.getCurrentRoomId(socket);

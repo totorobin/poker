@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { BACK_CARD_VALUE, type Room, type SavedRoom, type User } from '../data-model.ts'
+import { BACK_CARD_VALUE, type Room, type SavedRoom, type User } from '@shared/data-model'
 import { socket } from '../socket.ts'
 import router from '../router'
 
