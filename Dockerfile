@@ -26,7 +26,7 @@ FROM node:21-slim as build-b
 
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/server
 
 COPY shared ../shared
 COPY server .
@@ -42,10 +42,10 @@ ENV NODE_ENV production
 # Create app directory
 WORKDIR /usr/src/app
 
-COPY --from=build-b /usr/src/app/package*.json ./
+COPY --from=build-b /usr/src/server/package*.json ./
 RUN npm ci --only=production
 COPY --from=build-f /usr/src/app/dist public
-COPY --from=build-b /usr/src/app/dist ./
+COPY --from=build-b /usr/src/server/dist ./
 
 ENV PORT 8080
 EXPOSE 8080
