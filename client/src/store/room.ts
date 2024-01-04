@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { BACK_CARD_VALUE, type Room, type SavedRoom, type User } from '@shared/data-model'
+import { BACK_CARD_VALUE, type Room, type SavedRoom, type Player } from '@shared/data-model'
 import { socket } from '../socket.ts'
 import router from '../router'
 
@@ -66,8 +66,8 @@ export const useRoomStore = defineStore('store', () => {
 
   async function leave() {
     if (room.value.id)
-      socket.emit('leave', { roomId: room.value.id }, (newRoom: Room) => {
-        room.value = newRoom
+      socket.emit('leave', { roomId: room.value.id }, (_user) => {
+        room.value = {} as Room
       })
   }
 
@@ -75,7 +75,7 @@ export const useRoomStore = defineStore('store', () => {
   const users = computed(() =>
     !room.value.users
       ? []
-      : Object.values(room.value.users).map((user: User) => {
+      : Object.values(room.value.users).map((user: Player) => {
           if (user.uuid === userUuid || room.value.cardVisible) {
             return { name: user.name, card: user.card }
           }
@@ -105,7 +105,7 @@ export const useRoomStore = defineStore('store', () => {
   /** SETTINGS */
 
   async function updateSettings(settings: SavedRoom) {
-    socket.emit('updateSettings', settings)
+    socket.emit('updateSettings', settings as Room)
   }
 
   const actionsAllowed = computed(

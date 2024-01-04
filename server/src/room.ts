@@ -23,7 +23,7 @@ export class SRoom extends Room {
     delete this.users[user.uuid];
   }
 
-  setVote(user: User, value: string): boolean {
+  setVote(user: User, value: string | null): boolean {
     if (this.noVoteWhenVisible && this.cardVisible) {
       throw new Error('VOTE_NOT_ALLOWED');
     }

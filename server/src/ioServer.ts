@@ -35,7 +35,7 @@ export class IoServer {
             const roomId = rooms.getCurrentRoomId(socket);
             if (!rooms.get(roomId).actionsAllowed(socket.data.uuid)) {
               console.log(`user ${socket.data.name} tried to do something unauthorized`);
-              socket.to(roomId).emit('notify', { type: Notification.cheated, values: socket.data });
+              socket.to(roomId).emit('notify', { type: Notification.cheated, values: socket.data as unknown as Record<string,string> });
               next(new Error('unauthorized event'));
               return;
             }
@@ -87,12 +87,12 @@ export class IoServer {
               .to(roomId)
               .emit('notify', {
                 type: rooms.get(roomId).voteDone() ? Notification.voteDone : Notification.vote,
-                values: socket.data,
+                values: socket.data as unknown as Record<string,string>,
               });
           } // inform action
         } catch (err) {
           if ((err as Error).message === 'VOTE_NOT_ALLOWED') {
-            socket.emit('notify', { type: Notification.voteBlocked, values: socket.data });
+            socket.emit('notify', { type: Notification.voteBlocked, values: socket.data as unknown as Record<string,string>});
           }
           console.log(err);
         }
@@ -104,7 +104,7 @@ export class IoServer {
           this.io.to(roomId).emit('roomState', rooms.get(roomId)); // emit new state
           socket
             .to(roomId)
-            .emit('notify', { type: value ? Notification.show : Notification.hide, values: socket.data }); // inform action
+            .emit('notify', { type: value ? Notification.show : Notification.hide, values: socket.data as unknown as Record<string,string> }); // inform action
         } catch (err) {
           console.log(err);
         }
@@ -114,7 +114,7 @@ export class IoServer {
           const roomId = rooms.getCurrentRoomId(socket);
           rooms.get(roomId).reset();
           this.io.to(roomId).emit('roomState', rooms.get(roomId)); // emit new state
-          socket.to(roomId).emit('notify', { type: Notification.reset, values: socket.data }); // inform a
+          socket.to(roomId).emit('notify', { type: Notification.reset, values: socket.data as unknown as Record<string,string>}); // inform a
         } catch (err) {
           console.log(err);
         }
@@ -166,7 +166,7 @@ export class IoServer {
         .then((socket) => {
           rooms.get(roomId).addPlayer(socket.data);
           this.io.to(roomId).emit('roomState', rooms.get(roomId)); // emit new state
-          this.io.to(roomId).emit('notify', { type: Notification.joinedRoom, values: socket.data }); // inform action
+          this.io.to(roomId).emit('notify', { type: Notification.joinedRoom, values: socket.data as unknown as Record<string,string>}); // inform action
         })
         .catch((err) => {
           console.log(err);
@@ -193,7 +193,7 @@ export class IoServer {
           console.log(`remove ${socket.data.name} from ${roomId}`);
           rooms.get(roomId).removePlayer(socket.data);
           this.io.to(roomId).emit('roomState', rooms.get(roomId)); // emit new state
-          this.io.to(roomId).emit('notify', { type: Notification.leftRoom, values: socket.data });
+          this.io.to(roomId).emit('notify', { type: Notification.leftRoom, values: socket.data as unknown as Record<string,string> });
         })
         .catch((err) => {
           console.log(err);

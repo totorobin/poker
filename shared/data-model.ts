@@ -54,7 +54,7 @@ export enum Notification {
   }
 
  export interface ServerToClientEvents {
-    notify: (args: { type: Notification; values: object }) => void;
+    notify: (args: { type: Notification; values: Record<string,string> }) => void;
     roomState: (room: Room) => void;
   }
   
@@ -64,7 +64,7 @@ export enum Notification {
     setUserName: (name: string) => void;
     create: (callback: (res: { roomId: string }) => void) => Promise<void>;
     join: (args: { roomId: string }) => Promise<void>;
-    vote: (args: { value: string }) => void;
+    vote: (args: { value: string | null }) => void;
     cardVisible: (value: boolean) => void;
     reset: () => void;
     leave: (args: { roomId: string }, callback: (e: User) => void) => void;
@@ -74,10 +74,10 @@ export enum Notification {
 
 export interface SavedRoom {
   id: string
-  cards: string[]
-  owner: string
-  actionsOwnerOnly: boolean
-  noVoteWhenVisible: boolean
+  cards?: string[]
+  owner?: string
+  actionsOwnerOnly?: boolean
+  noVoteWhenVisible?: boolean
 }
 
 export const BACK_CARD_VALUE = ';'

@@ -38,7 +38,7 @@ export const useConnectionStore = defineStore('connection', () => {
       }
     })
 
-    socket.on('notify', ({ type, values }) => {
+    socket.on('notify', ({ type , values }) => {
       ElMessage(i18n.t(`notifications.${type}`, values))
     })
   }
