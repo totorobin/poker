@@ -1,11 +1,10 @@
-import { Server, type ServerOptions } from 'socket.io'
-import type { Server as HTTPSServer } from 'https'
-import type { Http2SecureServer } from 'http2'
+import {Server, type ServerOptions} from 'socket.io'
+import type {Server as HTTPSServer} from 'https'
+import type {Http2SecureServer} from 'http2'
 import type * as http from 'http'
-import { SRoom } from './room'
-import { SUser } from './user'
-import { RoomStore } from './roomStore'
-import  { type ClientToServerEvents, type ServerToClientEvents , Notification , type Room, User } from '@shared/data-model'
+import {SUser} from './user'
+import {RoomStore} from './roomStore'
+import {type ClientToServerEvents, Notification, type ServerToClientEvents, User} from '../../shared/data-model'
 
 const rooms = new RoomStore();
 

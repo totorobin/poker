@@ -1,4 +1,4 @@
-import { Player, type User, Room } from '@shared/data-model';
+import {Player, Room, type User} from '../../shared/data-model';
 
 
 export class SRoom extends Room {
