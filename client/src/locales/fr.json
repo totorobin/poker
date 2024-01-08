@@ -23,7 +23,7 @@
     "left": "{name} est parti",
     "vote": "{name} a voté",
     "vote-done": "Tout le monde a voté",
-    "change-name": "{oldName} se fait maintenant appeler {newName}",
+    "name-changed": "{oldName} se fait maintenant appeler {newName}",
     "reset": "{name} a réinitialisé la salle",
     "show": "{name} a rendu les cartes visibles",
     "hide": "{name} a caché les valeurs des cartes",

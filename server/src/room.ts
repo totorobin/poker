@@ -33,7 +33,7 @@ export class SRoom extends Room {
   }
 
   voteDone(): boolean {
-    return Object.values(this.users).find((u) => u.card == null) !== undefined;
+    return !Object.values(this.users).some((u) => u.card == undefined || u.card === null);
   }
 
   reset(): void {
