@@ -23,7 +23,7 @@
     "left": "{name} is gone",
     "vote": "{name} has voted",
     "vote-done": "Everyone has voted",
-    "change-name": "{oldName} is now called {newName}",
+    "name-changed": "{oldName} is now called {newName}",
     "reset": "{name} has reset the room",
     "show": "{name} just showed everyone cards",
     "hide": "{name} just hidden everyone cards",
