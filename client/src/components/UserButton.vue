@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { User } from '@element-plus/icons-vue'
-  import { ElMessage, ElMessageBox } from 'element-plus'
-  import { useI18n } from 'vue-i18n'
-  import { useConnectionStore } from '../store/connection.ts'
+import {User} from '@element-plus/icons-vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {useI18n} from 'vue-i18n'
+import {useConnectionStore} from '../store/connection.ts'
 
-  const { t } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 
   const connectionStore = useConnectionStore()
 
@@ -12,7 +12,7 @@
     ElMessageBox.prompt(t('prompt-name.message'), t('prompt-name.title'), {
       confirmButtonText: t('prompt-name.confirm'),
       cancelButtonText: t('prompt-name.cancel'),
-      inputPattern: /^[^_!¡?÷¿/\\+=@#$%^&*(){}|~<>;:[\]]{1,32}$/,
+      inputPattern: /^[^÷/\\+=@$%^&|;]{1,32}$/,
       inputErrorMessage: t('prompt-name.error-input')
     })
       .then(({ value }) => {
