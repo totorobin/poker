@@ -1,10 +1,8 @@
 import {Player, Room, type User} from '../../shared/data-model';
 
-
 export class SRoom extends Room {
-
   constructor(id: string) {
-    super(id)
+    super(id);
   }
 
   showCards(visible: boolean): void {
@@ -33,7 +31,7 @@ export class SRoom extends Room {
   }
 
   voteDone(): boolean {
-    return !Object.values(this.users).some((u) => u.card == undefined || u.card === null);
+    return !Object.values(this.users).some((u) => u.card == undefined || u.card === null);
   }
 
   reset(): void {

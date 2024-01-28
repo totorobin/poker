@@ -1,5 +1,5 @@
 import {type Config, starWars, uniqueNamesGenerator} from 'unique-names-generator';
-import {type User} from '../../shared/data-model'
+import {type User} from '../../shared/data-model';
 
 const userNameConfig: Config = {
   dictionaries: [starWars],

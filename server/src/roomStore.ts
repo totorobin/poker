@@ -1,6 +1,6 @@
-import { SRoom } from './room';
-import { type Socket } from 'socket.io';
-import { adjectives, animals, type Config, names, uniqueNamesGenerator } from 'unique-names-generator';
+import {SRoom} from './room';
+import {type Socket} from 'socket.io';
+import {adjectives, animals, type Config, names, uniqueNamesGenerator} from 'unique-names-generator';
 
 const roomNameConfig: Config = {
   dictionaries: [adjectives, animals, names],
@@ -15,13 +15,17 @@ export class RoomStore {
     this.rooms = {};
   }
 
-  getCurrentRoomId(socket: Socket<any, any, any, any>): string {
+  getCurrentRoomId(socket: Socket<any, any, any>): string {
     for (const roomId of socket.rooms) {
       if (roomId !== socket.id && roomId in this.rooms) {
         return roomId;
       }
     }
     throw new Error('no_current_room');
+  }
+
+  isRoomId(roomId: string): boolean {
+    return roomId in this.rooms;
   }
 
   get(roomId: string): SRoom {
@@ -38,6 +42,8 @@ export class RoomStore {
 
   removeRoom(roomId: string): void {
     delete this.rooms[roomId];
+    console.log(`room ${roomId} was deleted`);
+    console.log(`rooms left : ${Object.keys(this.rooms).length}`);
   }
 
   generateRoomId(): string {
