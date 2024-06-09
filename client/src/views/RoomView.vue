@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { useRoomStore } from '@/store/room.ts'
-  import { computed } from 'vue'
-  import { storeToRefs } from 'pinia'
-  import GameCard from '@/components/GameCard.vue'
-  import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
-  import { useI18n } from 'vue-i18n'
-  import RoomTimer from '@/components/RoomTimer.vue'
-  import RoomSettings from '@/components/RoomSettings.vue'
+import {useRoomStore} from '@/store/room.ts'
+import {computed} from 'vue'
+import {storeToRefs} from 'pinia'
+import GameCard from '@/components/GameCard.vue'
+import {Hide, RefreshLeft, View} from '@element-plus/icons-vue'
+import {useI18n} from 'vue-i18n'
+import RoomTimer from '@/components/RoomTimer.vue'
+import RoomSettings from '@/components/RoomSettings.vue'
 
-  const { t } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 
   const props = defineProps<{
     roomId: string
@@ -105,6 +105,7 @@
         :key="index"
         :span="4"
         :class="{ cardcontainer: true }"
+        pw-id="user-card"
       >
         <GameCard
           style="font-size: xxx-large"
@@ -128,6 +129,7 @@
           :key="index"
           :span="3"
           :class="{ cardcontainer: true }"
+          pw-id="voting-card"
         >
           <GameCard
             :card-value="val"
