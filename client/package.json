@@ -20,6 +20,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@types/dom-view-transitions": "^1.0.6",
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",

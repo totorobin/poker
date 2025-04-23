@@ -1,7 +1,7 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import { BACK_CARD_VALUE, type Room, type SavedRoom, type Player } from '@shared/data-model'
-import { socket } from '../socket.ts'
+import {computed, ref} from 'vue'
+import {defineStore} from 'pinia'
+import {BACK_CARD_VALUE, type Player, type Room, type SavedRoom} from '@shared/data-model'
+import {socket} from '../socket.ts'
 import router from '../router'
 
 /** Chargement des valeurs stockés en localstorage */
@@ -45,10 +45,16 @@ export const useRoomStore = defineStore('store', () => {
           setTimer(roomState.endTimer)
         } else {
           clearInterval(nIntervId.value)
-          nIntervId.value = 0
+          nIntervId.value = undefined
         }
       }
-      room.value = roomState
+      if ('startViewTransition' in document) {
+        document.startViewTransition(() => {
+          room.value = roomState
+        })
+      } else {
+        room.value = roomState
+      }
     })
   }
 
@@ -115,8 +121,8 @@ export const useRoomStore = defineStore('store', () => {
   /** TIMER */
 
   const time = ref(3600000) // 1h en ms
-  const nIntervId = ref(0)
-  const timerRunning = computed(() => nIntervId.value !== 0)
+  const nIntervId = ref<NodeJS.Timeout>()
+  const timerRunning = computed(() => nIntervId.value !== undefined)
   const endTimer = ref(false)
 
   const setTimer = (endTime: number) => {
@@ -125,7 +131,7 @@ export const useRoomStore = defineStore('store', () => {
       if (time.value < 1000) {
         // si moins d'1s
         clearInterval(nIntervId.value)
-        nIntervId.value = 0
+        nIntervId.value = undefined
         endTimer.value = true
       }
     }, 1000)
