@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { RouterLink } from 'vue-router'
-  import ChangeLangButton from './ChangeLangButton.vue'
-  import PopupWindowButton from './PopupWindowButton.vue'
-  import ShareButton from './ShareButton.vue'
-  import UserButton from './UserButton.vue'
+import {RouterLink} from 'vue-router'
+import ChangeLangButton from './ChangeLangButton.vue'
+import PopupWindowButton from './PopupWindowButton.vue'
+import ShareButton from './ShareButton.vue'
+import UserButton from './UserButton.vue'
 </script>
 
 <template>
