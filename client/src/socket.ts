@@ -4,7 +4,10 @@ import type {ClientToServerEvents, ServerToClientEvents} from '@shared/data-mode
 
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
   autoConnect: false,
-  auth: {
-    uuid: localStorage.getItem('uuid') || uuidv4()
+  auth: (cb) => {
+    if (localStorage.getItem('uuid') === null) {
+      localStorage.setItem('uuid', uuidv4())
+    }
+    cb({uuid: localStorage.getItem('uuid')})
   }
 })

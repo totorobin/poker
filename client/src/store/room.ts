@@ -44,7 +44,6 @@ export const useRoomStore = defineStore('store', () => {
           nIntervId.value = undefined
         }
       }
-      console.log('room', roomState)
       if ('startViewTransition' in document) {
         document.startViewTransition(() => {
           room.value = roomState

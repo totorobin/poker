@@ -24,8 +24,6 @@ export const useConnectionStore = defineStore('connection', () => {
       } else {
         socket.emit('whoAmI', (data: { name: string; uuid: string }) => {
           state.userName = data.name
-          state.userUuid = data.uuid
-          localStorage.setItem('uuid', data.uuid)
         })
       }
     })
@@ -57,6 +55,7 @@ export const useConnectionStore = defineStore('connection', () => {
   const connect = () => {
     socket.connect()
   }
+
   const disconnect = () => {
     socket.disconnect()
   }
@@ -66,7 +65,7 @@ export const useConnectionStore = defineStore('connection', () => {
   return {
     bindEvents,
     userName: computed(() => state.userName),
-    userUuid: state.userUuid,
+    userUuid: computed(() => state.userUuid),
     userSaved: computed(() => state.userSaved),
     connect,
     disconnect,
