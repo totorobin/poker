@@ -4,7 +4,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {useI18n} from 'vue-i18n'
 import {useConnectionStore} from '../store/connection.ts'
 
-const { t } = useI18n({ useScope: 'global' })
+const {t} = useI18n({useScope: 'global'})
 
   const connectionStore = useConnectionStore()
 

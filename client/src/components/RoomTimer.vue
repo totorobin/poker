@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import { useRoomStore } from '../store/room.ts'
-  import { VideoPlay, VideoPause } from '@element-plus/icons-vue'
-  import { storeToRefs } from 'pinia'
-  import { computed } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  const { t } = useI18n({ useScope: 'global' })
+import {useRoomStore} from '../store/room.ts'
+import {VideoPause, VideoPlay} from '@element-plus/icons-vue'
+import {storeToRefs} from 'pinia'
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
+
+const { t } = useI18n({ useScope: 'global' })
 
   const roomStore = useRoomStore()
   const { time, timerRunning, endTimer, actionsAllowed } = storeToRefs(roomStore)

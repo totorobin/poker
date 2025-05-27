@@ -22,7 +22,9 @@
 
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../shared/*"],
+      "@shared/*": [
+        "../shared/*"
+      ]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../shared/**/*"],

@@ -1,5 +1,5 @@
 # --------------> The frontend build image
-FROM node:21-slim as build-f
+FROM node:24-slim as build-f
 
 WORKDIR /usr/src/shared
 COPY shared .
@@ -22,7 +22,7 @@ COPY client .
 RUN npm run build
 
 # --------------> The backend build image
-FROM node:21-slim as build-b
+FROM node:24-slim as build-b
 
 
 # Create app directory
@@ -36,7 +36,7 @@ RUN npm install
 RUN npm run build
 
 # --------------> The production image
-FROM node:21-slim
+FROM node:24-slim
 ENV NODE_ENV production
 
 # Create app directory

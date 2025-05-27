@@ -6,7 +6,6 @@ defineProps<{
     mine: boolean
   }>()
 
-
   const encode = (val: string) => {
     return encodeURIComponent(val).replaceAll('%', '')
   }

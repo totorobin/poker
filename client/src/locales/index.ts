@@ -1,4 +1,4 @@
-import { createI18n, type VueI18n } from 'vue-i18n'
+import {createI18n, type VueI18n} from 'vue-i18n'
 
 import en from './en.json'
 import fr from './fr.json'

@@ -22,6 +22,6 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        "@typescript-eslint/no-dynamic-delete": "warn"
+        "@typescript-eslint/no-dynamic-delete": "off"
     }
 }

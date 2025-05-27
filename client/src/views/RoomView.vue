@@ -8,7 +8,7 @@ import {useI18n} from 'vue-i18n'
 import RoomTimer from '@/components/RoomTimer.vue'
 import RoomSettings from '@/components/RoomSettings.vue'
 
-const { t } = useI18n({ useScope: 'global' })
+const {t} = useI18n({useScope: 'global'})
 
   const props = defineProps<{
     roomId: string
@@ -17,7 +17,7 @@ const { t } = useI18n({ useScope: 'global' })
   document.title = 'PP - ' + props.roomId
 
   const roomStore = useRoomStore()
-  const { room, users, selectedCard, userName, actionsAllowed } = storeToRefs(roomStore)
+const {room, users, selectedCard, actionsAllowed} = storeToRefs(roomStore)
   const { joinRoom, vote, show, hide, reset } = roomStore
 
   joinRoom(props.roomId)
@@ -103,13 +103,13 @@ const { t } = useI18n({ useScope: 'global' })
         <GameCard
           style="font-size: xxx-large"
           :card-value="user.card"
-          :mine="userName === user.name"
           :class="{
             unset: !user.card,
-            mine: userName === user.name,
-            actionable: userName === user.name && user.card
+            mine: user.isMe,
+            actionable: user.isMe && user.card
           }"
-          @click="() => (userName === user.name && user.card != null ? vote(null) : () => {})"
+          :mine="user.isMe"
+          @click="() => (user.isMe && user.card != null ? vote(null) : () => {})"
         />
         {{ user.name }}
       </el-col>

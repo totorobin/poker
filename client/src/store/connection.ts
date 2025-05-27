@@ -1,15 +1,15 @@
-import { defineStore } from 'pinia'
-import { socket } from '../socket'
-import { ElMessage } from 'element-plus'
-import { i18n } from '../locales'
-import { reactive, computed } from 'vue'
+import {defineStore} from 'pinia'
+import {socket} from '../socket'
+import {ElMessage} from 'element-plus'
+import {i18n} from '../locales'
+import {computed, reactive} from 'vue'
 
 export const useConnectionStore = defineStore('connection', () => {
   const state = reactive({
     connected: false,
     firstConnection: true,
     userName: localStorage.getItem('userName'),
-    userUuid: localStorage.getItem('uuid'),
+    userUuid: localStorage.getItem('uuid') || '',
     userSaved: localStorage.getItem('userName') != null
   })
 
@@ -22,8 +22,10 @@ export const useConnectionStore = defineStore('connection', () => {
       if (state.userName) {
         socket.emit('setUserName', state.userName)
       } else {
-        socket.emit('whoAmI', (data: { name: string }) => {
+        socket.emit('whoAmI', (data: { name: string; uuid: string }) => {
           state.userName = data.name
+          state.userUuid = data.uuid
+          localStorage.setItem('uuid', data.uuid)
         })
       }
     })
@@ -38,7 +40,7 @@ export const useConnectionStore = defineStore('connection', () => {
       }
     })
 
-    socket.on('notify', ({ type , values }) => {
+    socket.on('notify', ({type, values}) => {
       ElMessage(i18n.t(`notifications.${type}`, values))
     })
   }

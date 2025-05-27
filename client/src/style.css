@@ -1,10 +1,10 @@
 @media (prefers-reduced-motion: reduce) {
-    * {
-        view-transition-name: unset !important;
-    }
+  * {
+    view-transition-name: unset !important;
+  }
 }
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
-    animation-duration: 5s;
+  animation-duration: 0.5s;
 }

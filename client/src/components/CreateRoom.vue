@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import { useRoomStore } from '../store/room.ts'
-  import { ref } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { type SavedRoom } from '@shared/data-model'
-  import router from '../router'
-  const { t } = useI18n({ useScope: 'global' })
+import {useRoomStore} from '../store/room.ts'
+import {ref} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {type SavedRoom} from '@shared/data-model'
+import router from '../router'
+
+const { t } = useI18n({ useScope: 'global' })
 
   const roomStore = useRoomStore()
   const roomForm = ref(localStorage.getItem('roomId') || '')
@@ -28,7 +29,7 @@
   }
   const createFilter = (queryString: string) => {
     return (room: SavedRoom) => {
-      return room.id.toLowerCase().indexOf(queryString.toLowerCase()) > 0
+      return room.id?.toLowerCase().indexOf(queryString.toLowerCase()) > 0
     }
   }
 

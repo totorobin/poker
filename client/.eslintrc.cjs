@@ -23,9 +23,9 @@ module.exports = {
       alias: {
         map: [
           ['@', './src'],
-          ['@shared', '../shared'],
-        ],
-      },
-    },
-  },
+          ['@shared', '../shared']
+        ]
+      }
+    }
+  }
 }
