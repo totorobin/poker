@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { useRoomStore } from '@/store/room.ts'
-  import { computed } from 'vue'
-  import { storeToRefs } from 'pinia'
-  import GameCard from '@/components/GameCard.vue'
-  import { RefreshLeft, View, Hide } from '@element-plus/icons-vue'
-  import { useI18n } from 'vue-i18n'
-  import RoomTimer from '@/components/RoomTimer.vue'
-  import RoomSettings from '@/components/RoomSettings.vue'
+import {useRoomStore} from '@/store/room.ts'
+import {computed} from 'vue'
+import {storeToRefs} from 'pinia'
+import GameCard from '@/components/GameCard.vue'
+import {Hide, RefreshLeft, View} from '@element-plus/icons-vue'
+import {useI18n} from 'vue-i18n'
+import RoomTimer from '@/components/RoomTimer.vue'
+import RoomSettings from '@/components/RoomSettings.vue'
 
-  const { t } = useI18n({ useScope: 'global' })
+const {t} = useI18n({useScope: 'global'})
 
   const props = defineProps<{
     roomId: string
@@ -17,7 +17,7 @@
   document.title = 'PP - ' + props.roomId
 
   const roomStore = useRoomStore()
-  const { room, users, selectedCard, userName, actionsAllowed } = storeToRefs(roomStore)
+const {room, users, selectedCard, actionsAllowed} = storeToRefs(roomStore)
   const { joinRoom, vote, show, hide, reset } = roomStore
 
   joinRoom(props.roomId)
@@ -39,13 +39,7 @@
       return false
     }
 
-    if (!selectedCard.value || !val) {
-      vote(val)
-      return
-    }
-
-    vote(null)
-    setTimeout(() => vote(val), 200)
+    vote(val)
   }
 </script>
 
@@ -111,10 +105,11 @@
           :card-value="user.card"
           :class="{
             unset: !user.card,
-            mine: userName === user.name,
-            actionable: userName === user.name && user.card
+            mine: user.isMe,
+            actionable: user.isMe && user.card
           }"
-          @click="() => (userName === user.name ? vote(null) : () => {})"
+          :mine="user.isMe"
+          @click="() => (user.isMe && user.card != null ? vote(null) : () => {})"
         />
         {{ user.name }}
       </el-col>
@@ -130,11 +125,12 @@
           :class="{ cardcontainer: true }"
         >
           <GameCard
+              v-if="selectedCard !== val"
             :card-value="val"
-            :class="{
-              selected: selectedCard === val,
-              actionable: selectedCard !== val
+              :class="{
+              actionable: true
             }"
+            :mine="true"
             @click="() => pickCard(val)"
           />
         </el-col>
@@ -165,6 +161,8 @@
     /* effect like pulling the card */
     transform: rotateX(5deg) translateY(20px);
   }
+
+  /**
   .selected {
     opacity: 0;
     transform: translateY(-200px) rotateX(-10deg) scale(1.3);
@@ -177,7 +175,7 @@
   }
   .unset:not(.mine) {
     transform: translateY(-200px) rotateX(20deg);
-  }
+  }*/
   .user-view {
     padding-top: 20px;
     padding-bottom: 20px;

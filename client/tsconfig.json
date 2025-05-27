@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2021",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2021",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -22,7 +26,9 @@
 
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../shared/*"],
+      "@shared/*": [
+        "../shared/*"
+      ]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../shared/**/*"],

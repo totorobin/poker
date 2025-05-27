@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { useI18n, type Locale } from 'vue-i18n'
+import {type Locale, useI18n} from 'vue-i18n'
 
-  const { t, locale, availableLocales } = useI18n({ useScope: 'global' })
+const { t, locale, availableLocales } = useI18n({ useScope: 'global' })
 
   const changelang = () => {
     locale.value =

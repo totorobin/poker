@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia'
-  import { FullScreen } from '@element-plus/icons-vue'
-  import { useRoomStore } from '../store/room.ts'
-  import { useI18n } from 'vue-i18n'
+import {storeToRefs} from 'pinia'
+import {FullScreen} from '@element-plus/icons-vue'
+import {useRoomStore} from '../store/room.ts'
+import {useI18n} from 'vue-i18n'
 
-  const { t } = useI18n({ useScope: 'global' })
+const {t} = useI18n({useScope: 'global'})
 
   const roomStore = useRoomStore()
   const { userName } = storeToRefs(roomStore)

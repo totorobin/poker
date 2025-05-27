@@ -1,8 +1,14 @@
 <script setup lang="ts">
-  import { BACK_CARD_VALUE } from '@shared/data-model'
-  defineProps<{
+import {BACK_CARD_VALUE} from '@shared/data-model'
+
+defineProps<{
     cardValue: string | null
+    mine: boolean
   }>()
+
+  const encode = (val: string) => {
+    return encodeURIComponent(val).replaceAll('%', '')
+  }
 </script>
 
 <template>
@@ -11,6 +17,9 @@
       card: true,
       cardBack: cardValue === BACK_CARD_VALUE,
       cardFront: cardValue && cardValue !== BACK_CARD_VALUE
+    }"
+    :style="{
+      viewTransitionName: mine && cardValue != null ? `card-${encode(cardValue)}` : 'none'
     }"
   >
     {{ cardValue == BACK_CARD_VALUE ? '' : cardValue }}

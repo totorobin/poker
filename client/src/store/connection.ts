@@ -1,15 +1,17 @@
-import { defineStore } from 'pinia'
-import { socket } from '../socket'
-import { ElMessage } from 'element-plus'
-import { i18n } from '../locales'
-import { reactive, computed } from 'vue'
+import {defineStore} from 'pinia'
+import {socket} from '../socket'
+import {ElMessage} from 'element-plus'
+import {i18n} from '../locales'
+import {computed, reactive} from 'vue'
+import {useStorage} from "@vueuse/core";
+import {v4 as uuidv4} from "uuid";
 
 export const useConnectionStore = defineStore('connection', () => {
   const state = reactive({
     connected: false,
     firstConnection: true,
     userName: localStorage.getItem('userName'),
-    userUuid: localStorage.getItem('uuid'),
+    userUuid: useStorage('uuid', uuidv4()),
     userSaved: localStorage.getItem('userName') != null
   })
 
@@ -22,7 +24,7 @@ export const useConnectionStore = defineStore('connection', () => {
       if (state.userName) {
         socket.emit('setUserName', state.userName)
       } else {
-        socket.emit('whoAmI', (data: { name: string }) => {
+        socket.emit('whoAmI', (data: { name: string; uuid: string }) => {
           state.userName = data.name
         })
       }
@@ -38,7 +40,7 @@ export const useConnectionStore = defineStore('connection', () => {
       }
     })
 
-    socket.on('notify', ({ type , values }) => {
+    socket.on('notify', ({type, values}) => {
       ElMessage(i18n.t(`notifications.${type}`, values))
     })
   }
@@ -55,6 +57,7 @@ export const useConnectionStore = defineStore('connection', () => {
   const connect = () => {
     socket.connect()
   }
+
   const disconnect = () => {
     socket.disconnect()
   }
@@ -64,7 +67,7 @@ export const useConnectionStore = defineStore('connection', () => {
   return {
     bindEvents,
     userName: computed(() => state.userName),
-    userUuid: state.userUuid,
+    userUuid: computed(() => state.userUuid),
     userSaved: computed(() => state.userSaved),
     connect,
     disconnect,

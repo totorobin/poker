@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia'
-  import { computed } from 'vue'
-  import { RouterView } from 'vue-router'
-  import { useRoomStore } from '@/store/room.ts'
-  import MyHeader from '@/components/MyHeader.vue'
-  import { socket } from '@/socket.ts'
-  import { useConnectionStore } from '@/store/connection.ts'
+import {storeToRefs} from 'pinia'
+import {computed} from 'vue'
+import {RouterView} from 'vue-router'
+import {useRoomStore} from '@/store/room.ts'
+import MyHeader from '@/components/MyHeader.vue'
+import {socket} from '@/socket.ts'
+import {useConnectionStore} from '@/store/connection.ts'
 
-  const roomStore = useRoomStore()
+const roomStore = useRoomStore()
   const connectionStore = useConnectionStore()
 
   const { room } = storeToRefs(roomStore)

@@ -1,19 +1,15 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import { BACK_CARD_VALUE, type Room, type SavedRoom, type Player } from '@shared/data-model'
-import { socket } from '../socket.ts'
+import {computed, ref} from 'vue'
+import {defineStore} from 'pinia'
+import {BACK_CARD_VALUE, type Player, type Room, type SavedRoom} from '@shared/data-model'
+import {socket} from '../socket.ts'
 import router from '../router'
-
-/** Chargement des valeurs stockés en localstorage */
-const userName = ref(localStorage.getItem('userName'))
-const userSaved = ref(userName.value !== null)
+import {useConnectionStore} from '@/store/connection.ts'
 
 const savedRooms = ref(JSON.parse(localStorage.getItem('rooms') || '[]') as SavedRoom[])
 
-const userUuid = localStorage.getItem('uuid') || ''
-
 export const useRoomStore = defineStore('store', () => {
   const room = ref({} as Room)
+  const connectionStore = useConnectionStore()
 
   const bindEvents = () => {
     socket.on('roomState', (roomState: Room) => {
@@ -24,7 +20,7 @@ export const useRoomStore = defineStore('store', () => {
           ({
             id: room.value.id,
             cards: ['1', '2', '3', '5', '8', '13', '21', '☕'],
-            owner: userUuid,
+            owner: connectionStore.userUuid,
             actionsOwnerOnly: false
           } as SavedRoom)
         console.log('send cards ', savedRoom.cards)
@@ -45,10 +41,16 @@ export const useRoomStore = defineStore('store', () => {
           setTimer(roomState.endTimer)
         } else {
           clearInterval(nIntervId.value)
-          nIntervId.value = 0
+          nIntervId.value = undefined
         }
       }
-      room.value = roomState
+      if ('startViewTransition' in document) {
+        document.startViewTransition(() => {
+          room.value = roomState
+        })
+      } else {
+        room.value = roomState
+      }
     })
   }
 
@@ -66,7 +68,7 @@ export const useRoomStore = defineStore('store', () => {
 
   async function leave() {
     if (room.value.id)
-      socket.emit('leave', { roomId: room.value.id }, (_user) => {
+      socket.emit('leave', {roomId: room.value.id}, () => {
         room.value = {} as Room
       })
   }
@@ -76,13 +78,19 @@ export const useRoomStore = defineStore('store', () => {
     !room.value.users
       ? []
       : Object.values(room.value.users).map((user: Player) => {
-          if (user.uuid === userUuid || room.value.cardVisible) {
-            return { name: user.name, card: user.card }
+          if (user.uuid === connectionStore.userUuid || room.value.cardVisible) {
+            return {
+              name: user.name,
+              card: user.card,
+              isMe: user.uuid === connectionStore.userUuid
+            }
           }
-          return { name: user.name, card: user.card ? BACK_CARD_VALUE : null }
+          return {name: user.name, card: user.card ? BACK_CARD_VALUE : null, isMe: false}
         })
   )
-  const selectedCard = computed(() => (!room.value.users ? '' : room.value.users[userUuid].card))
+  const selectedCard = computed(() =>
+      !room.value.users ? '' : room.value.users[connectionStore.userUuid]?.card
+  )
 
   async function vote(cardValue: string | null) {
     socket.emit('vote', { value: cardValue })
@@ -109,14 +117,14 @@ export const useRoomStore = defineStore('store', () => {
   }
 
   const actionsAllowed = computed(
-    () => !room.value.actionsOwnerOnly || room.value.owner == userUuid
+      () => !room.value.actionsOwnerOnly || room.value.owner == connectionStore.userUuid
   )
 
   /** TIMER */
 
   const time = ref(3600000) // 1h en ms
-  const nIntervId = ref(0)
-  const timerRunning = computed(() => nIntervId.value !== 0)
+  const nIntervId = ref<ReturnType<typeof setInterval>>()
+  const timerRunning = computed(() => nIntervId.value !== undefined)
   const endTimer = ref(false)
 
   const setTimer = (endTime: number) => {
@@ -125,7 +133,7 @@ export const useRoomStore = defineStore('store', () => {
       if (time.value < 1000) {
         // si moins d'1s
         clearInterval(nIntervId.value)
-        nIntervId.value = 0
+        nIntervId.value = undefined
         endTimer.value = true
       }
     }, 1000)
@@ -151,9 +159,8 @@ export const useRoomStore = defineStore('store', () => {
     users,
     selectedCard,
     leave,
-    userName,
-    userSaved,
-    userUuid,
+    userName: computed(() => connectionStore.userName),
+    userUuid: computed(() => connectionStore.userUuid),
     time,
     startTimer,
     stopTimer,
