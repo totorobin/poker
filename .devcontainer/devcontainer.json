@@ -3,9 +3,10 @@
   "build": {
     "dockerfile": "Dockerfile",
   },
+  forwardPorts: [5173, 3000],
   "runArgs": [
     "--sysctl",
     "net.ipv6.conf.all.disable_ipv6=1"
   ],
-  "postCreateCommand": "pnpm install"
+  "postCreateCommand": "pnpm i"
 }

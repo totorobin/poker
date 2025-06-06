@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "@poker/client",
   "private": true,
   "version": "2.0.0",
   "type": "module",
@@ -11,16 +11,18 @@
     "format": "prettier . --write"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vueuse/core": "13.3.0",
     "element-plus": "^2.4.4",
     "pinia": "^2.1.7",
     "socket.io-client": "^4.7.2",
     "uuid": "^9.0.1",
     "vue": "^3.3.11",
     "vue-i18n": "^9.8.0",
-    "vue-router": "^4.2.5",
-    "@vueuse/core": "13.3.0"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@poker/shared": "workspace:^1.0.0",
     "@types/dom-view-transitions": "^1.0.6",
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
