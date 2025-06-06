@@ -1,54 +1,19 @@
-# --------------> The frontend build image
-FROM node:24-slim as build-f
+FROM node:24-slim AS base
 
-WORKDIR /usr/src/shared
-COPY shared .
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-# Create app directory
+FROM base AS build
+COPY . /usr/src/app
 WORKDIR /usr/src/app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run -r build
+RUN pnpm deploy --filter=server --prod /app
+RUN pnpm deploy --filter=client --prod /app/public
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY client/package*.json ./
-
-RUN npm install
-# If you are building your code for production
-#RUN npm ci --only=production
-
-# Bundle app source
-COPY client .
-
-RUN npm run build
-
-# --------------> The backend build image
-FROM node:24-slim as build-b
-
-
-# Create app directory
-WORKDIR /usr/src/server
-
-COPY shared ../shared
-COPY server .
-
-RUN npm install
-
-RUN npm run build
-
-# --------------> The production image
-FROM node:24-slim
-ENV NODE_ENV production
-
-# Create app directory
-WORKDIR /usr/src/app
-
-COPY --from=build-b /usr/src/server/package*.json ./
-RUN npm ci --only=production
-COPY --from=build-f /usr/src/app/dist public
-COPY --from=build-b /usr/src/server/dist ./
-
-ENV PORT 8080
+FROM base AS app
+COPY --from=build /app /app
+WORKDIR /app
 EXPOSE 8080
-
-USER node
-CMD [ "node", "server/src/index.js" ]
+CMD [ "pnpm", "start" ]

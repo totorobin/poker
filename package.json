@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm run --parallel dev",
+    "build": "pnpm run --parallel build",
     "server": "pnpm run --filter \"@retro/server\" dev",
     "client": "pnpm run --filter \"@retro/client\" dev"
   },
