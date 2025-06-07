@@ -1,12 +1,12 @@
-import {SRoom} from './room'
-import {type Socket} from 'socket.io'
-import {adjectives, animals, type Config, names, uniqueNamesGenerator} from 'unique-names-generator'
+import { SRoom } from './room.ts';
+import { type Socket } from 'socket.io';
+import { adjectives, animals, type Config, names, uniqueNamesGenerator } from 'unique-names-generator';
 
 const roomNameConfig: Config = {
   dictionaries: [adjectives, animals, names],
   separator: '-',
-    length: 2
-}
+  length: 2,
+};
 
 export class RoomStore {
     private rooms: Record<string, SRoom>

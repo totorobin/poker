@@ -1,12 +1,17 @@
-import {Server, type ServerOptions} from 'socket.io'
-import type {Server as HTTPSServer} from 'https'
-import type {Http2SecureServer} from 'http2'
-import type * as http from 'http'
-import {SUser} from './user'
-import {RoomStore} from './roomStore'
-import {type ClientToServerEvents, Notification, type ServerToClientEvents, type User} from '../../shared/data-model'
+import { Server, type ServerOptions } from 'socket.io';
+import type { Server as HTTPSServer } from 'https';
+import type { Http2SecureServer } from 'http2';
+import type * as http from 'http';
+import { SUser } from './user.ts';
+import { RoomStore } from './roomStore.ts';
+import {
+  type ClientToServerEvents,
+  Notification,
+  type ServerToClientEvents,
+  type User,
+} from '../../shared/data-model.ts';
 
-const rooms = new RoomStore()
+const rooms = new RoomStore();
 
 const restrictedEvents = ['timer', 'cardVisible', 'reset', 'updateSettings']
 

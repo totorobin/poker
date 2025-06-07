@@ -1,10 +1,10 @@
-import express, {type Express} from 'express'
-import dotenv from 'dotenv'
-import {createServer} from 'node:http'
-import {IoServer} from './ioServer'
-import path from 'node:path'
+import express, { type Express } from 'express';
+import dotenv from 'dotenv';
+import { createServer } from 'node:http';
+import { IoServer } from './ioServer.ts';
+import path from 'node:path';
 
-dotenv.config()
+dotenv.config();
 
 const app: Express = express()
 const port: string | number = process.env.PORT ?? 3000
