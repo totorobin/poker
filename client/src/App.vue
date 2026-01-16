@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import {storeToRefs} from 'pinia'
-import {computed} from 'vue'
-import {RouterView} from 'vue-router'
+import {computed, watch} from 'vue'
+import {RouterView, useRoute} from 'vue-router'
 import {useRoomStore} from '@/store/room.ts'
 import MyHeader from '@/components/MyHeader.vue'
 import {socket} from '@/socket.ts'
 import {useConnectionStore} from '@/store/connection.ts'
 
 const roomStore = useRoomStore()
-  const connectionStore = useConnectionStore()
+const connectionStore = useConnectionStore()
 
-  const { room } = storeToRefs(roomStore)
-  const backgroundColor = computed(() => (room.value.id ? '#56ab2f' : 'white'))
+const route = useRoute()
 
-  // remove any existing listeners (in case of hot reload)
-  socket.off()
+// remove any existing listeners (in case of hot reload)
+socket.off()
 
-  roomStore.bindEvents()
-  connectionStore.bindEvents()
+roomStore.bindEvents()
+connectionStore.bindEvents()
 </script>
 
 <template>
-  <div class="common-layout" :style="{ 'background-color': backgroundColor }">
+  <div class="common-layout" :class="{ 'room': route.name === 'room' }">
     <el-container>
       <el-header><MyHeader /></el-header>
       <el-main><RouterView /></el-main>
@@ -31,9 +29,14 @@ const roomStore = useRoomStore()
 </template>
 
 <style>
+:root {
+  --primary-color-theme: #56AB2F;
+  --primary-color-theme-dark: rgb(from var(--primary-color-theme) calc(r *0.25) calc(g *0.25) calc(b *0.25));
+  --card-back-background-image: url('/src/assets/playing-card-back_old.png');
+}
   /** important : permet d'afficher la fenetre de saisie du user AU DESSUS des notifications  **/
   .el-overlay {
-    z-index: 99999999999999 !important;
+    z-index: 19 !important;
   }
 
   body {
@@ -48,10 +51,13 @@ const roomStore = useRoomStore()
   }
 </style>
 <style scoped>
+  .room {
+    background-color: var(--primary-color-theme);
+  }
   .el-header {
     height: 50px;
     line-height: 50px;
-    background-color: #1a330e;
+    background-color: var(--primary-color-theme-dark);
   }
   .el-container {
     height: 100vh;

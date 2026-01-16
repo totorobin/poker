@@ -4,14 +4,17 @@ import ChangeLangButton from './ChangeLangButton.vue'
 import PopupWindowButton from './PopupWindowButton.vue'
 import ShareButton from './ShareButton.vue'
 import UserButton from './UserButton.vue'
+import Logo from "@/components/Logo.vue";
+import ChangeThemeButton from "@/components/ChangeThemeButton.vue";
 </script>
 
 <template>
   <el-row>
     <RouterLink to="/">
-      <img alt="Vue logo" class="logo" src="../assets/logo.png" />
+        <Logo class="logo" alt="Vue logo" />
     </RouterLink>
     <div class="flex-grow" />
+    <ChangeThemeButton />
     <ChangeLangButton />
     <ShareButton />
     <PopupWindowButton />

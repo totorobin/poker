@@ -16,7 +16,8 @@
     "reset": "Reset",
     "share": "Share",
     "popup": "Open in popup window",
-    "lang": "Language : English"
+    "lang": "Language : English",
+    "theme": "Theme"
   },
   "notifications": {
     "join": "{name} just joined",
