@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {computed, watch} from 'vue'
 import {RouterView, useRoute} from 'vue-router'
 import {useRoomStore} from '@/store/room.ts'
 import MyHeader from '@/components/MyHeader.vue'
