@@ -11,10 +11,10 @@ const port: number = parseInt(process.env.PORT ?? '3000', 10);
 const host: string = process.env.HOST ?? '0.0.0.0';
 const server = createServer(app);
 
-const publicPath = path.resolve('public');
+const publicPath = path.resolve(__dirname, '../public');
 console.log(`Serving static files from: ${publicPath}`);
 app.use(express.static(publicPath));
-app.get('/room/:id', (_req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(publicPath, 'index.html'));
 });
 

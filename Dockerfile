@@ -37,9 +37,11 @@ USER node
 # Copy the deployed server files (contains dist/, node_modules/, package.json)
 COPY --chown=node:node --from=base /usr/src/app/deployed ./
 
+# Ensure public directory exists
+RUN mkdir -p public && chown node:node public
+
 # Copy built client files to server's public folder
-# Note: In the server, path.resolve('public') will point to /usr/src/app/public
-COPY --chown=node:node --from=base /usr/src/app/apps/client/dist ./public
+COPY --chown=node:node --from=base /usr/src/app/apps/client/dist/ ./public/
 
 ENV PORT=8080
 ENV HOST=0.0.0.0
