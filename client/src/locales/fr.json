@@ -16,7 +16,8 @@
     "reset": "Réinitialiser",
     "share": "Partager",
     "popup": "Ouvrir dans une popup",
-    "lang": "Langue : français"
+    "lang": "Langue : français",
+    "theme": "Thème"
   },
   "notifications": {
     "join": "{name} a rejoint la salle",
@@ -40,6 +41,13 @@
     "confirm": "Ok",
     "cancel": "Annuler",
     "cancel-notif": "Saisie annulée"
+  },
+  "theme": {
+    "form": {
+      "title": "Personnaliser l'affichage",
+      "color" :"Couleur de fond",
+      "card": "Verso des cartes"
+    }
   },
   "settings": {
     "sets": {

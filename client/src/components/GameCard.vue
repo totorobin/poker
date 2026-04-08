@@ -2,13 +2,14 @@
 import {BACK_CARD_VALUE} from '@shared/data-model'
 
 defineProps<{
-    cardValue: string | null
-    mine: boolean
-  }>()
+  cardValue: string | null
+  mine: boolean
+}>()
 
-  const encode = (val: string) => {
-    return encodeURIComponent(val).replaceAll('%', '')
-  }
+const encode = (val: string) => {
+  return encodeURIComponent(val).replaceAll('%', '')
+}
+
 </script>
 
 <template>
@@ -45,7 +46,7 @@ defineProps<{
     user-select: none;
   }
   .cardBack {
-    background-image: url('../assets/playing-card-back.png');
+    background-image: var(--card-back-background-image);
     border: 1px solid black;
   }
   .cardFront {
