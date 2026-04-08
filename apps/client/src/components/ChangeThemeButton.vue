@@ -12,11 +12,11 @@
   }
 
   const color = useStorage('color', '#56AB2F')
-  const back = useStorage('card-back', '/src/assets/playing-card-back_old.png')
-  const backs = ref<string[]>([])
-  Object.entries(import.meta.glob(['@/assets/playing-card-back_*.png'])).forEach(([key]) => {
-    backs.value.push(key)
-  })
+  const back = useStorage('card-back', '/card-backs/playing-card-back_old.png')
+  const backs = ref<string[]>([
+    '/card-backs/playing-card-back_old.png',
+    ...Array.from({ length: 8 }, (_, i) => `/card-backs/playing-card-back_${i + 1}.png`)
+  ])
 
   watch(
     color,

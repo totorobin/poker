@@ -17,12 +17,11 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY . .
 
-# Run a clean build for all packages in correct order and verify server outputs
+# Run a clean build for all packages in correct order
 RUN pnpm --filter @poker/shared build \
     && pnpm --filter client build \
     && rm -rf apps/server/dist && rm -f apps/server/tsconfig.tsbuildinfo \
-    && pnpm --filter server build \
-    && ls -la apps/server/dist
+    && pnpm --filter server build
 
 # Deploy the server package to a standalone directory
 # This command extracts the server and ses dépendances de production (including shared)
@@ -54,5 +53,5 @@ ENV PORT=3000
 ENV HOST=0.0.0.0
 EXPOSE 3000
 
-# Start using the explicitly copied dist/index.js
+# Start the application
 CMD [ "node", "dist/index.js" ]

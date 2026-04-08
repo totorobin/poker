@@ -33,7 +33,7 @@
     --primary-color-theme-dark: rgb(
       from var(--primary-color-theme) calc(r * 0.25) calc(g * 0.25) calc(b * 0.25)
     );
-    --card-back-background-image: url('/src/assets/playing-card-back_old.png');
+    --card-back-background-image: url('/card-backs/playing-card-back_old.png');
   }
   /** important : permet d'afficher la fenetre de saisie du user AU DESSUS des notifications  **/
   .el-overlay {
