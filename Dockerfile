@@ -50,12 +50,9 @@ COPY --chown=node:node --from=base /usr/src/app/apps/server/dist ./dist
 RUN mkdir -p public
 COPY --chown=node:node --from=base /usr/src/app/apps/client/dist ./public
 
-# Debug step to verify file existence during build (visible in docker build logs)
-RUN ls -la dist/ && ls -la dist/user.js && ls -la public/ && ls -la public/index.html
-
-ENV PORT=8080
+ENV PORT=3000
 ENV HOST=0.0.0.0
-EXPOSE $PORT
+EXPOSE 3000
 
 # Start using the explicitly copied dist/index.js
 CMD [ "node", "dist/index.js" ]

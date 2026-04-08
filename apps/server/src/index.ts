@@ -13,17 +13,17 @@ dotenv.config();
 const app: Express = express();
 const port: number = parseInt(process.env.PORT ?? '3000', 10);
 const host: string = process.env.HOST ?? '0.0.0.0';
-const server = createServer(app);
 
 const publicPath = path.resolve(__dirname, '../public');
 console.log(`Checking publicPath: ${publicPath}`);
 if (fs.existsSync(publicPath)) {
-  console.log(`publicPath exists. Content: ${fs.readdirSync(publicPath).join(', ')}`);
+  const files = fs.readdirSync(publicPath);
+  console.log(`publicPath exists. Content: ${files.join(', ')}`);
 } else {
   console.error(`ERROR: publicPath does not exist: ${publicPath}`);
 }
 
-// Global request logger to debug incoming traffic
+// Global request logger
 app.use((req, _res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
@@ -31,19 +31,17 @@ app.use((req, _res, next) => {
 
 app.use(express.static(publicPath, { index: 'index.html' }));
 
-// Route fallback for SPA (Express 5 syntax requires named parameters with wildcard)
+// Express 5 compatible catch-all for SPA (requires named parameters with wildcard)
 app.get('*path', (req, res) => {
-  console.log(`Fallback for SPA hit: ${req.url}`);
-  res.sendFile(path.join(publicPath, 'index.html'), (err) => {
-    console.error(`Error sending index.html for ${req.url}: ${err.message}`);
-  });
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
+const server = createServer(app);
 const io = new IoServer(server);
 if (io.io != null) {
   console.log('Websocket Server initiated');
 }
 
 server.listen(port, host, () => {
-  console.log(`Server v2.0.1 is running at http://${host}:${port}`);
+  console.log(`Server v2.0.2 is running at http://${host}:${port}`);
 });
