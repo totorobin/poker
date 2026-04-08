@@ -1,0 +1,12 @@
+{
+  "name": "poker-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format"
+  },
+  "packageManager": "pnpm@10.5.2"
+}

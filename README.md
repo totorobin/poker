@@ -12,55 +12,44 @@ docker run -p 8080:8080 -d ghcr.io/totorobin/poker:latest
 
 ## Project Setup
 
+Ce projet est un monorepo géré par [pnpm](https://pnpm.io/).
 
-### Server side
+### Installation des dépendances
 
+À la racine du projet :
 ```sh
-cd ./server
-npm install
+pnpm install
 ```
 
-#### Compile and Hot-Reload for Development
+### Développement
 
+Lancer tous les services (client et serveur) en mode développement :
 ```sh
-npm run dev
+pnpm dev
 ```
 
-#### Type-Check, Compile and Minify for Production
-
+Ou individuellement :
 ```sh
-npm run build
+pnpm --filter client dev
+pnpm --filter server dev
 ```
 
-### Client side
+### Build
 
+Pour construire tout le projet :
 ```sh
-cd ./client
-npm install
+pnpm build
 ```
 
-#### Compile and Hot-Reload for Development
+### Lint et Formatage
 
 ```sh
-npm run dev
+pnpm lint
+pnpm format
 ```
-! server needs to run for client to work
-
-#### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-#### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-
 
 ### Dockerize
 
 ```sh
-docker build . -t totoro/poker --network host
+docker build . -t poker
 ```

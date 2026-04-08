@@ -1,5 +1,42 @@
+# Dependencies and build artifacts
 node_modules
-npm-debug.log
-cypress/
-.github
+dist
+**/dist
+**/node_modules
+*.tsbuildinfo
+.pnpm-store
+
+# Debug and logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# IDEs and OS
 .vscode
+.idea
+.git
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Testing
+cypress/
+coverage/
+.github
+.playwright-artifacts
+results.xml
