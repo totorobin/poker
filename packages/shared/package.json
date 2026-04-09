@@ -2,8 +2,8 @@
   "name": "@poker/shared",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/data-model.js",
-  "types": "./dist/data-model.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },

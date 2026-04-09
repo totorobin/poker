@@ -13,7 +13,7 @@ export default defineConfig({
       { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
       {
         find: '@poker/shared',
-        replacement: fileURLToPath(new URL('../../packages/shared/data-model.ts', import.meta.url))
+        replacement: fileURLToPath(new URL('../../packages/shared/index.ts', import.meta.url))
       }
     ]
   },

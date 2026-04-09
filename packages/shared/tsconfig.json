@@ -10,6 +10,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "data-model.ts"
+    "index.ts"
   ]
 }
