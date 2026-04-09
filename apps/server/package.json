@@ -1,0 +1,45 @@
+{
+  "name": "@poker/server",
+  "version": "2.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "public"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "lint": "eslint --ext .ts --ignore-path .gitignore --fix src",
+    "format": "prettier --config .prettierrc.json --write src/**/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@poker/shared": "workspace:*",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3",
+    "unique-names-generator": "^4.7.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.2",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "eslint": "^8.57.1",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^17.24.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "husky": "^9.1.7",
+    "nodemon": "^3.1.14",
+    "prettier": "3.8.1",
+    "pretty-quick": "^4.2.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
+  }
+}
