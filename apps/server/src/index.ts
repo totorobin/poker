@@ -8,7 +8,7 @@ import fs from 'node:fs'
 dotenv.config()
 
 const app: Express = express()
-const port: number = parseInt(process.env.PORT ?? '3000', 10)
+const port: number = parseInt(process.env.PORT ?? '8080', 10)
 const host: string = process.env.HOST ?? '0.0.0.0'
 
 process.argv.forEach(function (val, index, array) {
