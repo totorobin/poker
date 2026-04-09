@@ -11,7 +11,14 @@ const app: Express = express()
 const port: number = parseInt(process.env.PORT ?? '3000', 10)
 const host: string = process.env.HOST ?? '0.0.0.0'
 
-const publicPath = path.resolve(__dirname, '../public')
+process.argv.forEach(function (val, index, array) {
+  if (val.startsWith('--')) {
+    process.env[val.substring(2)] = array[index + 1]
+    console.log(`process.env.${val.substring(2)}: ${process.env[val.substring(2)]}`);
+  }
+})
+
+const publicPath = path.resolve(__dirname, process.env.PUBLIC_PATH ?? '../public')
 console.log(`Checking publicPath: ${publicPath}`)
 if (fs.existsSync(publicPath)) {
   const files = fs.readdirSync(publicPath)

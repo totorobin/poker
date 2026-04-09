@@ -6,7 +6,8 @@
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "format": "pnpm -r format"
+    "format": "pnpm -r format",
+    "start": "pnpm --filter=@poker/server start --PUBLIC_PATH ../../client/dist"
   },
   "packageManager": "pnpm@10.5.2"
 }
