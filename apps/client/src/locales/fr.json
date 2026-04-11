@@ -32,7 +32,8 @@
     "websocket-disconnected": "Websocket déconnecté, tentative de reconnection.",
     "websocket-reconnected": "Websocket re-connecté",
     "end-timer": "Temps écoulé !",
-    "vote-blocked": "Impossible de voter une fois que les cartes sont affichés"
+    "vote-blocked": "Impossible de voter une fois que les cartes sont affichés",
+    "cheated": "Attention {name} tente de tricher !"
   },
   "prompt-name": {
     "title": "Surnom",

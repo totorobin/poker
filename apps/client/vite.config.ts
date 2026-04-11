@@ -5,6 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import ElementPlus from 'unplugin-element-plus/vite'
 import { fileURLToPath, URL } from 'node:url'
+import istanbul from 'vite-plugin-istanbul'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,12 +26,18 @@ export default defineConfig({
     }),
     Components({
       resolvers: [ElementPlusResolver()]
+    }),
+    istanbul({
+      include: 'src/*',
+      exclude: ['node_modules', 'test/*'],
+      extension: ['.js', '.ts', '.vue'],
+      requireEnv: true
     })
   ],
   server: {
     proxy: {
       '/socket.io': {
-        target: 'ws://localhost:3000',
+        target: 'ws://127.0.0.1:3000',
         ws: true
       }
     }

@@ -8,6 +8,7 @@
       availableLocales[
         (availableLocales.indexOf(locale.value as Locale) + 1) % availableLocales.length
       ]
+    localStorage.setItem('locale', locale.value)
   }
 </script>
 

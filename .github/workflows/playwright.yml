@@ -1,0 +1,74 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+        with:
+          version: 10.5.2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright Browsers
+        run: pnpm --filter @poker/e2e exec playwright install --with-deps chromium
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Run Playwright tests with coverage
+        run: pnpm test:e2e:coverage
+
+      - name: Generate Test Summary
+        if: always()
+        run: |
+          echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -f apps/e2e/reports/cucumber-report.json ]; then
+            PASSED=$(grep -o '"status": "passed"' apps/e2e/reports/cucumber-report.json | wc -l)
+            FAILED=$(grep -o '"status": "failed"' apps/e2e/reports/cucumber-report.json | wc -l)
+            echo "✅ **Passed:** $PASSED" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **Failed:** $FAILED" >> $GITHUB_STEP_SUMMARY
+            echo "[Full Cucumber Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Cucumber report not found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Generate Coverage Summary
+        if: always()
+        run: |
+          echo "## Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -d apps/e2e/.nyc_output ]; then
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            pnpm exec nyc report --reporter=text-summary --temp-dir apps/e2e/.nyc_output >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage data not found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Cucumber Report
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: cucumber-report
+          path: apps/e2e/reports/cucumber-report.html
+          retention-days: 30
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: coverage-report
+          path: apps/e2e/reports/coverage
+          retention-days: 30

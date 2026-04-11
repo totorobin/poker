@@ -6,7 +6,21 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format",
-    "start": "pnpm --filter=@poker/server start --PUBLIC_PATH ../../client/dist"
+    "test:e2e": "start-server-and-test \"pnpm run dev\" http://localhost:5173 \"pnpm run test:e2e:run\"",
+    "test:e2e:run": "pnpm --filter @poker/e2e test",
+    "test:e2e:coverage": "cross-env VITE_COVERAGE=true pnpm run test:e2e && nyc report --reporter=html --reporter=text-summary --temp-dir apps/e2e/.nyc_output --report-dir apps/e2e/reports/coverage",
+    "test:e2e:report": "pnpm --filter @poker/e2e report",
+    "start": "pnpm --filter=@poker/server start --PUBLIC_PATH ../../client/dist --PORT 8080",
+    "prestart": "pnpm -r build"
   },
-  "packageManager": "pnpm@10.5.2"
+  "packageManager": "pnpm@10.5.2",
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "fs-extra": "^11.3.4",
+    "istanbul-lib-coverage": "^3.2.2",
+    "istanbul-lib-report": "^3.0.1",
+    "istanbul-reports": "^3.2.0",
+    "nyc": "^18.0.0",
+    "start-server-and-test": "^3.0.2"
+  }
 }

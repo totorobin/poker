@@ -86,6 +86,7 @@
           <GameCard
             :card-value="val"
             :class="{ cardSelected: selectedCards.includes(val) }"
+            :mine="true"
             @click="selectCard(val)"
           />
         </el-col>
