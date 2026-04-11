@@ -1,11 +1,15 @@
-import {After, Before, setDefaultTimeout, setWorldConstructor, World} from '@cucumber/cucumber';
-import {Browser, BrowserContext, chromium, Page} from '@playwright/test';
+import {After, AfterAll, Before, setDefaultTimeout, setWorldConstructor, World} from '@cucumber/cucumber';
+import {Browser, chromium, Page} from '@playwright/test';
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import axios from 'axios';
 
 setDefaultTimeout(30000);
 
+const COVERAGE_DIR = path.join(__dirname, '../../.nyc_output');
+
 export class CustomWorld extends World {
     browser?: Browser;
-    context?: BrowserContext;
     pages: Record<string, Page> = {};
 
     async init() {
@@ -28,6 +32,21 @@ export class CustomWorld extends World {
     }
 
     async close() {
+        // Collecte de la couverture avant de fermer les pages
+        if (process.env.VITE_COVERAGE === 'true') {
+            for (const [name, page] of Object.entries(this.pages)) {
+                if (!page.isClosed()) {
+                    const coverage = await page.evaluate(() => (window as any).__coverage__);
+                    if (coverage) {
+                        const coverageFile = path.join(COVERAGE_DIR, `client-${name}-${Date.now()}.json`);
+                        await fs.ensureDir(COVERAGE_DIR);
+                        await fs.writeJson(coverageFile, coverage);
+                        console.log(`[COVERAGE] Couverture client enregistrée pour ${name}`);
+                    }
+                }
+            }
+        }
+
         for (const page of Object.values(this.pages)) {
             await page.close();
         }
@@ -56,4 +75,21 @@ After(async function (this: CustomWorld, scenario) {
         }
     }
     await this.close();
+});
+
+AfterAll(async function () {
+    if (process.env.VITE_COVERAGE === 'true') {
+        try {
+            console.log('[COVERAGE] Récupération de la couverture serveur...');
+            const response = await axios.get('http://localhost:3000/coverage');
+            if (response.data && response.data.coverage) {
+                const coverageFile = path.join(COVERAGE_DIR, `server-${Date.now()}.json`);
+                await fs.ensureDir(COVERAGE_DIR);
+                await fs.writeJson(coverageFile, response.data.coverage);
+                console.log('[COVERAGE] Couverture serveur enregistrée');
+            }
+        } catch (e) {
+            console.error('[ERROR] Impossible de récupérer la couverture du serveur:', (e as Error).message);
+        }
+    }
 });

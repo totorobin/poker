@@ -33,6 +33,13 @@ app.use((req, _res, next) => {
   next();
 });
 
+// Coverage endpoint for E2E tests
+if (process.env.VITE_COVERAGE === 'true') {
+  app.get('/coverage', (req, res) => {
+    res.json({ coverage: (global as any).__coverage__ || null });
+  });
+}
+
 app.use(express.static(publicPath, { index: 'index.html' }));
 
 // Express 5 compatible catch-all for SPA (requires named parameters with wildcard)
