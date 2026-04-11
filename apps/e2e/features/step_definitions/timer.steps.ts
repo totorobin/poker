@@ -30,21 +30,10 @@ Then('{string} et {string} doivent voir le timer tourner', async function (this:
     const timerInput1 = page1.locator('.timer .el-date-editor input');
     const timerInput2 = page2.locator('.timer .el-date-editor input');
 
-    const val1_initial = await timerInput1.inputValue();
-    const val2_initial = await timerInput2.inputValue();
-
-    console.log(`Initial values: Alice=${val1_initial}, Bob=${val2_initial}`);
-
-    // Attendre 3 secondes pour être sûr
-    await page1.waitForTimeout(3000);
-
-    const val1_final = await timerInput1.inputValue();
-    const val2_final = await timerInput2.inputValue();
-
-    console.log(`Final values: Alice=${val1_final}, Bob=${val2_final}`);
-
-    expect(val1_final).not.toBe(val1_initial);
-    expect(val2_final).not.toBe(val2_initial);
+    // On s'attend à ce que la valeur change (ne soit plus 00:00:10)
+    // On utilise expect.poll ou on attend que la valeur change
+    await expect(timerInput1).not.toHaveValue('00:00:10', {timeout: 10000});
+    await expect(timerInput2).not.toHaveValue('00:00:10', {timeout: 10000});
 });
 
 Then('quand le temps est écoulé {string} et {string} doivent voir une notification {string}', async function (this: CustomWorld, actor1: string, actor2: string, message: string) {

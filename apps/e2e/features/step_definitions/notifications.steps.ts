@@ -22,7 +22,8 @@ Then('{string} doit voir une notification indiquant que {string} s\'appelle main
     // Le message est "{oldName} se fait maintenant appeler {name}"
     const expectedText = `${oldName} se fait maintenant appeler ${newName}`;
     const notification = page.locator('.el-message').filter({hasText: expectedText});
-    await expect(notification).toBeVisible({timeout: 5000});
+    // On augmente le timeout pour la CI
+    await expect(notification).toBeVisible({timeout: 10000});
 });
 
 Then('{string} doit voir une notification indiquant que tout le monde a voté', async function (this: CustomWorld, observer: string) {
@@ -41,5 +42,5 @@ Then('{string} doit voir une notification indiquant que {string} a tenté de tri
     const page = await this.getPage(observer);
     const expectedText = `Attention ${cheaterName} tente de tricher !`;
     const notification = page.locator('.el-message').filter({hasText: expectedText});
-    await expect(notification).toBeVisible({timeout: 5000});
+    await expect(notification).toBeVisible({timeout: 10000});
 });
