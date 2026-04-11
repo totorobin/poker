@@ -6,7 +6,8 @@ module.exports = {
             'progress-bar',
             'summary',
             'progress',
-            'html:reports/cucumber-report.html'
+            'html:reports/cucumber-report.html',
+            'json:reports/cucumber-report.json'
         ],
         paths: ['features/**/*.feature'],
         defaultTimeout: 30000
