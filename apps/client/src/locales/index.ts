@@ -7,10 +7,17 @@ const listLocales = ['en', 'fr']
 
 type MessageSchema = typeof en
 let userLang: string | undefined
-for (const lang of navigator.languages) {
-  userLang =
-    listLocales.find((loc) => lang === loc) || listLocales.find((loc) => lang.split('-')[0] === loc)
-  if (userLang) break
+
+const forceLang = localStorage.getItem('locale')
+if (forceLang && listLocales.includes(forceLang)) {
+  userLang = forceLang
+} else {
+  for (const lang of navigator.languages) {
+    userLang =
+      listLocales.find((loc) => lang === loc) ||
+      listLocales.find((loc) => lang.split('-')[0] === loc)
+    if (userLang) break
+  }
 }
 console.log('The language is: ' + userLang)
 const instance = createI18n<[MessageSchema], 'en' | 'fr'>({

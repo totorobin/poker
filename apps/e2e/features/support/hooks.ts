@@ -21,6 +21,11 @@ export class CustomWorld extends World {
             const context = await this.browser!.newContext();
             const page = await context.newPage();
 
+            // Forcer la langue en français pour les tests E2E
+            await page.addInitScript(() => {
+                localStorage.setItem('locale', 'fr');
+            });
+
             // Relayer les messages de la console du navigateur vers le terminal
             page.on('console', msg => {
                 console.log(`[BROWSER ${name}] ${msg.type().toUpperCase()}: ${msg.text()}`);
