@@ -51,7 +51,7 @@ jobs:
           echo "## Coverage Summary" >> $GITHUB_STEP_SUMMARY
           if [ -d apps/e2e/.nyc_output ]; then
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            nyc report --reporter=text-summary --temp-dir apps/e2e/.nyc_output >> $GITHUB_STEP_SUMMARY
+            pnpm exec nyc report --reporter=text-summary --temp-dir apps/e2e/.nyc_output >> $GITHUB_STEP_SUMMARY
             echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           else
             echo "Coverage data not found." >> $GITHUB_STEP_SUMMARY
