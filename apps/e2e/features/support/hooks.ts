@@ -80,8 +80,12 @@ After(async function (this: CustomWorld, scenario) {
 AfterAll(async function () {
     if (process.env.VITE_COVERAGE === 'true') {
         try {
+            // Un petit délai pour laisser le serveur respirer
+            await new Promise(resolve => setTimeout(resolve, 2000));
             console.log('[COVERAGE] Récupération de la couverture serveur...');
-            const response = await axios.get('http://localhost:3000/coverage');
+            // Utiliser le port 8080 si configuré ainsi
+            const serverUrl = 'http://localhost:3000/coverage';
+            const response = await axios.get(serverUrl, {timeout: 5000});
             if (response.data && response.data.coverage) {
                 const coverageFile = path.join(COVERAGE_DIR, `server-${Date.now()}.json`);
                 await fs.ensureDir(COVERAGE_DIR);
@@ -90,6 +94,18 @@ AfterAll(async function () {
             }
         } catch (e) {
             console.error('[ERROR] Impossible de récupérer la couverture du serveur:', (e as Error).message);
+            // On tente une seconde fois sur le port 8080 au cas où
+            try {
+                const response = await axios.get('http://localhost:8080/coverage', {timeout: 2000});
+                if (response.data && response.data.coverage) {
+                    const coverageFile = path.join(COVERAGE_DIR, `server-8080-${Date.now()}.json`);
+                    await fs.ensureDir(COVERAGE_DIR);
+                    await fs.writeJson(coverageFile, response.data.coverage);
+                    console.log('[COVERAGE] Couverture serveur enregistrée (port 8080)');
+                }
+            } catch (e2) {
+                // ignore second failure
+            }
         }
     }
 });

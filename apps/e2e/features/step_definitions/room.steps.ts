@@ -227,3 +227,42 @@ Then('{string} doit voir que personne n\'a voté', async function (this: CustomW
     await expect(userView.locator('.cardBack')).toHaveCount(0);
     await expect(userView.locator('.cardFront')).toHaveCount(0);
 });
+
+Given('l\'utilisateur {string} navigue vers l\'accueil avec le nom pré-enregistré {string}', async function (this: CustomWorld, actor: string, userName: string) {
+    const page = await this.getPage(actor);
+    await page.addInitScript((name) => {
+        window.localStorage.setItem('userName', name);
+    }, userName);
+    await page.goto(`${BASE_URL}`);
+    await page.waitForLoadState('networkidle');
+});
+
+When('{string} clique sur le bouton de création de salle', async function (this: CustomWorld, actor: string) {
+    const page = await this.getPage(actor);
+    const createButton = page.locator('button:has-text("Créer"), button:has(.i-mdi-plus)');
+    await createButton.click();
+});
+
+Then('{string} doit être redirigée vers une nouvelle salle', async function (this: CustomWorld, actor: string) {
+    const page = await this.getPage(actor);
+    // On s'attend à être sur une URL /room/XXXXX
+    await expect(page).toHaveURL(new RegExp(`/room/[a-z0-9-]+$`));
+    await page.waitForSelector('.user-view', {state: 'visible'});
+});
+
+When('{string} quitte la salle', async function (this: CustomWorld, actor: string) {
+    const page = await this.getPage(actor);
+    await page.evaluate(() => {
+        (window as any).socket.emit('leave', {roomId: (window as any).location.pathname.split('/').pop()});
+    });
+    // On attend un peu que le serveur traite le message avant de naviguer (pour simuler un leave propre)
+    await page.waitForTimeout(500);
+    await page.goto(`${BASE_URL}/`);
+});
+
+Then('{string} ne doit plus voir {string} dans la room', async function (this: CustomWorld, observer: string, actor: string) {
+    const page = await this.getPage(observer);
+    const userView = page.locator('.user-view');
+    // On attend que l'utilisateur disparaisse (timeout augmenté)
+    await expect(userView).not.toContainText(actor, {timeout: 10000});
+});

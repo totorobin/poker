@@ -30,30 +30,28 @@ When('{string} active l\'option {string}', async function (this: CustomWorld, ac
     const page = await this.getPage(actor);
     console.log(`${actor} active l'option ${optionLabel}`);
 
-    // On cherche le switch par le texte qui l'accompagne
-    // Les options sont dans des balises <p>
-    // "Actions réservés a l'admin" ou "Bloquer les votes une fois les cartes révélés"
+    // Attendre que le dialogue soit visible
+    await page.waitForSelector('.el-dialog', {state: 'visible', timeout: 10000});
 
-    // Les libellés exacts dans fr.json sont :
-    // "actions-owner-only": "Actions réservés a l'admin"
-    // "no-vote-after-show": "Bloquer les votes une fois les cartes révélés"
-
-    // Normalisation pour le test (le feature utilise des apostrophes courbes ou droites, et des accents)
+    // Normalisation pour le test
     let searchLabel = optionLabel;
-    if (optionLabel.includes("Actions réservées")) {
+    if (optionLabel.toLowerCase().includes("actions réservées") || optionLabel.toLowerCase().includes("actions r.serv.es")) {
         searchLabel = "Actions réservés a l'admin";
-    } else if (optionLabel.includes("Bloquer les votes")) {
+    } else if (optionLabel.toLowerCase().includes("bloquer les votes")) {
         searchLabel = "Bloquer les votes une fois les cartes révélés";
     }
 
     console.log(`Recherche du libellé : "${searchLabel}"`);
-    const optionRow = page.locator('.el-dialog p', {hasText: searchLabel});
-    await optionRow.waitFor({state: 'visible', timeout: 5000});
-    const switchElement = optionRow.locator('.el-switch');
+    const optionText = page.locator('.el-dialog p').filter({hasText: new RegExp(searchLabel.replace(/[.'-]/g, '.'), 'i')}).first();
+    await optionText.waitFor({state: 'visible', timeout: 5000});
 
-    const isChecked = await switchElement.getAttribute('aria-checked');
-    if (isChecked !== 'true') {
+    const switchElement = optionText.locator('.el-switch');
+    await switchElement.waitFor({state: 'visible', timeout: 5000});
+
+    const isChecked = await switchElement.evaluate(el => el.classList.contains('is-checked'));
+    if (!isChecked) {
         await switchElement.click();
+        await expect(switchElement).toHaveClass(/is-checked/, {timeout: 5000});
     }
 });
 

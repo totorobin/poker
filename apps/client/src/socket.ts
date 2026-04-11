@@ -10,3 +10,7 @@ export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
     cb({ uuid: uuid.value })
   }
 })
+
+if (typeof window !== 'undefined') {
+  ;(window as any).socket = socket
+}

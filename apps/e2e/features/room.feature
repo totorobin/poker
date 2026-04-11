@@ -12,6 +12,17 @@ Fonctionnalité: Connexion à une room
     Et "Bob" doit voir que "Alice" et "Charlie" sont présents dans la room
     Et "Charlie" doit voir que "Alice" et "Bob" sont présents dans la room
 
+  Scénario: Alice crée une nouvelle salle depuis l'accueil
+    Etant donné que l'utilisateur "Alice" navigue vers l'accueil avec le nom pré-enregistré "Alice"
+    Quand "Alice" clique sur le bouton de création de salle
+    Alors "Alice" doit être redirigée vers une nouvelle salle
+
+  Scénario: Bob quitte la salle
+    Etant donné que l'utilisateur "Alice" se connecte à la room "leave-room" avec le nom pré-enregistré "Alice"
+    Et que l'utilisateur "Bob" se connecte à la room "leave-room" et saisit son nom "Bob"
+    Quand "Bob" quitte la salle
+    Alors "Alice" ne doit plus voir "Bob" dans la room
+
   Scénario: Les utilisateurs votent, révèlent, cachent et effacent les votes
     Etant donné que l'utilisateur "Alice" se connecte à la room "poker-test" avec le nom pré-enregistré "Alice"
     Et que l'utilisateur "Bob" se connecte à la room "poker-test" et saisit son nom "Bob"
