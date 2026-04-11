@@ -51,7 +51,9 @@ export class IoServer {
       });
 
       socket.on('whoAmI', (callback) => {
-        callback(socket.data);
+        if (typeof callback === 'function') {
+          callback(socket.data);
+        }
       });
 
       socket.on('setUserName', (name) => {
@@ -72,8 +74,10 @@ export class IoServer {
       socket.on('create', async (callback) => {
         const roomId = rooms.generateRoomId();
         console.log(`new room for ${socket.data.name} : ${roomId}`);
-        /* eslint-disable-next-line n/no-callback-literal */
-        callback({ roomId });
+        if (typeof callback === 'function') {
+          /* eslint-disable-next-line n/no-callback-literal */
+          callback({ roomId });
+        }
         await socket.join(roomId);
       });
 
@@ -146,7 +150,9 @@ export class IoServer {
           console.log('leave', err);
         }
         await socket.leave(roomId);
-        callback(socket.data);
+        if (typeof callback === 'function') {
+          callback(socket.data);
+        }
       });
 
       socket.on('timer', ({ endTime }) => {
@@ -186,7 +192,7 @@ export class IoServer {
             });
           }
         } catch (err) {
-          if ((err as Error).message !== 'no_current_room') {
+          if ((err as Error).message !== 'no_current_room' && (err as Error).message !== 'room_does_not_exist') {
             console.log('disconnecting', err);
           }
         }
